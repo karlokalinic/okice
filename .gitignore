@@ -33,6 +33,8 @@ Thumbs.db
 Desktop.ini
 
 # Local repair/build artifacts
+/_CodexRepair/
+/uam/
 /_CodexRepair/Backups/
 /_CodexRepair/Builds/
 /_CodexRepair/Logs/

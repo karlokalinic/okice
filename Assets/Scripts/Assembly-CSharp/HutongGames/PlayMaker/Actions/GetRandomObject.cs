@@ -41,7 +41,7 @@ namespace HutongGames.PlayMaker.Actions
 
 		private void DoGetRandomObject()
 		{
-			GameObject[] array = ((!(withTag.Value != "Untagged")) ? Object.FindObjectsByType<GameObject>(FindObjectsSortMode.None) : GameObject.FindGameObjectsWithTag(withTag.Value));
+			GameObject[] array = ((!(withTag.Value != "Untagged")) ? Object.FindObjectsByType<GameObject>() : GameObject.FindGameObjectsWithTag(withTag.Value));
 			if (array.Length != 0)
 			{
 				storeResult.Value = array[Random.Range(0, array.Length)];

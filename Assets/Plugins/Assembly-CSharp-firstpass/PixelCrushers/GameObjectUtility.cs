@@ -9,22 +9,22 @@ namespace PixelCrushers
 	{
 		public static T FindFirstObjectByType<T>() where T : UnityEngine.Object
 		{
-			return UnityEngine.Object.FindFirstObjectByType<T>();
+			return UnityEngine.Object.FindAnyObjectByType<T>();
 		}
 
 		public static UnityEngine.Object FindFirstObjectByType(Type type)
 		{
-			return UnityEngine.Object.FindFirstObjectByType(type);
+			return UnityEngine.Object.FindAnyObjectByType(type);
 		}
 
 		public static T[] FindObjectsByType<T>() where T : UnityEngine.Object
 		{
-			return UnityEngine.Object.FindObjectsByType<T>(FindObjectsSortMode.None);
+			return UnityEngine.Object.FindObjectsByType<T>();
 		}
 
 		public static UnityEngine.Object[] FindObjectsByType(Type type)
 		{
-			return UnityEngine.Object.FindObjectsByType(type, FindObjectsSortMode.None);
+			return UnityEngine.Object.FindObjectsByType(type, FindObjectsInactive.Exclude);
 		}
 
 		public static bool IsPrefab(GameObject go)
@@ -179,7 +179,7 @@ namespace PixelCrushers
 
 		public static T[] FindObjectsOfTypeAlsoInactive<T>(bool checkAllScenes = true) where T : Component
 		{
-			return UnityEngine.Object.FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+			return UnityEngine.Object.FindObjectsByType<T>(FindObjectsInactive.Include);
 		}
 
 		private static void FindObjectsSearchRootObjects<T>(GameObject[] rootGameObjects, List<T> list) where T : Component

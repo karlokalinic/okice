@@ -8,7 +8,7 @@ namespace CodexRepair
 {
     public static class BuildGame
     {
-        private const string OutputPath = "_CodexRepair/Builds/Windows/ExportedProject.exe";
+        private const string OutputPath = "_CodexRepair/Builds/Windows/COLD CITY.exe";
 
         public static void BuildWindows64()
         {
@@ -27,6 +27,11 @@ namespace CodexRepair
             var outputDirectory = Path.GetDirectoryName(OutputPath);
             if (!string.IsNullOrEmpty(outputDirectory))
             {
+                if (Directory.Exists(outputDirectory))
+                {
+                    Directory.Delete(outputDirectory, true);
+                }
+
                 Directory.CreateDirectory(outputDirectory);
             }
 

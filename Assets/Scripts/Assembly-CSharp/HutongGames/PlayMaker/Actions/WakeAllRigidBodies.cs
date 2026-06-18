@@ -33,7 +33,7 @@ namespace HutongGames.PlayMaker.Actions
 
 		private void DoWakeAll()
 		{
-			bodies = Object.FindObjectsByType<Rigidbody>(FindObjectsSortMode.None);
+			bodies = Object.FindObjectsByType<Rigidbody>();
 			if (bodies != null)
 			{
 				Rigidbody[] array = bodies;

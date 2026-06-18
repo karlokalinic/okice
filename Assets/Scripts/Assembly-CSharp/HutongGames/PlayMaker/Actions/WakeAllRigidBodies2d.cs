@@ -30,7 +30,7 @@ namespace HutongGames.PlayMaker.Actions
 
 		private void DoWakeAll()
 		{
-			Rigidbody2D[] array = Object.FindObjectsByType<Rigidbody2D>(FindObjectsSortMode.None);
+			Rigidbody2D[] array = Object.FindObjectsByType<Rigidbody2D>();
 			if (array != null)
 			{
 				Rigidbody2D[] array2 = array;

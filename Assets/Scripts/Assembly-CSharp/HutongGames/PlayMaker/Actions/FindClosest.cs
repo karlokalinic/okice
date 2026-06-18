@@ -60,7 +60,7 @@ namespace HutongGames.PlayMaker.Actions
 		private void DoFindClosest()
 		{
 			GameObject gameObject = ((this.gameObject.OwnerOption == OwnerDefaultOption.UseOwner) ? base.Owner : this.gameObject.GameObject.Value);
-			GameObject[] array = ((!string.IsNullOrEmpty(withTag.Value) && !(withTag.Value == "Untagged")) ? GameObject.FindGameObjectsWithTag(withTag.Value) : Object.FindObjectsByType<GameObject>(FindObjectsSortMode.None));
+			GameObject[] array = ((!string.IsNullOrEmpty(withTag.Value) && !(withTag.Value == "Untagged")) ? GameObject.FindGameObjectsWithTag(withTag.Value) : Object.FindObjectsByType<GameObject>());
 			GameObject value = null;
 			float num = float.PositiveInfinity;
 			GameObject[] array2 = array;

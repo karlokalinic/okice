@@ -43,6 +43,8 @@ namespace RetroShadersPro.URP
 
 			private int frameCounter;
 
+			private bool shaderLookupFailed;
+
 			public CRTRenderPass()
 			{
 				base.profilingSampler = new ProfilingSampler("CRT Effect");
@@ -51,10 +53,15 @@ namespace RetroShadersPro.URP
 
 			private void CreateMaterial()
 			{
+				if (shaderLookupFailed)
+				{
+					return;
+				}
 				Shader shader = Shader.Find("Retro Shaders Pro/Post Processing/CRT");
 				if (shader == null)
 				{
-					Debug.LogError("Cannot find shader: \"Retro Shaders Pro/Post Processing/CRT\".");
+					shaderLookupFailed = true;
+					Debug.LogWarning("Cannot find shader: \"Retro Shaders Pro/Post Processing/CRT\".");
 				}
 				else
 				{
