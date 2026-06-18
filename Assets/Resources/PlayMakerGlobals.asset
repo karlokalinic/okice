@@ -1,0 +1,151 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c91e31617be8b730be0459768edc5e8, type: 3}
+  m_Name: PlayMakerGlobals
+  m_EditorClassIdentifier:
+  variables:
+    floatVariables:
+    - useVariable: 1
+      name: screenheightingame
+      tooltip:
+      showInInspector: 0
+      networkSync: 0
+      value: 0
+    intVariables:
+    - useVariable: 1
+      name: currentscreenwidth
+      tooltip:
+      showInInspector: 0
+      networkSync: 0
+      value: 0
+    - useVariable: 1
+      name: currentscreenheight
+      tooltip:
+      showInInspector: 0
+      networkSync: 0
+      value: 0
+    - useVariable: 1
+      name: ShardAmount
+      tooltip:
+      showInInspector: 0
+      networkSync: 0
+      value: 0
+    boolVariables:
+    - useVariable: 1
+      name: HaveEyeKey
+      tooltip:
+      showInInspector: 0
+      networkSync: 0
+      value: 0
+    - useVariable: 1
+      name: HavePipeValve
+      tooltip:
+      showInInspector: 0
+      networkSync: 0
+      value: 0
+    - useVariable: 1
+      name: HaveEyes
+      tooltip:
+      showInInspector: 0
+      networkSync: 0
+      value: 0
+    - useVariable: 1
+      name: lefteyecorrect
+      tooltip:
+      showInInspector: 0
+      networkSync: 0
+      value: 0
+    - useVariable: 1
+      name: righteyecorrect
+      tooltip:
+      showInInspector: 0
+      networkSync: 0
+      value: 0
+    - useVariable: 1
+      name: wardrobedooropen
+      tooltip:
+      showInInspector: 0
+      networkSync: 0
+      value: 0
+    - useVariable: 1
+      name: HaveBunkerKey
+      tooltip:
+      showInInspector: 0
+      networkSync: 0
+      value: 0
+    - useVariable: 1
+      name: HaveSaw
+      tooltip:
+      showInInspector: 0
+      networkSync: 0
+      value: 0
+    stringVariables: []
+    vector2Variables: []
+    vector3Variables: []
+    colorVariables: []
+    rectVariables: []
+    quaternionVariables: []
+    gameObjectVariables: []
+    objectVariables: []
+    materialVariables: []
+    textureVariables: []
+    arrayVariables: []
+    enumVariables: []
+    categories:
+    - 
+    variableCategoryIDs: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  events:
+  - interactEvent
+  - showInteractable
+  - dontShowInteractable
+  - performInteract
+  - PLAYER / INTERACTING
+  - PLAYER / NOT INTERACTING
+  - CHAPTERS / CHAPTER1
+  - MENU OPEN
+  - changeInteract
+  - UNLOAD / SIDE1
+  - ENCOUNTERS / MIRRORMAN / DISABLE IN HALLWAY
+  - disable mirror man above stairs
+  - test picked up valve
+  - main menu / fade in bg
+  - 720p
+  - 2160p
+  - 1440p
+  - 1080p
+  - PAUSED
+  - UNPAUSED
+  - flush toilet
+  - debug / mirror stage 2
+  - ENCOUNTERS / mirror stage 2 complete
+  - close to sockets
+  - jumpscare1
+  - PLAYER / CANT PAUSE
+  - PLAYER / CAN PAUSE
+  - ACT 2 CHANGES
+  - changeInteract2
+  - UNLOAD / ACT1
+  - borders wide
+  - jets / jet1
+  - jets / jet2
+  - jets / jet3
+  - jets / jet4
+  - jets / final jet
+  - jet crash
+  - borders after crash
+  - walking on sand
+  - flicker bunker lights
+  - bunker phone
+  - have pills
+  - flicker maddie hallway lights
+  - close elevator
+  - increase heartbeat

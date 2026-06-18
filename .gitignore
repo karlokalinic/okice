@@ -1,0 +1,41 @@
+# Unity generated folders
+/Library/
+/Temp/
+/Obj/
+/Build/
+/Builds/
+/Logs/
+/UserSettings/
+/MemoryCaptures/
+/Recordings/
+
+# Unity generated project files
+/*.csproj
+/*.sln
+/*.slnx
+/*.user
+/*.pidb
+/*.booproj
+/*.svd
+/*.pdb
+/*.mdb
+/*.opendb
+/*.VC.db
+
+# IDE/editor folders
+/.vs/
+/.vscode/
+/.idea/
+
+# OS noise
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local repair/build artifacts
+/_CodexRepair/Backups/
+/_CodexRepair/Builds/
+/_CodexRepair/Logs/
+/_CodexRepair/Quarantined*/
+/_CodexRepair/**/*.zip
+/_CodexRepair/**/*.log
