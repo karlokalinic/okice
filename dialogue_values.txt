@@ -1,0 +1,256 @@
+Zaključano.
+Idem.
+IDEM
+Telefon zvoni.\n\nMaddie.
+PRIMI
+\"Što se, dovraga, događa?\"
+Ne znam.
+Jesi li dobro?
+\"Da. Jesam. Nemoj se brinuti za mene.\"
+Jesi li ranjena?
+Doći ću.
+\"Mislim da nisam. Ne osjećam bol.\"
+\"Ne! Molim te, nemoj.\n\nStvarno sam dobro. Samo sam te htjela pitati što se događa.\"
+Jesi li sigurna?
+Trebao bih doći.
+\"Da. Nemoj se brinuti.\"
+\"...dobro. Ali sumnjam da je most prema Bloku 29 još uvijek otvoren.\"
+Pokušat ću. (IDEM)
+\"Još mi zvrje u ušima od one bombe.\"
+Slika kina koje je Maddie nekoć posjećivala.\n\nMaddie je voljela filmove.
+To je tvoj telefon.
+To je kratka bilješka tvog susjeda.
+PROČITAJ
+\"Za Maddie:\n\nZaštitit ću te.\"
+To je neoprani tanjur. Tvoj susjed otišao je u žurbi.
+To je nadzorničin interfon.
+Halo?
+Nakon kratkog zujanja čuješ nadzorničin stari glas.\n\n\"Ima li koga?\" pita.
+Ja sam tvoj susjed.
+Treba mi pristup mostu.
+Duboko udahne.\n\n\"Zašto još nisi otišao, dragi? Rekli su nam da se evakuiramo. Čovjek s jednim okom već je otišao.\"
+Moram pronaći Maddie.
+\"Maddie?\n\nMaddie. Moj unuk neprestano priča o njoj.\n\nMoj unuk! Ni on se ne želi evakuirati. Bez razuma je.\"
+\"Most? Ne možeš, dragi. Žao mi je. Vojnici su mi naredili da ga zaključam.\n\nA zašto bi uopće išao na most?\"
+Zašto ostaje?
+Zaista mi treba pristup mostu.
+\"Ne znam!\" vikne nadzornica, glasnije nego što je namjeravala.\n\n\"Zaključao se u stanu. Ne znam što ondje radi.\"
+\"Znam, dragi. Ali vojnici ti to neće dopustiti. Vjerojatno bi me ubili kad bih ti dopustila da prijeđeš most.\"
+Nadzornica oklijeva.\n\n\"...stvarno? Ako to učiniš, mislim da bih mogla otvoriti most. Samo za tebe. Vojnici možda ni ne bi primijetili.\n\nAli moraš nagovoriti mog unuka da ode.\"
+Zauzvrat bih mogao izvući tvog unuka.
+Hoću.
+\"Hvala ti. To mislim od srca. Otključat ću vrata njegova stana.\n\nI molim te, budi oprezan.\"
+...
+\"Ponekad nemam pojma što mu se sve mota po glavi.\"\n\nNadzornica isključuje interfon. 
+\"I ne mogu ništa učiniti u vezi toga,\" kaže.
+Što kažeš o Maddie?
+\"Ma, ovo i ono.\"
+\"To bi te samo odvelo dublje u zgradu. Rekli su nam da se evakuiramo. Čovjek s jednim okom već je otišao.\"
+ne
+To je razbijeno zrcalo.
+UPOTRIJEBI KRHOTINU ZRCALA
+Zrcalo je sada cijelo.\n\nPrimjećuješ natpis urezan pri dnu.
+\"Ispravio sam sve svoje nedostatke.\n\nSad će me voljeti.\"
+NASTAVI ČITATI
+\"Maddie će me sada voljeti.\"
+To je tipkovnica.
+PREGLEDAJ
+Tekst na ekranu glasi: \"Pristup mostu Bloka 29\".\n\nNe znaš šifru.
+Bilješka je pribijena uz prašnjavo zrcalo.
+\"Na desnoj strani vrata imam ružnu mrlju.\n\nOči mi izgledaju grozno.\n\nMislim da nešto nije u redu s mojom kožom.\"
+\"Ovaj je odvijač bio dovoljno oštar.\n\nRužne mrlje više nema.\"
+To je odvijač pokraj male hrpe mesa.
+To je KRHOTINA ZRCALA (1/3).
+UZMI
+Nešto je zapelo u zahodskoj školjci.
+To je mala bilježnica.
+\"Popravljeno:\n\n- Zubi\n- Obrve\n- Nokti\n- Koža\"
+\"Za popraviti:\n\n- Oči\n\nOči mi izgledaju grozno.\"
+Niz cijevi koje vode do kupaonice u prizemlju.\n\nNa sredini bi se mogao pričvrstiti neki držač.
+UPOTRIJEBI VENTIL CIJEVI
+To je ljudska koža.
+To je mali lokot sa simbolom oka.
+UPOTRIJEBI KLJUČ OKA
+To je KLJUČ OKA (3 uporabe).
+To je bilješka.
+\"Hodnici su prazni.\n\nZaglavio sam ovdje, okružen ovim zrcalima.\"
+\"Od sada ću gledati samo slomljene.\"
+Par okretnih ležišta.\n\nNa njih bi stala dva mala okrugla predmeta.
+UPOTRIJEBI LJUDSKE OČI
+Bilješka je pribijena na stražnju stranu ormara.
+\"Pokušat ću opet sutra.\n\nIzgubio sam pilu.\"
+To je VENTIL CIJEVI.
+Nešto je na donjoj polici.
+To je bilješka proturena ispod tvojih vrata.
+\"Svim stanarima Bloka 28,\n\nOvo je hitno.\n\nSmjesta evakuirajte grad.\"
+\"Blok 28 - Stanar 256\"
+\"Blok 28 - Stanar 254\"
+\"Blok 28 - Stanar 255\"
+To je malo zrcalo s pričvršćenom bilješkom.
+\"Znam šifru za most.\n\nPomozimo jedno drugome.\"
+\"Molim te, pomozi mi popraviti moje posebno zrcalo.\n\nOd udara je palo sa stola i razbilo se.\n\nNe znam što ću bez njega.\"
+To je KRHOTINA ZRCALA (2/3).
+\"Mojih groznih očiju više nema.\n\nBol će se isplatiti.\"
+To je PAR LJUDSKIH OČIJU.
+To je niz ležišta s dva ljudska oka na vrhu.
+OKRENI LIJEVO OKO
+OKRENI DESNO OKO
+To je KRHOTINA ZRCALA (3/3).
+\"Kako sam obećala:\n\nŠifra za most glasi:\n2-2-0-0-0.\"
+To je mala knjiga pjesama koje si napisao o Maddie. 
+Naslov glasi: \"Moja toplina u Hladnom gradu\".\n\nNikad joj nisi pokazao nijednu svoju pjesmu, ali kad ih zapišeš, postaju tako divno stvarne.
+Kutija cigareta.\n\nTi ne pušiš, ali Maddie puši.
+Plakat starog filma o hrabrom jednonogom junaku koji za vrijeme rata štiti djevojku.\n\nJedan od Maddienih najdražih.
+\"Blok 28 - Stanar 255\n\nStražnji ulaz\"
+Telefon zvoni. To je Maddie.
+\"Ponavljam, ne moraš dolaziti.\n\nStvarno sam dobro.\"
+Svejedno ću doći.
+\"Misli na vlastitu sigurnost, molim te.\"
+Ne brini.
+Tvoja je sigurnost važnija.
+\"Dobro... ako baš inzistiraš.\n\nAli molim te, nemoj ovo shvatiti krivo.\"
+Uskoro stižem.
+Čuvaj se.
+\"Dobro.\"
+Volim te.
+Maddie je već spustila slušalicu.\n\nNije te čula.
+\"Već sam na sigurnom. Mislim.\"
+Molim te, pusti me da dođem.
+Zvučiš nesigurno.
+\"Pa... jednostavno ne znam što bih rekla.\"
+\"...dobro.\n\nNemoj ovo shvatiti krivo.\"
+Neću.
+U redu je.
+\"...možeš doći.\n\nAli molim te, nemoj ovo shvatiti krivo.\"
+\"U redu.\"
+Tekst na ekranu glasi: \"Pristup mostu Bloka 29\".
+UNESI ŠIFRU:\n2-2-0-0-0
+\"...\"
+Gdje je Blok 29?
+\"...toliko dugo... a što zauzvrat dobivam?...\"
+Trebaš li pomoć?
+\"...stotine... ne, tisuće... mrtvih...\"
+\"...gdje je moja nagrada?...\"
+\"...boli...\"
+\"...u bunkeru s tvoje lijeve strane ima tableta.\n\n...donesi mi ih i prebacit ću te do Bloka 29....\"
+Moram doći do Bloka 29.
+Pilot ti daje KLJUČ BUNKERA.
+\"...mislila sam da hoće...\"
+UPOTRIJEBI KLJUČ BUNKERA
+Vrata su zabijena daskama.\n\nKljučanica je neobično velika.
+POGLEDAJ KROZ KLJUČANICU
+Na stolu je bočica tableta.
+PRESTANI GLEDATI
+UPOTRIJEBI PILU
+To je bilješka koju je napisao pilot.
+\"Trebam je.\"
+\"Za nju bih učinio sve.\"
+\"Zapravo, nemoj dolaziti.\n\nMolim te, nemoj.\"
+Zašto ne?
+Kako to misliš?
+\"Nazvala sam samo zbog te bombe.\n\nNemoj ovo shvatiti pogrešno.\"
+\"Samo sam se zabrinula za tebe.\n\nNisam te trebala zvati. Možda je sve to moja krivnja.\"
+Nije tvoja krivnja.
+Jesi li na sigurnom?
+Moram te vidjeti.
+\"Nije važno.\n\nMolim te, idi. Ostavi me na miru.\"
+\"Da, na sigurnom sam.\n\nMolim te, idi. Ostavi me na miru.\"
+\"Ostavi me na miru. Molim te, samo idi.\"
+Maddie?
+Spustila je slušalicu.\n\nTrebao bi otići k njoj.
+SAČMARICA.\n\nNe znaš se njome služiti.\nNisi poput pilota.
+To je PILA.
+Vrata su zabijena daskama.
+To je neki nadzorni sustav.
+Monitori prikazuju čitav Maddien stan, snimljen nekoliko skrivenih kamera.
+PROVJERI DNEVNI BORAVAK
+PROVJERI KUHINJU
+PROVJERI SPAVAĆU SOBU
+Njezin je dnevni boravak zapušten. Sve djeluje krhko.\n\nNa stolu leži kutija cigareta.
+Kuhinja je neugledna.\n\nNekoliko neopranih tanjura naslagano je na pultu.\n
+Vidiš Maddie kako leži na kauču i gleda televiziju.\n\nKao i uvijek, savršena je.
+\"Štitim je, pa je posve pošteno da znam što smjera.\n\nValjda godi biti s nekim tako bliskim.\"
+\"Kad su mi naredili da branim Blok 29, mislio sam da sanjam. Tako sam bio sretan.\n\nNitko neće stati između nas. Sa mnom je sigurna.\"
+To je bočica tableta.\n\nTrebao bi je odnijeti pilotu.
+Ne smiješ izaći iz bunkera dok ne uzmeš pilotove tablete.
+DAJ TABLETE
+Pilot uzima tablete.
+\"...hvala ti...\"
+Odvedi me do Bloka 29.
+\"...žao mi je, ne mogu.\n\nNemam ključ. Nemam baš ništa.\"
+\"Uostalom, ne bih ti ni dopustila. Tko zna što bi učinio...\"
+O čemu govoriš?
+\"Žao mi je...\n\nNe zaslužujem ništa od ovoga...\"
+Lagala si mi.
+\"...kloni se od Maddie...\"
+\"...izgubio sam nogu zbog te djevojke.\"
+Pilot više ne odgovara.\n\nNe trebaš ga.
+\"Što si to izgubio?\"
+\"Blok 29 - Dizala\"
+NAZOVI MADDIE
+\"Kloni se.\"
+Zašto?
+Ne mogu.
+\"Nazvala sam te jer je pala bomba. U ratu smo.\n\nHtjela sam znati jesi li dobro. Samo zbog toga sam nazvala.\"
+\"Zašto misliš da to išta znači?\n\nUvijek misliš da sve nešto znači.\"
+\"Ni ne poznajem te.\"
+\"Plašiš me. Kloni se.\"
+Trebam te.
+Dolazim.
+\"Nisam htjela da ovako ispadne.\n\nNisam te trebala zvati.\"
+Maddie je spustila slušalicu.\n\nDošao si tako daleko. Ne možeš se sada zaustaviti.
+Najprije bi trebao nazvati Maddie.
+\"Blok 29 - Stanar 471\"
+\"Blok 29 - Stanar 472\"
+\"Blok 29 - Stanar 473\"
+\"Blok 29 - Stanar 474\"
+\"Blok 29 - Stanar 475\"
+\"Blok 29 - Stanar 476\n\nMaddie\"
+Maddie je odškrinula vrata.\n\nNe vidiš je, ali znaš da je unutra.
+Ovdje sam.
+\"Gubi se iz mog stana. Molim te, ostavi me na miru.\"
+\"Što želiš od mene?\n\nŠto, dovraga, želiš?\"
+Zaštitit ću te.
+\"Da me zaštitiš? Od čega?\n\nVeć sam sigurna, zahvaljujući onom pilotu.\"
+\"Izgubio je nogu kako bih ja bila sigurna.\n\nZar to nije hrabro?\"
+\"...o čemu ja uopće govorim?\n\nOstavi me na miru. Samo idi.\"
+\"...izgubio je nogu zbog mene...\"
+\"...izgubio je nogu zbog mene...\n\n...tako hrabar...\"
+Došao si tako daleko. Ne možeš sada stati.
+Primjećuješ PILU koju si uzeo iz bunkera.\n\nI ti bi mogao biti hrabar.
+Mogao bi biti tako hrabar.\n\nTako hrabar.\n\nMaddie će te zbog toga voljeti.
+PREPILI NOGU
+Ne možeš se sada zaustaviti.\n\nMaddie će te voljeti, ako budeš hrabar.
+\"Što si to učinio sebi?\n\nŠto nije u redu s tobom?\"
+Hrabar sam.
+Za tebe bih učinio sve.
+\"Nosi se dovraga od mene.\n\nGubi se iz mog stana.\"
+Maddie tiho plače.
+\"O, Bože...\"
+\"Molim te, idi...\"
+Bit ću savršen.
+\"...o čemu ti to, dovraga, govoriš?\"
+DRŽI ODVIJAČE
+Odvijači izgledaju dovoljno oštro.\n\nBit ćeš savršen.
+PROBODI DESNO OKO
+PROBODI LIJEVO OKO
+Boli.\n\nMaddie će te voljeti.
+\"Molim te, prestani,\npreklinjem te.
+\"Molim te, prestani,\npreklinjem te.\"
+\"O Bože, molim te, prestani.\"
+\"Učinit ću što god želiš,\nsamo prestani, molim te prestani.\"
+\"...volim te!\n\nToliko te volim...\"
+U ormariću je bilješka.
+\"Sve je slomljeno, propušta i dotrajalo.\n\nRekli su da će poslati nekoga da to popravi, ali nikad nisu.\"
+To je maketa borbenog aviona.
+To je prazan umivaonik.
+To je kutija Maddienih cigareta.
+Vrata Maddiene spavaće sobe.\n\nZaključana su.
+Veliko zrcalo.\n\nPred njim leži par odvijača.
+POGLEDAJ U ZRCALO
+Ali te nedostatke možeš ispraviti.\n\nMožeš biti besprijekoran i Maddie će te voljeti.\n\nSamo joj to moraš pokazati.
+Oči ti izgledaju grozno.
+UZMI ODVIJAČE
+Vidiš vlastito lice.\n\nIzgledaš umorno, ali nježno i odlučno.\n\nZašto te Maddie ne može voljeti?
+POGLEDAJ IZBLIZA
+...to su zacijelo tvoje oči.\n\nMutne, krvave i iznurene.

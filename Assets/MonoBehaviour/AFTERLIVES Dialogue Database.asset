@@ -299,7 +299,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's locked.
+        value: "Zaključano."
         type: 0
         typeString:
       - title: Sequence
@@ -354,7 +354,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Leave.
+        value: "Idem."
         type: 0
         typeString:
       - title: Sequence
@@ -562,7 +562,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's locked.
+        value: "Zaključano."
         type: 0
         typeString:
       - title: Sequence
@@ -617,7 +617,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -770,7 +770,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "The phone is ringing.\n\nSurprisingly, it's Maddie."
+        value: "Telefon zvoni.\n\nMaddie."
         type: 0
         typeString:
       - title: Sequence
@@ -831,7 +831,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: PICK UP
+        value: "PRIMI"
         type: 0
         typeString:
       - title: Sequence
@@ -886,7 +886,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -935,7 +935,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"What the hell is going on?"'
+        value: "\"Što se, dovraga, događa?\""
         type: 0
         typeString:
       - title: Sequence
@@ -996,7 +996,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I don't know
+        value: "Ne znam."
         type: 0
         typeString:
       - title: Sequence
@@ -1051,7 +1051,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Are you okay?
+        value: "Jesi li dobro?"
         type: 0
         typeString:
       - title: Sequence
@@ -1106,7 +1106,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Yes. I am. Please don''t worry about me."'
+        value: "\"Da. Jesam. Nemoj se brinuti za mene.\""
         type: 0
         typeString:
       - title: Sequence
@@ -1161,7 +1161,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Are you hurt?
+        value: "Jesi li ranjena?"
         type: 0
         typeString:
       - title: Sequence
@@ -1216,7 +1216,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I'll come over
+        value: "Doći ću."
         type: 0
         typeString:
       - title: Sequence
@@ -1271,7 +1271,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"I don''t think so. I mean, I don''t feel hurt."'
+        value: "\"Mislim da nisam. Ne osjećam bol.\""
         type: 0
         typeString:
       - title: Sequence
@@ -1326,7 +1326,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"No! Please don't.\n\nReally, I'm fine. I only wanted to ask if you knew what was happening.\""
+        value: "\"Ne! Molim te, nemoj.\n\nStvarno sam dobro. Samo sam te htjela pitati što se događa.\""
         type: 0
         typeString:
       - title: Sequence
@@ -1387,7 +1387,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Are you sure?
+        value: "Jesi li sigurna?"
         type: 0
         typeString:
       - title: Sequence
@@ -1442,7 +1442,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I should really come over
+        value: "Trebao bih doći."
         type: 0
         typeString:
       - title: Sequence
@@ -1497,7 +1497,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Yes. Don''t worry."'
+        value: "\"Da. Nemoj se brinuti.\""
         type: 0
         typeString:
       - title: Sequence
@@ -1552,7 +1552,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"...okay. But I don''t think the bridge to Block 29 is still open."'
+        value: "\"...dobro. Ali sumnjam da je most prema Bloku 29 još uvijek otvoren.\""
         type: 0
         typeString:
       - title: Sequence
@@ -1607,7 +1607,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I'll try (LEAVE)
+        value: "Pokušat ću. (IDEM)"
         type: 0
         typeString:
       - title: Sequence
@@ -1656,7 +1656,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"My ears are still ringing from the impact of that bomb."'
+        value: "\"Još mi zvrje u ušima od one bombe.\""
         type: 0
         typeString:
       - title: Sequence
@@ -1815,7 +1815,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "It's a picture of the cinema that Maddie used to visit.\n\nMaddie loves the movies."
+        value: "Slika kina koje je Maddie nekoć posjećivala.\n\nMaddie je voljela filmove."
         type: 0
         typeString:
       - title: Sequence
@@ -1870,7 +1870,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -2023,7 +2023,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's your phone.
+        value: "To je tvoj telefon."
         type: 0
         typeString:
       - title: Sequence
@@ -2078,7 +2078,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -2231,7 +2231,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a short note written by your neighbor.
+        value: "To je kratka bilješka tvog susjeda."
         type: 0
         typeString:
       - title: Sequence
@@ -2292,7 +2292,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ
+        value: "PROČITAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -2347,7 +2347,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -2396,7 +2396,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"To Maddie:\n\nI'll protect you.\""
+        value: "\"Za Maddie:\n\nZaštitit ću te.\""
         type: 0
         typeString:
       - title: Sequence
@@ -2451,7 +2451,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -2604,7 +2604,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's an unwashed plate. Your neighbor left in a hurry.
+        value: "To je neoprani tanjur. Tvoj susjed otišao je u žurbi."
         type: 0
         typeString:
       - title: Sequence
@@ -2659,7 +2659,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -2812,7 +2812,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's the overseer's intercom.
+        value: "To je nadzorničin interfon."
         type: 0
         typeString:
       - title: Sequence
@@ -2873,7 +2873,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Hello?
+        value: "Halo?"
         type: 0
         typeString:
       - title: Sequence
@@ -2928,7 +2928,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -2977,7 +2977,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "After a short buzz you hear the overseer's old voice. \n\n\"Anybody there?\" she asks."
+        value: "Nakon kratkog zujanja čuješ nadzorničin stari glas.\n\n\"Ima li koga?\" pita."
         type: 0
         typeString:
       - title: Sequence
@@ -3038,7 +3038,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I'm your neighbor
+        value: "Ja sam tvoj susjed."
         type: 0
         typeString:
       - title: Sequence
@@ -3093,7 +3093,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I need access to the bridge
+        value: "Treba mi pristup mostu."
         type: 0
         typeString:
       - title: Sequence
@@ -3148,7 +3148,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "She takes a deep breath.\n\n\"Why haven't you left yet, dear? They told us to evacuate. The man with one eye is gone already.\""
+        value: "Duboko udahne.\n\n\"Zašto još nisi otišao, dragi? Rekli su nam da se evakuiramo. Čovjek s jednim okom već je otišao.\""
         type: 0
         typeString:
       - title: Sequence
@@ -3203,7 +3203,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I need to find Maddie
+        value: "Moram pronaći Maddie."
         type: 0
         typeString:
       - title: Sequence
@@ -3258,7 +3258,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Maddie? \n\nOh, Maddie. My grandson keeps talking about her. \n\nMy grandson! He won't evacuate either, the fool.\""
+        value: "\"Maddie?\n\nMaddie. Moj unuk neprestano priča o njoj.\n\nMoj unuk! Ni on se ne želi evakuirati. Bez razuma je.\""
         type: 0
         typeString:
       - title: Sequence
@@ -3325,7 +3325,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"The bridge? You can't, dear. I'm sorry. The soldiers told me to lock it off.\n\nWhy would you go to the bridge, anyway?\" \n\n"
+        value: "\"Most? Ne možeš, dragi. Žao mi je. Vojnici su mi naredili da ga zaključam.\n\nA zašto bi uopće išao na most?\""
         type: 0
         typeString:
       - title: Sequence
@@ -3380,7 +3380,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Why does he stay?
+        value: "Zašto ostaje?"
         type: 0
         typeString:
       - title: Sequence
@@ -3435,7 +3435,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I really need access to the bridge
+        value: "Zaista mi treba pristup mostu."
         type: 0
         typeString:
       - title: Sequence
@@ -3490,7 +3490,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"I don't know!\" the overseer shouts, seemingly louder than she wanted to. \n\n\"He's locked himself in his apartment. I don't know what he's doing in there.\""
+        value: "\"Ne znam!\" vikne nadzornica, glasnije nego što je namjeravala.\n\n\"Zaključao se u stanu. Ne znam što ondje radi.\""
         type: 0
         typeString:
       - title: Sequence
@@ -3545,7 +3545,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"I know, dear. But the soldiers won''t let you. They''d likely kill me if I allowed you to take the bridge."'
+        value: "\"Znam, dragi. Ali vojnici ti to neće dopustiti. Vjerojatno bi me ubili kad bih ti dopustila da prijeđeš most.\""
         type: 0
         typeString:
       - title: Sequence
@@ -3600,7 +3600,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "The overseer hesitates.\n\n\"...really? If you do that, I think I'd be able to open the bridge, just for you. The soldiers might not notice.\n\nBut you have to convince my grandson to leave.\""
+        value: "Nadzornica oklijeva.\n\n\"...stvarno? Ako to učiniš, mislim da bih mogla otvoriti most. Samo za tebe. Vojnici možda ni ne bi primijetili.\n\nAli moraš nagovoriti mog unuka da ode.\""
         type: 0
         typeString:
       - title: Sequence
@@ -3655,7 +3655,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I could get your grandson out in exchange
+        value: "Zauzvrat bih mogao izvući tvog unuka."
         type: 0
         typeString:
       - title: Sequence
@@ -3710,7 +3710,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I will
+        value: "Hoću."
         type: 0
         typeString:
       - title: Sequence
@@ -3765,7 +3765,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Thank you so much. I really mean it. I'll open the door to his apartment. \n\nAnd please be careful.\""
+        value: "\"Hvala ti. To mislim od srca. Otključat ću vrata njegova stana.\n\nI molim te, budi oprezan.\""
         type: 0
         typeString:
       - title: Sequence
@@ -3820,7 +3820,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -3875,7 +3875,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Sometimes, I have no idea what goes through his head anymore.\"\n\nThe overseer turns off the intercom. "
+        value: "\"Ponekad nemam pojma što mu se sve mota po glavi.\"\n\nNadzornica isključuje interfon. "
         type: 0
         typeString:
       - title: Sequence
@@ -3930,7 +3930,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -3979,7 +3979,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -4034,7 +4034,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"And I can''t do anything about it," she says.'
+        value: "\"I ne mogu ništa učiniti u vezi toga,\" kaže."
         type: 0
         typeString:
       - title: Sequence
@@ -4089,7 +4089,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: What does he say about Maddie?
+        value: "Što kažeš o Maddie?"
         type: 0
         typeString:
       - title: Sequence
@@ -4144,7 +4144,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Oh, this and that."'
+        value: "\"Ma, ovo i ono.\""
         type: 0
         typeString:
       - title: Sequence
@@ -4205,7 +4205,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -4260,7 +4260,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"It''d only take you deeper inside the building. They told us to evacuate. The man with one eye is gone already."'
+        value: "\"To bi te samo odvelo dublje u zgradu. Rekli su nam da se evakuiramo. Čovjek s jednim okom već je otišao.\""
         type: 0
         typeString:
       - title: Sequence
@@ -4419,7 +4419,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: no
+        value: "ne"
         type: 0
         typeString:
       - title: Sequence
@@ -4474,7 +4474,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -4627,7 +4627,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a broken mirror.
+        value: "To je razbijeno zrcalo."
         type: 0
         typeString:
       - title: Sequence
@@ -4700,7 +4700,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -4749,7 +4749,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: USE MIRROR SHARD
+        value: "UPOTRIJEBI KRHOTINU ZRCALA"
         type: 0
         typeString:
       - title: Sequence
@@ -4798,7 +4798,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: USE MIRROR SHARD
+        value: "UPOTRIJEBI KRHOTINU ZRCALA"
         type: 0
         typeString:
       - title: Sequence
@@ -4847,7 +4847,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: USE MIRROR SHARD
+        value: "UPOTRIJEBI KRHOTINU ZRCALA"
         type: 0
         typeString:
       - title: Sequence
@@ -4902,7 +4902,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "The mirror is complete.\n\nYou notice some text inscribed on the bottom."
+        value: "Zrcalo je sada cijelo.\n\nPrimjećuješ natpis urezan pri dnu."
         type: 0
         typeString:
       - title: Sequence
@@ -4957,7 +4957,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ
+        value: "PROČITAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -5012,7 +5012,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"I've fixed all my imperfections.\n\nShe'll love me now.\""
+        value: "\"Ispravio sam sve svoje nedostatke.\n\nSad će me voljeti.\""
         type: 0
         typeString:
       - title: Sequence
@@ -5071,7 +5071,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ ON
+        value: "NASTAVI ČITATI"
         type: 0
         typeString:
       - title: Sequence
@@ -5126,7 +5126,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Maddie will love me now."'
+        value: "\"Maddie će me sada voljeti.\""
         type: 0
         typeString:
       - title: Sequence
@@ -5181,7 +5181,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -5334,7 +5334,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a keypad.
+        value: "To je tipkovnica."
         type: 0
         typeString:
       - title: Sequence
@@ -5395,7 +5395,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: INSPECT
+        value: "PREGLEDAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -5450,7 +5450,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -5499,7 +5499,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "The text on the screen reads: \"Block 29 Bridge Access\".\n\nYou don't know the code."
+        value: "Tekst na ekranu glasi: \"Pristup mostu Bloka 29\".\n\nNe znaš šifru."
         type: 0
         typeString:
       - title: Sequence
@@ -5554,7 +5554,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -5707,7 +5707,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: A note is pinned to the dusty mirror.
+        value: "Bilješka je pribijena uz prašnjavo zrcalo."
         type: 0
         typeString:
       - title: Sequence
@@ -5768,7 +5768,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ
+        value: "PROČITAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -5823,7 +5823,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -5872,7 +5872,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"There's an ugly spot on the right side of my neck.\n\nMy eyes look awful.\n\nI think there's something wrong with my skin.\""
+        value: "\"Na desnoj strani vrata imam ružnu mrlju.\n\nOči mi izgledaju grozno.\n\nMislim da nešto nije u redu s mojom kožom.\""
         type: 0
         typeString:
       - title: Sequence
@@ -5927,7 +5927,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ ON
+        value: "NASTAVI ČITATI"
         type: 0
         typeString:
       - title: Sequence
@@ -5982,7 +5982,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"This screwdriver was sharp enough.\n\nThe ugly spot is gone now.\""
+        value: "\"Ovaj je odvijač bio dovoljno oštar.\n\nRužne mrlje više nema.\""
         type: 0
         typeString:
       - title: Sequence
@@ -6141,7 +6141,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a screwdriver next to a small pile of flesh.
+        value: "To je odvijač pokraj male hrpe mesa."
         type: 0
         typeString:
       - title: Sequence
@@ -6196,7 +6196,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -6349,7 +6349,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a MIRROR SHARD (1/3).
+        value: "To je KRHOTINA ZRCALA (1/3)."
         type: 0
         typeString:
       - title: Sequence
@@ -6410,7 +6410,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: TAKE
+        value: "UZMI"
         type: 0
         typeString:
       - title: Sequence
@@ -6459,7 +6459,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -6612,7 +6612,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: There's something stuck inside of the toilet.
+        value: "Nešto je zapelo u zahodskoj školjci."
         type: 0
         typeString:
       - title: Sequence
@@ -6667,7 +6667,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -6820,7 +6820,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a small notebook.
+        value: "To je mala bilježnica."
         type: 0
         typeString:
       - title: Sequence
@@ -6881,7 +6881,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ
+        value: "PROČITAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -6936,7 +6936,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -6985,7 +6985,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Fixed:\n\n- Teeth\n- Eyebrows\n- Nails\n- Skin\""
+        value: "\"Popravljeno:\n\n- Zubi\n- Obrve\n- Nokti\n- Koža\""
         type: 0
         typeString:
       - title: Sequence
@@ -7040,7 +7040,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ ON
+        value: "NASTAVI ČITATI"
         type: 0
         typeString:
       - title: Sequence
@@ -7095,7 +7095,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"To be fixed:\n\n- Eyes\n\nMy eyes look awful.\""
+        value: "\"Za popraviti:\n\n- Oči\n\nOči mi izgledaju grozno.\""
         type: 0
         typeString:
       - title: Sequence
@@ -7254,7 +7254,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "It's a set of pipes leading to the bathroom downstairs. \n\nSomething could be attached to the holder in the middle."
+        value: "Niz cijevi koje vode do kupaonice u prizemlju.\n\nNa sredini bi se mogao pričvrstiti neki držač."
         type: 0
         typeString:
       - title: Sequence
@@ -7315,7 +7315,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -7364,7 +7364,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: USE PIPE VALVE
+        value: "UPOTRIJEBI VENTIL CIJEVI"
         type: 0
         typeString:
       - title: Sequence
@@ -7517,7 +7517,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's human skin.
+        value: "To je ljudska koža."
         type: 0
         typeString:
       - title: Sequence
@@ -7572,7 +7572,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -7725,7 +7725,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a small padlock with the symbol of an eye.
+        value: "To je mali lokot sa simbolom oka."
         type: 0
         typeString:
       - title: Sequence
@@ -7786,7 +7786,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -7835,7 +7835,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: USE EYE KEY
+        value: "UPOTRIJEBI KLJUČ OKA"
         type: 0
         typeString:
       - title: Sequence
@@ -7988,7 +7988,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's an EYE KEY (3 USES).
+        value: "To je KLJUČ OKA (3 uporabe)."
         type: 0
         typeString:
       - title: Sequence
@@ -8049,7 +8049,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: TAKE
+        value: "UZMI"
         type: 0
         typeString:
       - title: Sequence
@@ -8098,7 +8098,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -8251,7 +8251,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a small padlock with the symbol of an eye.
+        value: "To je mali lokot sa simbolom oka."
         type: 0
         typeString:
       - title: Sequence
@@ -8312,7 +8312,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: USE EYE KEY
+        value: "UPOTRIJEBI KLJUČ OKA"
         type: 0
         typeString:
       - title: Sequence
@@ -8361,7 +8361,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -8514,7 +8514,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a small padlock with the symbol of an eye.
+        value: "To je mali lokot sa simbolom oka."
         type: 0
         typeString:
       - title: Sequence
@@ -8575,7 +8575,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: USE EYE KEY
+        value: "UPOTRIJEBI KLJUČ OKA"
         type: 0
         typeString:
       - title: Sequence
@@ -8624,7 +8624,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -8777,7 +8777,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a note.
+        value: "To je bilješka."
         type: 0
         typeString:
       - title: Sequence
@@ -8838,7 +8838,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ
+        value: "PROČITAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -8893,7 +8893,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -8942,7 +8942,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"The hallways are empty.\n\nI'm stuck in here with all these mirrors.\""
+        value: "\"Hodnici su prazni.\n\nZaglavio sam ovdje, okružen ovim zrcalima.\""
         type: 0
         typeString:
       - title: Sequence
@@ -8997,7 +8997,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ ON
+        value: "NASTAVI ČITATI"
         type: 0
         typeString:
       - title: Sequence
@@ -9052,7 +9052,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"From now on, I''ll only look at the broken ones."'
+        value: "\"Od sada ću gledati samo slomljene.\""
         type: 0
         typeString:
       - title: Sequence
@@ -9211,7 +9211,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "It's a pair of rotating sockets.\n\nTwo small round objects could fit onto them."
+        value: "Par okretnih ležišta.\n\nNa njih bi stala dva mala okrugla predmeta."
         type: 0
         typeString:
       - title: Sequence
@@ -9272,7 +9272,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: USE HUMAN EYES
+        value: "UPOTRIJEBI LJUDSKE OČI"
         type: 0
         typeString:
       - title: Sequence
@@ -9321,7 +9321,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -9474,7 +9474,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: There's a note pinned to the back of the closet.
+        value: "Bilješka je pribijena na stražnju stranu ormara."
         type: 0
         typeString:
       - title: Sequence
@@ -9535,7 +9535,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ
+        value: "PROČITAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -9590,7 +9590,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -9639,7 +9639,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"I'll try again tomorrow.\n\nI've lost my saw.\""
+        value: "\"Pokušat ću opet sutra.\n\nIzgubio sam pilu.\""
         type: 0
         typeString:
       - title: Sequence
@@ -9798,7 +9798,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a PIPE VALVE.
+        value: "To je VENTIL CIJEVI."
         type: 0
         typeString:
       - title: Sequence
@@ -9859,7 +9859,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: TAKE
+        value: "UZMI"
         type: 0
         typeString:
       - title: Sequence
@@ -9908,7 +9908,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -10061,7 +10061,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: There's something on the bottom shelf.
+        value: "Nešto je na donjoj polici."
         type: 0
         typeString:
       - title: Sequence
@@ -10116,7 +10116,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -10269,7 +10269,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a note that's been slipped under your door.
+        value: "To je bilješka proturena ispod tvojih vrata."
         type: 0
         typeString:
       - title: Sequence
@@ -10330,7 +10330,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ
+        value: "PROČITAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -10385,7 +10385,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -10434,7 +10434,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"To all Block 28 residents,\n\nThis is an emergency. \n\nEvacuate the city immediately.\""
+        value: "\"Svim stanarima Bloka 28,\n\nOvo je hitno.\n\nSmjesta evakuirajte grad.\""
         type: 0
         typeString:
       - title: Sequence
@@ -10593,7 +10593,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Block 28 - Resident 256"'
+        value: "\"Blok 28 - Stanar 256\""
         type: 0
         typeString:
       - title: Sequence
@@ -10648,7 +10648,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -10801,7 +10801,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Block 28 - Resident 254"'
+        value: "\"Blok 28 - Stanar 254\""
         type: 0
         typeString:
       - title: Sequence
@@ -10856,7 +10856,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -11009,7 +11009,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Block 28 - Resident 255"'
+        value: "\"Blok 28 - Stanar 255\""
         type: 0
         typeString:
       - title: Sequence
@@ -11064,7 +11064,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -11217,7 +11217,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a small mirror with a note attached to it.
+        value: "To je malo zrcalo s pričvršćenom bilješkom."
         type: 0
         typeString:
       - title: Sequence
@@ -11278,7 +11278,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ
+        value: "PROČITAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -11333,7 +11333,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -11382,7 +11382,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"I know the code for the bridge.\n\nLet's help each other out.\""
+        value: "\"Znam šifru za most.\n\nPomozimo jedno drugome.\""
         type: 0
         typeString:
       - title: Sequence
@@ -11541,7 +11541,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a note.
+        value: "To je bilješka."
         type: 0
         typeString:
       - title: Sequence
@@ -11602,7 +11602,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ
+        value: "PROČITAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -11657,7 +11657,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -11706,7 +11706,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Please help me fix my special mirror.\n\nThe impact made it fall off the table and it broke.\n\nI don't know what to do without it.\""
+        value: "\"Molim te, pomozi mi popraviti moje posebno zrcalo.\n\nOd udara je palo sa stola i razbilo se.\n\nNe znam što ću bez njega.\""
         type: 0
         typeString:
       - title: Sequence
@@ -11865,7 +11865,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a MIRROR SHARD (2/3).
+        value: "To je KRHOTINA ZRCALA (2/3)."
         type: 0
         typeString:
       - title: Sequence
@@ -11926,7 +11926,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: TAKE
+        value: "UZMI"
         type: 0
         typeString:
       - title: Sequence
@@ -11975,7 +11975,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -12128,7 +12128,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a note.
+        value: "To je bilješka."
         type: 0
         typeString:
       - title: Sequence
@@ -12189,7 +12189,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ
+        value: "PROČITAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -12244,7 +12244,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -12293,7 +12293,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"My awful eyes are gone.\n\nThe pain will be worth it.\""
+        value: "\"Mojih groznih očiju više nema.\n\nBol će se isplatiti.\""
         type: 0
         typeString:
       - title: Sequence
@@ -12452,7 +12452,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -12507,7 +12507,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -12660,7 +12660,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a PAIR OF HUMAN EYES.
+        value: "To je PAR LJUDSKIH OČIJU."
         type: 0
         typeString:
       - title: Sequence
@@ -12721,7 +12721,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: TAKE
+        value: "UZMI"
         type: 0
         typeString:
       - title: Sequence
@@ -12770,7 +12770,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -12923,7 +12923,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a set of sockets with two human eyes on top of them.
+        value: "To je niz ležišta s dva ljudska oka na vrhu."
         type: 0
         typeString:
       - title: Sequence
@@ -12990,7 +12990,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ROTATE LEFT EYE
+        value: "OKRENI LIJEVO OKO"
         type: 0
         typeString:
       - title: Sequence
@@ -13039,7 +13039,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ROTATE RIGHT EYE
+        value: "OKRENI DESNO OKO"
         type: 0
         typeString:
       - title: Sequence
@@ -13088,7 +13088,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -13241,7 +13241,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a MIRROR SHARD (3/3).
+        value: "To je KRHOTINA ZRCALA (3/3)."
         type: 0
         typeString:
       - title: Sequence
@@ -13302,7 +13302,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: TAKE
+        value: "UZMI"
         type: 0
         typeString:
       - title: Sequence
@@ -13351,7 +13351,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -13504,7 +13504,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a note.
+        value: "To je bilješka."
         type: 0
         typeString:
       - title: Sequence
@@ -13565,7 +13565,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ
+        value: "PROČITAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -13620,7 +13620,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -13669,7 +13669,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"As promised:\n\nThe code for the bridge is \n2-2-0-0-0.\""
+        value: "\"Kako sam obećala:\n\nŠifra za most glasi:\n2-2-0-0-0.\""
         type: 0
         typeString:
       - title: Sequence
@@ -13828,7 +13828,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: 'It''s a small book of poems you''ve written about Maddie. '
+        value: "To je mala knjiga pjesama koje si napisao o Maddie. "
         type: 0
         typeString:
       - title: Sequence
@@ -13889,7 +13889,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: INSPECT
+        value: "PREGLEDAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -13944,7 +13944,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -13993,7 +13993,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "It's titled: \"My Heat in the Cold City\".\n\nYou've never shown her any of your poems, but writing things down makes them so delightfully real."
+        value: "Naslov glasi: \"Moja toplina u Hladnom gradu\".\n\nNikad joj nisi pokazao nijednu svoju pjesmu, ali kad ih zapišeš, postaju tako divno stvarne."
         type: 0
         typeString:
       - title: Sequence
@@ -14152,7 +14152,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "It's a packet of cigarettes.\n\nYou don't smoke, but Maddie does."
+        value: "Kutija cigareta.\n\nTi ne pušiš, ali Maddie puši."
         type: 0
         typeString:
       - title: Sequence
@@ -14207,7 +14207,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -14360,7 +14360,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "It's a poster of an old movie about a brave one-legged hero who protects a girl during a war.\n\nIt's one of Maddie's favorites."
+        value: "Plakat starog filma o hrabrom jednonogom junaku koji za vrijeme rata štiti djevojku.\n\nJedan od Maddienih najdražih."
         type: 0
         typeString:
       - title: Sequence
@@ -14415,7 +14415,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -14568,7 +14568,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Block 28 - Resident 255\n\nBack Entrance\""
+        value: "\"Blok 28 - Stanar 255\n\nStražnji ulaz\""
         type: 0
         typeString:
       - title: Sequence
@@ -14623,7 +14623,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -14776,7 +14776,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: The phone is ringing. It's Maddie.
+        value: "Telefon zvoni. To je Maddie."
         type: 0
         typeString:
       - title: Sequence
@@ -14837,7 +14837,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: PICK UP
+        value: "PRIMI"
         type: 0
         typeString:
       - title: Sequence
@@ -14892,7 +14892,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -14941,7 +14941,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Again, you don't have to come over.\n\nI'm fine, really.\""
+        value: "\"Ponavljam, ne moraš dolaziti.\n\nStvarno sam dobro.\""
         type: 0
         typeString:
       - title: Sequence
@@ -14996,7 +14996,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I'll come over anyway
+        value: "Svejedno ću doći."
         type: 0
         typeString:
       - title: Sequence
@@ -15051,7 +15051,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Think of your own safety, please."'
+        value: "\"Misli na vlastitu sigurnost, molim te.\""
         type: 0
         typeString:
       - title: Sequence
@@ -15112,7 +15112,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Don't worry
+        value: "Ne brini."
         type: 0
         typeString:
       - title: Sequence
@@ -15167,7 +15167,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Your safety matters more
+        value: "Tvoja je sigurnost važnija."
         type: 0
         typeString:
       - title: Sequence
@@ -15222,7 +15222,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Alright... if you insist.\n\nBut please don't misunderstand this.\""
+        value: "\"Dobro... ako baš inzistiraš.\n\nAli molim te, nemoj ovo shvatiti krivo.\""
         type: 0
         typeString:
       - title: Sequence
@@ -15283,7 +15283,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I'll be there soon
+        value: "Uskoro stižem."
         type: 0
         typeString:
       - title: Sequence
@@ -15338,7 +15338,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Take care
+        value: "Čuvaj se."
         type: 0
         typeString:
       - title: Sequence
@@ -15393,7 +15393,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Okay."'
+        value: "\"Dobro.\""
         type: 0
         typeString:
       - title: Sequence
@@ -15448,7 +15448,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Love you
+        value: "Volim te."
         type: 0
         typeString:
       - title: Sequence
@@ -15503,7 +15503,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "Maddie has already hung up.\n\nShe didn't hear you."
+        value: "Maddie je već spustila slušalicu.\n\nNije te čula."
         type: 0
         typeString:
       - title: Sequence
@@ -15558,7 +15558,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -15607,7 +15607,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"I''m already safe, I think."'
+        value: "\"Već sam na sigurnom. Mislim.\""
         type: 0
         typeString:
       - title: Sequence
@@ -15668,7 +15668,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Please let me come over
+        value: "Molim te, pusti me da dođem."
         type: 0
         typeString:
       - title: Sequence
@@ -15723,7 +15723,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: You sound unsure
+        value: "Zvučiš nesigurno."
         type: 0
         typeString:
       - title: Sequence
@@ -15778,7 +15778,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"It''s... well, I just don''t know what to say."'
+        value: "\"Pa... jednostavno ne znam što bih rekla.\""
         type: 0
         typeString:
       - title: Sequence
@@ -15833,7 +15833,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"...okay.\n\nDon't misunderstand this.\""
+        value: "\"...dobro.\n\nNemoj ovo shvatiti krivo.\""
         type: 0
         typeString:
       - title: Sequence
@@ -15888,7 +15888,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I won't
+        value: "Neću."
         type: 0
         typeString:
       - title: Sequence
@@ -15943,7 +15943,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's okay
+        value: "U redu je."
         type: 0
         typeString:
       - title: Sequence
@@ -15998,7 +15998,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"... you can come over.\n\nBut please don't misunderstand this.\""
+        value: "\"...možeš doći.\n\nAli molim te, nemoj ovo shvatiti krivo.\""
         type: 0
         typeString:
       - title: Sequence
@@ -16053,7 +16053,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Alright."'
+        value: "\"U redu.\""
         type: 0
         typeString:
       - title: Sequence
@@ -16212,7 +16212,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a keypad.
+        value: "To je tipkovnica."
         type: 0
         typeString:
       - title: Sequence
@@ -16273,7 +16273,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: INSPECT
+        value: "PREGLEDAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -16328,7 +16328,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -16377,7 +16377,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: 'The text on the screen reads: "Block 29 Bridge Access".'
+        value: "Tekst na ekranu glasi: \"Pristup mostu Bloka 29\"."
         type: 0
         typeString:
       - title: Sequence
@@ -16438,7 +16438,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "ENTER CODE:\n2-2-0-0-0"
+        value: "UNESI ŠIFRU:\n2-2-0-0-0"
         type: 0
         typeString:
       - title: Sequence
@@ -16591,7 +16591,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"..."'
+        value: "\"...\""
         type: 0
         typeString:
       - title: Sequence
@@ -16646,7 +16646,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Where is Block 29?
+        value: "Gdje je Blok 29?"
         type: 0
         typeString:
       - title: Sequence
@@ -16701,7 +16701,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"...for so long... and what do I get in return?..."'
+        value: "\"...toliko dugo... a što zauzvrat dobivam?...\""
         type: 0
         typeString:
       - title: Sequence
@@ -16762,7 +16762,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Do you need help?
+        value: "Trebaš li pomoć?"
         type: 0
         typeString:
       - title: Sequence
@@ -16817,7 +16817,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"...hundreds... no, thousands... dead..."'
+        value: "\"...stotine... ne, tisuće... mrtvih...\""
         type: 0
         typeString:
       - title: Sequence
@@ -16872,7 +16872,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -16927,7 +16927,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"...where is my reward?..."'
+        value: "\"...gdje je moja nagrada?...\""
         type: 0
         typeString:
       - title: Sequence
@@ -16982,7 +16982,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -17037,7 +17037,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"...it hurts..."'
+        value: "\"...boli...\""
         type: 0
         typeString:
       - title: Sequence
@@ -17092,7 +17092,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -17147,7 +17147,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"...there's some pills in the bunker to your left. \n\n...bring them, and I'll get you to Block 29....\""
+        value: "\"...u bunkeru s tvoje lijeve strane ima tableta.\n\n...donesi mi ih i prebacit ću te do Bloka 29....\""
         type: 0
         typeString:
       - title: Sequence
@@ -17202,7 +17202,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I need to get to Block 29
+        value: "Moram doći do Bloka 29."
         type: 0
         typeString:
       - title: Sequence
@@ -17257,7 +17257,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -17312,7 +17312,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: The pilot gives you the BUNKER KEY.
+        value: "Pilot ti daje KLJUČ BUNKERA."
         type: 0
         typeString:
       - title: Sequence
@@ -17367,7 +17367,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -17416,7 +17416,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"...I thought she would..."'
+        value: "\"...mislila sam da hoće...\""
         type: 0
         typeString:
       - title: Sequence
@@ -17471,7 +17471,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -17630,7 +17630,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"..."'
+        value: "\"...\""
         type: 0
         typeString:
       - title: Sequence
@@ -17685,7 +17685,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -17838,7 +17838,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's locked.
+        value: "Zaključano."
         type: 0
         typeString:
       - title: Sequence
@@ -17899,7 +17899,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: USE BUNKER KEY
+        value: "UPOTRIJEBI KLJUČ BUNKERA"
         type: 0
         typeString:
       - title: Sequence
@@ -17948,7 +17948,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -18101,7 +18101,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "The door is boarded up.\n\nThe keyhole is surprisingly large."
+        value: "Vrata su zabijena daskama.\n\nKljučanica je neobično velika."
         type: 0
         typeString:
       - title: Sequence
@@ -18162,7 +18162,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LOOK THROUGH KEYHOLE
+        value: "POGLEDAJ KROZ KLJUČANICU"
         type: 0
         typeString:
       - title: Sequence
@@ -18217,7 +18217,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -18266,7 +18266,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: There's a bottle of pills on the table.
+        value: "Na stolu je bočica tableta."
         type: 0
         typeString:
       - title: Sequence
@@ -18327,7 +18327,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: STOP LOOKING
+        value: "PRESTANI GLEDATI"
         type: 0
         typeString:
       - title: Sequence
@@ -18376,7 +18376,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: USE SAW
+        value: "UPOTRIJEBI PILU"
         type: 0
         typeString:
       - title: Sequence
@@ -18529,7 +18529,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a note written by the pilot.
+        value: "To je bilješka koju je napisao pilot."
         type: 0
         typeString:
       - title: Sequence
@@ -18590,7 +18590,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ
+        value: "PROČITAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -18645,7 +18645,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -18694,7 +18694,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"She needs me."'
+        value: "\"Trebam je.\""
         type: 0
         typeString:
       - title: Sequence
@@ -18749,7 +18749,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ ON
+        value: "NASTAVI ČITATI"
         type: 0
         typeString:
       - title: Sequence
@@ -18804,7 +18804,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"I''d do anything for her."'
+        value: "\"Za nju bih učinio sve.\""
         type: 0
         typeString:
       - title: Sequence
@@ -18963,7 +18963,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: The phone is ringing. It's Maddie.
+        value: "Telefon zvoni. To je Maddie."
         type: 0
         typeString:
       - title: Sequence
@@ -19024,7 +19024,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: PICK UP
+        value: "PRIMI"
         type: 0
         typeString:
       - title: Sequence
@@ -19079,7 +19079,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -19128,7 +19128,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Actually, don't come over.\n\nPlease don't.\""
+        value: "\"Zapravo, nemoj dolaziti.\n\nMolim te, nemoj.\""
         type: 0
         typeString:
       - title: Sequence
@@ -19189,7 +19189,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Why not?
+        value: "Zašto ne?"
         type: 0
         typeString:
       - title: Sequence
@@ -19244,7 +19244,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: What do you mean?
+        value: "Kako to misliš?"
         type: 0
         typeString:
       - title: Sequence
@@ -19299,7 +19299,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"I only called because of that bomb.\n\nDon't take this the wrong way.\""
+        value: "\"Nazvala sam samo zbog te bombe.\n\nNemoj ovo shvatiti pogrešno.\""
         type: 0
         typeString:
       - title: Sequence
@@ -19354,7 +19354,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -19409,7 +19409,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"I was just worried about you. \n\nI shouldn't have called. Maybe it's my fault.\""
+        value: "\"Samo sam se zabrinula za tebe.\n\nNisam te trebala zvati. Možda je sve to moja krivnja.\""
         type: 0
         typeString:
       - title: Sequence
@@ -19476,7 +19476,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's not your fault
+        value: "Nije tvoja krivnja."
         type: 0
         typeString:
       - title: Sequence
@@ -19531,7 +19531,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Are you safe?
+        value: "Jesi li na sigurnom?"
         type: 0
         typeString:
       - title: Sequence
@@ -19586,7 +19586,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I need to see you
+        value: "Moram te vidjeti."
         type: 0
         typeString:
       - title: Sequence
@@ -19641,7 +19641,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"It doesn't matter.\n\nPlease go. Leave me alone.\""
+        value: "\"Nije važno.\n\nMolim te, idi. Ostavi me na miru.\""
         type: 0
         typeString:
       - title: Sequence
@@ -19696,7 +19696,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Yes, I'm safe.\n\nPlease go. Leave me alone.\""
+        value: "\"Da, na sigurnom sam.\n\nMolim te, idi. Ostavi me na miru.\""
         type: 0
         typeString:
       - title: Sequence
@@ -19751,7 +19751,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Leave me alone. Please, just go."'
+        value: "\"Ostavi me na miru. Molim te, samo idi.\""
         type: 0
         typeString:
       - title: Sequence
@@ -19806,7 +19806,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Maddie?
+        value: "Maddie?"
         type: 0
         typeString:
       - title: Sequence
@@ -19861,7 +19861,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "She's hung up the phone.\n\nYou should go to her."
+        value: "Spustila je slušalicu.\n\nTrebao bi otići k njoj."
         type: 0
         typeString:
       - title: Sequence
@@ -19916,7 +19916,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -20069,7 +20069,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "It's a SHOTGUN.\n\nYou don't know how to use it. \nYou're not like the pilot."
+        value: "SAČMARICA.\n\nNe znaš se njome služiti.\nNisi poput pilota."
         type: 0
         typeString:
       - title: Sequence
@@ -20124,7 +20124,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -20277,7 +20277,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a SAW.
+        value: "To je PILA."
         type: 0
         typeString:
       - title: Sequence
@@ -20338,7 +20338,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: TAKE
+        value: "UZMI"
         type: 0
         typeString:
       - title: Sequence
@@ -20387,7 +20387,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -20540,7 +20540,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: The door is boarded up.
+        value: "Vrata su zabijena daskama."
         type: 0
         typeString:
       - title: Sequence
@@ -20601,7 +20601,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: USE SAW
+        value: "UPOTRIJEBI PILU"
         type: 0
         typeString:
       - title: Sequence
@@ -20650,7 +20650,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -20803,7 +20803,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: The door is boarded up.
+        value: "Vrata su zabijena daskama."
         type: 0
         typeString:
       - title: Sequence
@@ -20864,7 +20864,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: USE SAW
+        value: "UPOTRIJEBI PILU"
         type: 0
         typeString:
       - title: Sequence
@@ -20913,7 +20913,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -21066,7 +21066,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's some kind of surveillance system.
+        value: "To je neki nadzorni sustav."
         type: 0
         typeString:
       - title: Sequence
@@ -21127,7 +21127,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: INSPECT
+        value: "PREGLEDAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -21182,7 +21182,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -21231,7 +21231,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: The monitors show the entirety of Maddie's apartment, seemingly recorded using several hidden cameras.
+        value: "Monitori prikazuju čitav Maddien stan, snimljen nekoliko skrivenih kamera."
         type: 0
         typeString:
       - title: Sequence
@@ -21304,7 +21304,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: CHECK LIVING ROOM
+        value: "PROVJERI DNEVNI BORAVAK"
         type: 0
         typeString:
       - title: Sequence
@@ -21359,7 +21359,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: CHECK KITCHEN
+        value: "PROVJERI KUHINJU"
         type: 0
         typeString:
       - title: Sequence
@@ -21414,7 +21414,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: CHECK BEDROOM
+        value: "PROVJERI SPAVAĆU SOBU"
         type: 0
         typeString:
       - title: Sequence
@@ -21469,7 +21469,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "Her living room is unkempt and everything looks fragile.\n\nA packet of cigarettes lies on the table."
+        value: "Njezin je dnevni boravak zapušten. Sve djeluje krhko.\n\nNa stolu leži kutija cigareta."
         type: 0
         typeString:
       - title: Sequence
@@ -21524,7 +21524,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "The kitchen is unremarkable.\n\nSome unwashed plates are stacked on the counter.\n"
+        value: "Kuhinja je neugledna.\n\nNekoliko neopranih tanjura naslagano je na pultu.\n"
         type: 0
         typeString:
       - title: Sequence
@@ -21579,7 +21579,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "You see Maddie lying on the couch, watching TV.\n\nAs always, she's perfect."
+        value: "Vidiš Maddie kako leži na kauču i gleda televiziju.\n\nKao i uvijek, savršena je."
         type: 0
         typeString:
       - title: Sequence
@@ -21634,7 +21634,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -21683,7 +21683,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -21842,7 +21842,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a note written by the pilot.
+        value: "To je bilješka koju je napisao pilot."
         type: 0
         typeString:
       - title: Sequence
@@ -21903,7 +21903,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ
+        value: "PROČITAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -21958,7 +21958,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -22007,7 +22007,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"I'm protecting her, so it's only fair to know what she's up to.\n\nI guess it feels nice to be so connected.\""
+        value: "\"Štitim je, pa je posve pošteno da znam što smjera.\n\nValjda godi biti s nekim tako bliskim.\""
         type: 0
         typeString:
       - title: Sequence
@@ -22166,7 +22166,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a note written by the pilot.
+        value: "To je bilješka koju je napisao pilot."
         type: 0
         typeString:
       - title: Sequence
@@ -22227,7 +22227,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ
+        value: "PROČITAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -22282,7 +22282,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -22331,7 +22331,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"When I was ordered to defend Block 29, I thought I was dreaming, I was so happy. \n\nNobody will get between us. She's safe with me.\""
+        value: "\"Kad su mi naredili da branim Blok 29, mislio sam da sanjam. Tako sam bio sretan.\n\nNitko neće stati između nas. Sa mnom je sigurna.\""
         type: 0
         typeString:
       - title: Sequence
@@ -22490,7 +22490,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "It's a bottle of pills.\n\nYou should bring it to the pilot."
+        value: "To je bočica tableta.\n\nTrebao bi je odnijeti pilotu."
         type: 0
         typeString:
       - title: Sequence
@@ -22551,7 +22551,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: TAKE
+        value: "UZMI"
         type: 0
         typeString:
       - title: Sequence
@@ -22600,7 +22600,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -22753,7 +22753,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: You shouldn't exit the bunker before getting the pilot's pills.
+        value: "Ne smiješ izaći iz bunkera dok ne uzmeš pilotove tablete."
         type: 0
         typeString:
       - title: Sequence
@@ -22808,7 +22808,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -22961,7 +22961,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"..."'
+        value: "\"...\""
         type: 0
         typeString:
       - title: Sequence
@@ -23022,7 +23022,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: GIVE PILLS
+        value: "DAJ TABLETE"
         type: 0
         typeString:
       - title: Sequence
@@ -23077,7 +23077,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -23126,7 +23126,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: The pilot takes the pills.
+        value: "Pilot uzima tablete."
         type: 0
         typeString:
       - title: Sequence
@@ -23181,7 +23181,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -23236,7 +23236,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"...thank you..."'
+        value: "\"...hvala ti...\""
         type: 0
         typeString:
       - title: Sequence
@@ -23291,7 +23291,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Get me to Block 29
+        value: "Odvedi me do Bloka 29."
         type: 0
         typeString:
       - title: Sequence
@@ -23346,7 +23346,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"...I'm sorry, I can't.\n\nI don't have a key. I don't have anything.\""
+        value: "\"...žao mi je, ne mogu.\n\nNemam ključ. Nemam baš ništa.\""
         type: 0
         typeString:
       - title: Sequence
@@ -23401,7 +23401,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -23456,7 +23456,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Besides, I wouldn''t let you. Who knows what you''d do..."'
+        value: "\"Uostalom, ne bih ti ni dopustila. Tko zna što bi učinio...\""
         type: 0
         typeString:
       - title: Sequence
@@ -23517,7 +23517,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: What are you talking about?
+        value: "O čemu govoriš?"
         type: 0
         typeString:
       - title: Sequence
@@ -23572,7 +23572,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"I'm sorry...\n\nI don't deserve any of this...\""
+        value: "\"Žao mi je...\n\nNe zaslužujem ništa od ovoga...\""
         type: 0
         typeString:
       - title: Sequence
@@ -23627,7 +23627,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: You lied to me
+        value: "Lagala si mi."
         type: 0
         typeString:
       - title: Sequence
@@ -23682,7 +23682,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -23737,7 +23737,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"...stay away from Maddie..."'
+        value: "\"...kloni se od Maddie...\""
         type: 0
         typeString:
       - title: Sequence
@@ -23792,7 +23792,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -23847,7 +23847,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"...I''ve lost my leg for that girl."'
+        value: "\"...izgubio sam nogu zbog te djevojke.\""
         type: 0
         typeString:
       - title: Sequence
@@ -23902,7 +23902,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -23957,7 +23957,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "The pilot doesn't respond anymore.\n\nYou don't need him."
+        value: "Pilot više ne odgovara.\n\nNe trebaš ga."
         type: 0
         typeString:
       - title: Sequence
@@ -24012,7 +24012,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -24061,7 +24061,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"What have you lost?"'
+        value: "\"Što si to izgubio?\""
         type: 0
         typeString:
       - title: Sequence
@@ -24116,7 +24116,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -24275,7 +24275,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "The pilot doesn't respond anymore.\n\nYou don't need him."
+        value: "Pilot više ne odgovara.\n\nNe trebaš ga."
         type: 0
         typeString:
       - title: Sequence
@@ -24330,7 +24330,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -24483,7 +24483,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: The door is boarded up.
+        value: "Vrata su zabijena daskama."
         type: 0
         typeString:
       - title: Sequence
@@ -24544,7 +24544,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: USE SAW
+        value: "UPOTRIJEBI PILU"
         type: 0
         typeString:
       - title: Sequence
@@ -24593,7 +24593,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -24746,7 +24746,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Block 29 - Elevators"'
+        value: "\"Blok 29 - Dizala\""
         type: 0
         typeString:
       - title: Sequence
@@ -24801,7 +24801,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -24954,7 +24954,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's your phone.
+        value: "To je tvoj telefon."
         type: 0
         typeString:
       - title: Sequence
@@ -25015,7 +25015,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: CALL MADDIE
+        value: "NAZOVI MADDIE"
         type: 0
         typeString:
       - title: Sequence
@@ -25070,7 +25070,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -25119,7 +25119,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Stay away."'
+        value: "\"Kloni se.\""
         type: 0
         typeString:
       - title: Sequence
@@ -25180,7 +25180,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Why?
+        value: "Zašto?"
         type: 0
         typeString:
       - title: Sequence
@@ -25235,7 +25235,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I can't
+        value: "Ne mogu."
         type: 0
         typeString:
       - title: Sequence
@@ -25290,7 +25290,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"I called you because a bomb dropped. We're at war. \n\nI wanted to know if you were okay. That's the only reason I called.\""
+        value: "\"Nazvala sam te jer je pala bomba. U ratu smo.\n\nHtjela sam znati jesi li dobro. Samo zbog toga sam nazvala.\""
         type: 0
         typeString:
       - title: Sequence
@@ -25345,7 +25345,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -25400,7 +25400,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Why do you think that means anything?\n\nYou always think everything \nmeans something.\""
+        value: "\"Zašto misliš da to išta znači?\n\nUvijek misliš da sve nešto znači.\""
         type: 0
         typeString:
       - title: Sequence
@@ -25455,7 +25455,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -25510,7 +25510,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"I don''t even know you."'
+        value: "\"Ni ne poznajem te.\""
         type: 0
         typeString:
       - title: Sequence
@@ -25565,7 +25565,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -25620,7 +25620,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"You scare me. Stay away."'
+        value: "\"Plašiš me. Kloni se.\""
         type: 0
         typeString:
       - title: Sequence
@@ -25693,7 +25693,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I can't
+        value: "Ne mogu."
         type: 0
         typeString:
       - title: Sequence
@@ -25748,7 +25748,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I love you
+        value: "Volim te."
         type: 0
         typeString:
       - title: Sequence
@@ -25803,7 +25803,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I need you
+        value: "Trebam te."
         type: 0
         typeString:
       - title: Sequence
@@ -25858,7 +25858,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I'm coming over
+        value: "Dolazim."
         type: 0
         typeString:
       - title: Sequence
@@ -25913,7 +25913,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"I didn't want it to be like this. \n\nI shouldn't have called.\""
+        value: "\"Nisam htjela da ovako ispadne.\n\nNisam te trebala zvati.\""
         type: 0
         typeString:
       - title: Sequence
@@ -25968,7 +25968,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -26023,7 +26023,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "Maddie's hung up the phone.\n\nYou've come so far. You can't stop now."
+        value: "Maddie je spustila slušalicu.\n\nDošao si tako daleko. Ne možeš se sada zaustaviti."
         type: 0
         typeString:
       - title: Sequence
@@ -26078,7 +26078,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -26231,7 +26231,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: You should call Maddie first.
+        value: "Najprije bi trebao nazvati Maddie."
         type: 0
         typeString:
       - title: Sequence
@@ -26286,7 +26286,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -26439,7 +26439,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Block 29 - Resident 471"'
+        value: "\"Blok 29 - Stanar 471\""
         type: 0
         typeString:
       - title: Sequence
@@ -26494,7 +26494,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -26647,7 +26647,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Block 29 - Resident 472"'
+        value: "\"Blok 29 - Stanar 472\""
         type: 0
         typeString:
       - title: Sequence
@@ -26702,7 +26702,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -26855,7 +26855,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Block 29 - Resident 473"'
+        value: "\"Blok 29 - Stanar 473\""
         type: 0
         typeString:
       - title: Sequence
@@ -26910,7 +26910,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -27063,7 +27063,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Block 29 - Resident 474"'
+        value: "\"Blok 29 - Stanar 474\""
         type: 0
         typeString:
       - title: Sequence
@@ -27118,7 +27118,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -27271,7 +27271,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Block 29 - Resident 475"'
+        value: "\"Blok 29 - Stanar 475\""
         type: 0
         typeString:
       - title: Sequence
@@ -27326,7 +27326,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -27479,7 +27479,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Block 29 - Resident 476\n\nMaddie\""
+        value: "\"Blok 29 - Stanar 476\n\nMaddie\""
         type: 0
         typeString:
       - title: Sequence
@@ -27534,7 +27534,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -27687,7 +27687,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "Maddie has slightly opened the door.\n\nYou can't see her, but you know she's in there."
+        value: "Maddie je odškrinula vrata.\n\nNe vidiš je, ali znaš da je unutra."
         type: 0
         typeString:
       - title: Sequence
@@ -27754,7 +27754,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Maddie?
+        value: "Maddie?"
         type: 0
         typeString:
       - title: Sequence
@@ -27809,7 +27809,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I'm here
+        value: "Ovdje sam."
         type: 0
         typeString:
       - title: Sequence
@@ -27864,7 +27864,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Get out of my apartment. Please, just leave me alone."'
+        value: "\"Gubi se iz mog stana. Molim te, ostavi me na miru.\""
         type: 0
         typeString:
       - title: Sequence
@@ -27919,7 +27919,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -27974,7 +27974,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"What do you want from me? \n\nWhat the hell do you want?\""
+        value: "\"Što želiš od mene?\n\nŠto, dovraga, želiš?\""
         type: 0
         typeString:
       - title: Sequence
@@ -28029,7 +28029,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I'll protect you
+        value: "Zaštitit ću te."
         type: 0
         typeString:
       - title: Sequence
@@ -28084,7 +28084,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Protect me? From what?\n\nI'm already safe because of that pilot.\" "
+        value: "\"Da me zaštitiš? Od čega?\n\nVeć sam sigurna, zahvaljujući onom pilotu.\""
         type: 0
         typeString:
       - title: Sequence
@@ -28139,7 +28139,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -28194,7 +28194,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"He lost his leg to keep me safe.\n\nIsn't that brave?\""
+        value: "\"Izgubio je nogu kako bih ja bila sigurna.\n\nZar to nije hrabro?\""
         type: 0
         typeString:
       - title: Sequence
@@ -28249,7 +28249,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -28304,7 +28304,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"...what am I even talking about?\n\nLeave me alone. Just go.\""
+        value: "\"...o čemu ja uopće govorim?\n\nOstavi me na miru. Samo idi.\""
         type: 0
         typeString:
       - title: Sequence
@@ -28359,7 +28359,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -28408,7 +28408,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"...he lost his leg for me..."'
+        value: "\"...izgubio je nogu zbog mene...\""
         type: 0
         typeString:
       - title: Sequence
@@ -28463,7 +28463,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -28518,7 +28518,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -28671,7 +28671,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"...he lost his leg for me...\n\n...so brave...\""
+        value: "\"...izgubio je nogu zbog mene...\n\n...tako hrabar...\""
         type: 0
         typeString:
       - title: Sequence
@@ -28726,7 +28726,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -28879,7 +28879,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: You've come so far. You can't stop now.
+        value: "Došao si tako daleko. Ne možeš sada stati."
         type: 0
         typeString:
       - title: Sequence
@@ -28934,7 +28934,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -29087,7 +29087,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "You notice the SAW you took from the bunker.\n\nYou could be brave too."
+        value: "Primjećuješ PILU koju si uzeo iz bunkera.\n\nI ti bi mogao biti hrabar."
         type: 0
         typeString:
       - title: Sequence
@@ -29148,7 +29148,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: INSPECT
+        value: "PREGLEDAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -29203,7 +29203,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -29252,7 +29252,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "You could be so brave.\n\nSo brave.\n\nMaddie will love you for this."
+        value: "Mogao bi biti tako hrabar.\n\nTako hrabar.\n\nMaddie će te zbog toga voljeti."
         type: 0
         typeString:
       - title: Sequence
@@ -29313,7 +29313,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: SAW OFF LEG
+        value: "PREPILI NOGU"
         type: 0
         typeString:
       - title: Sequence
@@ -29362,7 +29362,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -29417,7 +29417,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "You can't stop now.\n\nMaddie will love you if you're brave."
+        value: "Ne možeš se sada zaustaviti.\n\nMaddie će te voljeti, ako budeš hrabar."
         type: 0
         typeString:
       - title: Sequence
@@ -29576,7 +29576,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"What have you done to yourself?\n\nWhat is wrong with you?\""
+        value: "\"Što si to učinio sebi?\n\nŠto nije u redu s tobom?\""
         type: 0
         typeString:
       - title: Sequence
@@ -29637,7 +29637,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I'm brave
+        value: "Hrabar sam."
         type: 0
         typeString:
       - title: Sequence
@@ -29692,7 +29692,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I'd do anything for you
+        value: "Za tebe bih učinio sve."
         type: 0
         typeString:
       - title: Sequence
@@ -29747,7 +29747,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Stay the hell away from me.\n\nGet out of my apartment.\""
+        value: "\"Nosi se dovraga od mene.\n\nGubi se iz mog stana.\""
         type: 0
         typeString:
       - title: Sequence
@@ -29802,7 +29802,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -29857,7 +29857,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Maddie cries softly.
+        value: "Maddie tiho plače."
         type: 0
         typeString:
       - title: Sequence
@@ -29912,7 +29912,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -29961,7 +29961,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Oh, God..."'
+        value: "\"O, Bože...\""
         type: 0
         typeString:
       - title: Sequence
@@ -30016,7 +30016,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -30175,7 +30175,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Maddie cries softly.
+        value: "Maddie tiho plače."
         type: 0
         typeString:
       - title: Sequence
@@ -30230,7 +30230,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -30383,7 +30383,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Please go..."'
+        value: "\"Molim te, idi...\""
         type: 0
         typeString:
       - title: Sequence
@@ -30438,7 +30438,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I'll be perfect
+        value: "Bit ću savršen."
         type: 0
         typeString:
       - title: Sequence
@@ -30493,7 +30493,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"...what the hell are you talking about?"'
+        value: "\"...o čemu ti to, dovraga, govoriš?\""
         type: 0
         typeString:
       - title: Sequence
@@ -30548,7 +30548,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: HOLD SCREWDRIVERS
+        value: "DRŽI ODVIJAČE"
         type: 0
         typeString:
       - title: Sequence
@@ -30603,7 +30603,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "The screwdrivers look sharp enough. \n\nYou'll be perfect."
+        value: "Odvijači izgledaju dovoljno oštro.\n\nBit ćeš savršen."
         type: 0
         typeString:
       - title: Sequence
@@ -30664,7 +30664,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: STAB RIGHT EYE
+        value: "PROBODI DESNO OKO"
         type: 0
         typeString:
       - title: Sequence
@@ -30719,7 +30719,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: STAB LEFT EYE
+        value: "PROBODI LIJEVO OKO"
         type: 0
         typeString:
       - title: Sequence
@@ -30774,7 +30774,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "It hurts.\n\nMaddie will love you."
+        value: "Boli.\n\nMaddie će te voljeti."
         type: 0
         typeString:
       - title: Sequence
@@ -30829,7 +30829,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "It hurts.\n\nMaddie will love you."
+        value: "Boli.\n\nMaddie će te voljeti."
         type: 0
         typeString:
       - title: Sequence
@@ -30884,7 +30884,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -30939,7 +30939,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -30994,7 +30994,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Please stop, \nI'm begging you."
+        value: "\"Molim te, prestani,\npreklinjem te.\""
         type: 0
         typeString:
       - title: Sequence
@@ -31049,7 +31049,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Please stop, \nI'm begging you.\""
+        value: "\"Molim te, prestani,\npreklinjem te.\""
         type: 0
         typeString:
       - title: Sequence
@@ -31104,7 +31104,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: STAB RIGHT EYE
+        value: "PROBODI DESNO OKO"
         type: 0
         typeString:
       - title: Sequence
@@ -31153,7 +31153,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: STAB LEFT EYE
+        value: "PROBODI LIJEVO OKO"
         type: 0
         typeString:
       - title: Sequence
@@ -31202,7 +31202,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I love you
+        value: "Volim te."
         type: 0
         typeString:
       - title: Sequence
@@ -31257,7 +31257,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Oh God, please stop."'
+        value: "\"O Bože, molim te, prestani.\""
         type: 0
         typeString:
       - title: Sequence
@@ -31312,7 +31312,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -31367,7 +31367,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"I'll do whatever you want, \njust stop, please stop.\""
+        value: "\"Učinit ću što god želiš,\nsamo prestani, molim te prestani.\""
         type: 0
         typeString:
       - title: Sequence
@@ -31422,7 +31422,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -31477,7 +31477,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"...I love you!\n\nI love you so much...\""
+        value: "\"...volim te!\n\nToliko te volim...\""
         type: 0
         typeString:
       - title: Sequence
@@ -31532,7 +31532,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: I love you
+        value: "Volim te."
         type: 0
         typeString:
       - title: Sequence
@@ -31587,7 +31587,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: '"Oh God, please stop."'
+        value: "\"O Bože, molim te, prestani.\""
         type: 0
         typeString:
       - title: Sequence
@@ -31642,7 +31642,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -31697,7 +31697,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"I'll do whatever you want, \njust stop, please stop.\""
+        value: "\"Učinit ću što god želiš,\nsamo prestani, molim te prestani.\""
         type: 0
         typeString:
       - title: Sequence
@@ -31752,7 +31752,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -31807,7 +31807,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"...I love you!\n\nI love you so much...\""
+        value: "\"...volim te!\n\nToliko te volim...\""
         type: 0
         typeString:
       - title: Sequence
@@ -31966,7 +31966,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: There's a note in the cupboard.
+        value: "U ormariću je bilješka."
         type: 0
         typeString:
       - title: Sequence
@@ -32027,7 +32027,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: READ
+        value: "PROČITAJ"
         type: 0
         typeString:
       - title: Sequence
@@ -32082,7 +32082,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -32131,7 +32131,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "\"Everything's broken and leaking and old.\n\nThey said they'd send someone over to fix things up, but they never did.\""
+        value: "\"Sve je slomljeno, propušta i dotrajalo.\n\nRekli su da će poslati nekoga da to popravi, ali nikad nisu.\""
         type: 0
         typeString:
       - title: Sequence
@@ -32290,7 +32290,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a model fighter jet.
+        value: "To je maketa borbenog aviona."
         type: 0
         typeString:
       - title: Sequence
@@ -32345,7 +32345,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -32498,7 +32498,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's an empty sink.
+        value: "To je prazan umivaonik."
         type: 0
         typeString:
       - title: Sequence
@@ -32553,7 +32553,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -32706,7 +32706,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: It's a packet of Maddie's cigarettes.
+        value: "To je kutija Maddienih cigareta."
         type: 0
         typeString:
       - title: Sequence
@@ -32761,7 +32761,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -32914,7 +32914,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "It's the door to Maddie's bedroom.\n\nIt's locked."
+        value: "Vrata Maddiene spavaće sobe.\n\nZaključana su."
         type: 0
         typeString:
       - title: Sequence
@@ -32969,7 +32969,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -33122,7 +33122,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "It's a large mirror. \n\nThere's a pair of screwdrivers in front of it."
+        value: "Veliko zrcalo.\n\nPred njim leži par odvijača."
         type: 0
         typeString:
       - title: Sequence
@@ -33183,7 +33183,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LOOK INTO MIRROR
+        value: "POGLEDAJ U ZRCALO"
         type: 0
         typeString:
       - title: Sequence
@@ -33238,7 +33238,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LEAVE
+        value: "IDEM"
         type: 0
         typeString:
       - title: Sequence
@@ -33287,7 +33287,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -33342,7 +33342,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "But you can fix these imperfections.\n\nYou can be flawless and Maddie will love you.\n\nYou just need to show her."
+        value: "Ali te nedostatke možeš ispraviti.\n\nMožeš biti besprijekoran i Maddie će te voljeti.\n\nSamo joj to moraš pokazati."
         type: 0
         typeString:
       - title: Sequence
@@ -33397,7 +33397,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: ...
+        value: "..."
         type: 0
         typeString:
       - title: Sequence
@@ -33452,7 +33452,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: Your eyes look awful.
+        value: "Oči ti izgledaju grozno."
         type: 0
         typeString:
       - title: Sequence
@@ -33507,7 +33507,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: TAKE SCREWDRIVERS
+        value: "UZMI ODVIJAČE"
         type: 0
         typeString:
       - title: Sequence
@@ -33556,7 +33556,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "You see your face.\n\nYou look tired, but tender, determined.\n\nWhy can't Maddie love you?"
+        value: "Vidiš vlastito lice.\n\nIzgledaš umorno, ali nježno i odlučno.\n\nZašto te Maddie ne može voljeti?"
         type: 0
         typeString:
       - title: Sequence
@@ -33611,7 +33611,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: LOOK CLOSER
+        value: "POGLEDAJ IZBLIZA"
         type: 0
         typeString:
       - title: Sequence
@@ -33666,7 +33666,7 @@ MonoBehaviour:
         type: 0
         typeString:
       - title: Dialogue Text
-        value: "...it must be your eyes. \n\nThey're muddy and bloodshot and weak."
+        value: "...to su zacijelo tvoje oči.\n\nMutne, krvave i iznurene."
         type: 0
         typeString:
       - title: Sequence

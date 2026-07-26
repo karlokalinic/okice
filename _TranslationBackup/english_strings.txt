@@ -1,0 +1,257 @@
+'"..."'
+'"...for so long... and what do I get in return?..."'
+'"...he lost his leg for me..."'
+'"...hundreds... no, thousands... dead..."'
+'"...I thought she would..."'
+'"...it hurts..."'
+"...it must be your eyes. \n\nThey're muddy and bloodshot and weak."
+'"...I''ve lost my leg for that girl."'
+'"...okay. But I don''t think the bridge to Block 29 is still open."'
+'"...stay away from Maddie..."'
+'"...thank you..."'
+'"...what the hell are you talking about?"'
+'"...where is my reward?..."'
+"\"... you can come over.\n\nBut please don't misunderstand this.\""
+"\"...he lost his leg for me...\n\n...so brave...\""
+"\"...I love you!\n\nI love you so much...\""
+"\"...I'm sorry, I can't.\n\nI don't have a key. I don't have anything.\""
+"\"...okay.\n\nDon't misunderstand this.\""
+"\"...there's some pills in the bunker to your left. \n\n...bring them, and I'll get you to Block 29....\""
+"\"...what am I even talking about?\n\nLeave me alone. Just go.\""
+"\"Actually, don't come over.\n\nPlease don't.\""
+"\"Again, you don't have to come over.\n\nI'm fine, really.\""
+"\"Alright... if you insist.\n\nBut please don't misunderstand this.\""
+"\"As promised:\n\nThe code for the bridge is \n2-2-0-0-0.\""
+"\"Block 28 - Resident 255\n\nBack Entrance\""
+"\"Block 29 - Resident 476\n\nMaddie\""
+"\"Everything's broken and leaking and old.\n\nThey said they'd send someone over to fix things up, but they never did.\""
+"\"Fixed:\n\n- Teeth\n- Eyebrows\n- Nails\n- Skin\""
+"\"He lost his leg to keep me safe.\n\nIsn't that brave?\""
+"\"I called you because a bomb dropped. We're at war. \n\nI wanted to know if you were okay. That's the only reason I called.\""
+"\"I didn't want it to be like this. \n\nI shouldn't have called.\""
+"\"I don't know!\" the overseer shouts, seemingly louder than she wanted to. \n\n\"He's locked himself in his apartment. I don't know what he's doing in there.\""
+"\"I know the code for the bridge.\n\nLet's help each other out.\""
+"\"I only called because of that bomb.\n\nDon't take this the wrong way.\""
+"\"I was just worried about you. \n\nI shouldn't have called. Maybe it's my fault.\""
+"\"I'll do whatever you want, \njust stop, please stop.\""
+"\"I'll try again tomorrow.\n\nI've lost my saw.\""
+"\"I'm protecting her, so it's only fair to know what she's up to.\n\nI guess it feels nice to be so connected.\""
+"\"I'm sorry...\n\nI don't deserve any of this...\""
+"\"It doesn't matter.\n\nPlease go. Leave me alone.\""
+"\"I've fixed all my imperfections.\n\nShe'll love me now.\""
+"\"Maddie? \n\nOh, Maddie. My grandson keeps talking about her. \n\nMy grandson! He won't evacuate either, the fool.\""
+"\"My awful eyes are gone.\n\nThe pain will be worth it.\""
+"\"No! Please don't.\n\nReally, I'm fine. I only wanted to ask if you knew what was happening.\""
+"\"Please help me fix my special mirror.\n\nThe impact made it fall off the table and it broke.\n\nI don't know what to do without it.\""
+"\"Please stop, \nI'm begging you."
+"\"Please stop, \nI'm begging you.\""
+"\"Protect me? From what?\n\nI'm already safe because of that pilot.\" "
+"\"Sometimes, I have no idea what goes through his head anymore.\"\n\nThe overseer turns off the intercom. "
+"\"Stay the hell away from me.\n\nGet out of my apartment.\""
+"\"Thank you so much. I really mean it. I'll open the door to his apartment. \n\nAnd please be careful.\""
+"\"The bridge? You can't, dear. I'm sorry. The soldiers told me to lock it off.\n\nWhy would you go to the bridge, anyway?\" \n\n"
+"\"The hallways are empty.\n\nI'm stuck in here with all these mirrors.\""
+"\"There's an ugly spot on the right side of my neck.\n\nMy eyes look awful.\n\nI think there's something wrong with my skin.\""
+"\"This screwdriver was sharp enough.\n\nThe ugly spot is gone now.\""
+"\"To all Block 28 residents,\n\nThis is an emergency. \n\nEvacuate the city immediately.\""
+"\"To be fixed:\n\n- Eyes\n\nMy eyes look awful.\""
+"\"To Maddie:\n\nI'll protect you.\""
+"\"What do you want from me? \n\nWhat the hell do you want?\""
+"\"What have you done to yourself?\n\nWhat is wrong with you?\""
+"\"When I was ordered to defend Block 29, I thought I was dreaming, I was so happy. \n\nNobody will get between us. She's safe with me.\""
+"\"Why do you think that means anything?\n\nYou always think everything \nmeans something.\""
+"\"Yes, I'm safe.\n\nPlease go. Leave me alone.\""
+"After a short buzz you hear the overseer's old voice. \n\n\"Anybody there?\" she asks."
+'"Alright."'
+'"And I can''t do anything about it," she says.'
+'"Besides, I wouldn''t let you. Who knows what you''d do..."'
+'"Block 28 - Resident 254"'
+'"Block 28 - Resident 255"'
+'"Block 28 - Resident 256"'
+'"Block 29 - Elevators"'
+'"Block 29 - Resident 471"'
+'"Block 29 - Resident 472"'
+'"Block 29 - Resident 473"'
+'"Block 29 - Resident 474"'
+'"Block 29 - Resident 475"'
+"But you can fix these imperfections.\n\nYou can be flawless and Maddie will love you.\n\nYou just need to show her."
+"ENTER CODE:\n2-2-0-0-0"
+'"From now on, I''ll only look at the broken ones."'
+'"Get out of my apartment. Please, just leave me alone."'
+"Her living room is unkempt and everything looks fragile.\n\nA packet of cigarettes lies on the table."
+'"I don''t even know you."'
+'"I don''t think so. I mean, I don''t feel hurt."'
+'"I know, dear. But the soldiers won''t let you. They''d likely kill me if I allowed you to take the bridge."'
+'"I''d do anything for her."'
+'"I''m already safe, I think."'
+"It hurts.\n\nMaddie will love you."
+'"It''d only take you deeper inside the building. They told us to evacuate. The man with one eye is gone already."'
+"It's a bottle of pills.\n\nYou should bring it to the pilot."
+"It's a large mirror. \n\nThere's a pair of screwdrivers in front of it."
+"It's a packet of cigarettes.\n\nYou don't smoke, but Maddie does."
+"It's a pair of rotating sockets.\n\nTwo small round objects could fit onto them."
+"It's a picture of the cinema that Maddie used to visit.\n\nMaddie loves the movies."
+"It's a poster of an old movie about a brave one-legged hero who protects a girl during a war.\n\nIt's one of Maddie's favorites."
+"It's a set of pipes leading to the bathroom downstairs. \n\nSomething could be attached to the holder in the middle."
+"It's a SHOTGUN.\n\nYou don't know how to use it. \nYou're not like the pilot."
+"It's the door to Maddie's bedroom.\n\nIt's locked."
+"It's titled: \"My Heat in the Cold City\".\n\nYou've never shown her any of your poems, but writing things down makes them so delightfully real."
+'"It''s... well, I just don''t know what to say."'
+'"Leave me alone. Please, just go."'
+"Maddie has already hung up.\n\nShe didn't hear you."
+"Maddie has slightly opened the door.\n\nYou can't see her, but you know she's in there."
+'"Maddie will love me now."'
+"Maddie's hung up the phone.\n\nYou've come so far. You can't stop now."
+'"My ears are still ringing from the impact of that bomb."'
+'"Oh God, please stop."'
+'"Oh, God..."'
+'"Oh, this and that."'
+'"Okay."'
+'"Please go..."'
+'"She needs me."'
+"She takes a deep breath.\n\n\"Why haven't you left yet, dear? They told us to evacuate. The man with one eye is gone already.\""
+"She's hung up the phone.\n\nYou should go to her."
+'"Stay away."'
+"The door is boarded up.\n\nThe keyhole is surprisingly large."
+"The kitchen is unremarkable.\n\nSome unwashed plates are stacked on the counter.\n"
+"The mirror is complete.\n\nYou notice some text inscribed on the bottom."
+"The overseer hesitates.\n\n\"...really? If you do that, I think I'd be able to open the bridge, just for you. The soldiers might not notice.\n\nBut you have to convince my grandson to leave.\""
+"The phone is ringing.\n\nSurprisingly, it's Maddie."
+"The pilot doesn't respond anymore.\n\nYou don't need him."
+"The screwdrivers look sharp enough. \n\nYou'll be perfect."
+"The text on the screen reads: \"Block 29 Bridge Access\".\n\nYou don't know the code."
+'"Think of your own safety, please."'
+'"What have you lost?"'
+'"What the hell is going on?"'
+'"Yes. Don''t worry."'
+'"Yes. I am. Please don''t worry about me."'
+"You can't stop now.\n\nMaddie will love you if you're brave."
+"You could be so brave.\n\nSo brave.\n\nMaddie will love you for this."
+"You notice the SAW you took from the bunker.\n\nYou could be brave too."
+'"You scare me. Stay away."'
+"You see Maddie lying on the couch, watching TV.\n\nAs always, she's perfect."
+"You see your face.\n\nYou look tired, but tender, determined.\n\nWhy can't Maddie love you?"
+...
+A note is pinned to the dusty mirror.
+Are you hurt?
+Are you okay?
+Are you safe?
+Are you sure?
+CALL MADDIE
+CHECK BEDROOM
+CHECK KITCHEN
+CHECK LIVING ROOM
+Do you need help?
+Don't worry
+Get me to Block 29
+GIVE PILLS
+Hello?
+HOLD SCREWDRIVERS
+I can't
+I could get your grandson out in exchange
+I don't know
+I love you
+I need access to the bridge
+I need to find Maddie
+I need to get to Block 29
+I need to see you
+I need you
+I really need access to the bridge
+I should really come over
+I will
+I won't
+I'd do anything for you
+I'll be perfect
+I'll be there soon
+I'll come over
+I'll come over anyway
+I'll protect you
+I'll try (LEAVE)
+I'm brave
+I'm coming over
+I'm here
+I'm your neighbor
+INSPECT
+It's a broken mirror.
+It's a keypad.
+It's a MIRROR SHARD (1/3).
+It's a MIRROR SHARD (2/3).
+It's a MIRROR SHARD (3/3).
+It's a model fighter jet.
+It's a note that's been slipped under your door.
+It's a note written by the pilot.
+It's a note.
+It's a packet of Maddie's cigarettes.
+It's a PAIR OF HUMAN EYES.
+It's a PIPE VALVE.
+It's a SAW.
+It's a screwdriver next to a small pile of flesh.
+It's a set of sockets with two human eyes on top of them.
+It's a short note written by your neighbor.
+'It''s a small book of poems you''ve written about Maddie. '
+It's a small mirror with a note attached to it.
+It's a small notebook.
+It's a small padlock with the symbol of an eye.
+It's an empty sink.
+It's an EYE KEY (3 USES).
+It's an unwashed plate. Your neighbor left in a hurry.
+It's human skin.
+It's locked.
+It's not your fault
+It's okay
+It's some kind of surveillance system.
+It's the overseer's intercom.
+It's your phone.
+LEAVE
+Leave.
+LOOK CLOSER
+LOOK INTO MIRROR
+LOOK THROUGH KEYHOLE
+Love you
+Maddie cries softly.
+Maddie?
+no
+PICK UP
+Please let me come over
+READ
+READ ON
+ROTATE LEFT EYE
+ROTATE RIGHT EYE
+SAW OFF LEG
+STAB LEFT EYE
+STAB RIGHT EYE
+STOP LOOKING
+TAKE
+Take care
+TAKE SCREWDRIVERS
+The door is boarded up.
+The monitors show the entirety of Maddie's apartment, seemingly recorded using several hidden cameras.
+The phone is ringing. It's Maddie.
+The pilot gives you the BUNKER KEY.
+The pilot takes the pills.
+'The text on the screen reads: "Block 29 Bridge Access".'
+There's a bottle of pills on the table.
+There's a note in the cupboard.
+There's a note pinned to the back of the closet.
+There's something on the bottom shelf.
+There's something stuck inside of the toilet.
+USE BUNKER KEY
+USE EYE KEY
+USE HUMAN EYES
+USE MIRROR SHARD
+USE PIPE VALVE
+USE SAW
+What are you talking about?
+What do you mean?
+What does he say about Maddie?
+Where is Block 29?
+Why does he stay?
+Why not?
+Why?
+You lied to me
+You should call Maddie first.
+You shouldn't exit the bunker before getting the pilot's pills.
+You sound unsure
+Your eyes look awful.
+Your safety matters more
+You've come so far. You can't stop now.
