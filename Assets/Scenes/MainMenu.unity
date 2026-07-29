@@ -42632,7 +42632,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 76.439995}
+  m_AnchoredPosition: {x: 0, y: 169}
   m_SizeDelta: {x: 693, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &1964
@@ -43453,7 +43453,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -67.3}
+  m_AnchoredPosition: {x: 0, y: -105.3}
   m_SizeDelta: {x: 72, y: 21.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &2005
@@ -43494,7 +43494,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -32.77}
+  m_AnchoredPosition: {x: 0, y: -55.5}
   m_SizeDelta: {x: 150, y: 21.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &2007
@@ -43967,7 +43967,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.6000004}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &2031
@@ -44026,7 +44026,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -7.3}
   m_SizeDelta: {x: 100, y: 21.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &2034
@@ -44589,7 +44589,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Cold City
+  m_text: GRADOMRAZ
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3084e4f6340e8c546822041a76c98ede, type: 2}
   m_sharedMaterial: {fileID: 7049901848752055439, guid: 3084e4f6340e8c546822041a76c98ede, type: 2}
@@ -44616,14 +44616,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 56.01
-  m_fontSizeBase: 56.01
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 18
-  m_HorizontalAlignment: 2
+  m_fontStyle: 16
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 11
@@ -44655,7 +44655,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 0, w: -101.96315}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -45601,7 +45601,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Postavke
+  m_text: POSTAVKE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3084e4f6340e8c546822041a76c98ede, type: 2}
   m_sharedMaterial: {fileID: 7049901848752055439, guid: 3084e4f6340e8c546822041a76c98ede, type: 2}
@@ -45667,7 +45667,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -124.893234, y: -4.4623375, z: -185.05367, w: -5.0528793}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -46521,7 +46521,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Igraj
+  m_text: NOVA IGRA
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3084e4f6340e8c546822041a76c98ede, type: 2}
   m_sharedMaterial: {fileID: 7049901848752055439, guid: 3084e4f6340e8c546822041a76c98ede, type: 2}
@@ -46587,7 +46587,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -96.31787, y: -14.880206, z: -149.75963, w: -14.139669}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -47165,7 +47165,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Izlaz
+  m_text: IZLAZ
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3084e4f6340e8c546822041a76c98ede, type: 2}
   m_sharedMaterial: {fileID: 7049901848752055439, guid: 3084e4f6340e8c546822041a76c98ede, type: 2}
@@ -47231,7 +47231,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -75.3488, y: 0, z: -168.64392, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

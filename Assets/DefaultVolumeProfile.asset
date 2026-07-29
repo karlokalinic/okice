@@ -15,13 +15,13 @@ MonoBehaviour:
   active: 1
   redOutRedIn:
     m_OverrideState: 1
-    m_Value: 100
+    m_Value: 99
   redOutGreenIn:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: -45
   redOutBlueIn:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 40
   greenOutRedIn:
     m_OverrideState: 1
     m_Value: 0
@@ -55,7 +55,7 @@ MonoBehaviour:
   active: 1
   temperature:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 15
   tint:
     m_OverrideState: 1
     m_Value: 0
@@ -74,7 +74,7 @@ MonoBehaviour:
   active: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.05
 --- !u!114 &-6089541486799499525
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -90,13 +90,13 @@ MonoBehaviour:
   active: 1
   type:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 9
   intensity:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.92
   response:
     m_OverrideState: 1
-    m_Value: 0.8
+    m_Value: 0.7
   texture:
     m_OverrideState: 1
     m_Value: {fileID: 0}
@@ -135,10 +135,10 @@ MonoBehaviour:
   active: 1
   postExposure:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 4
   contrast:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 80
   colorFilter:
     m_OverrideState: 1
     m_Value: {r: 1, g: 1, b: 1, a: 1}
@@ -147,7 +147,7 @@ MonoBehaviour:
     m_Value: 0
   saturation:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 40
 --- !u!114 &-5736621574245963939
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -163,13 +163,13 @@ MonoBehaviour:
   active: 1
   shadows:
     m_OverrideState: 1
-    m_Value: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    m_Value: {r: 0.5943396, g: 0.50743145, b: 0.50743145, a: 1}
   highlights:
     m_OverrideState: 1
-    m_Value: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    m_Value: {r: 0.18422924, g: 0.18509753, b: 0.18867922, a: 1}
   balance:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 40.4
 --- !u!114 &-3564792203184236499
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -185,7 +185,7 @@ MonoBehaviour:
   active: 1
   mode:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 2
   neutralHDRRangeReductionMode:
     m_OverrideState: 1
     m_Value: 2
@@ -225,19 +225,19 @@ MonoBehaviour:
   active: 1
   mode:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   gaussianStart:
     m_OverrideState: 1
-    m_Value: 10
+    m_Value: 1
   gaussianEnd:
     m_OverrideState: 1
-    m_Value: 30
+    m_Value: 50
   gaussianMaxRadius:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.5
   highQualitySampling:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   focusDistance:
     m_OverrideState: 1
     m_Value: 10
@@ -304,10 +304,10 @@ MonoBehaviour:
   active: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.1
   tintColor:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 0.5754717, g: 0.5754717, b: 0.5754717, a: 1}
   bloomMip:
     m_OverrideState: 1
     m_Value: 1
@@ -325,37 +325,37 @@ MonoBehaviour:
     m_Value: {x: 1, y: 1}
   samples:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 3
   sampleDimmer:
     m_OverrideState: 1
     m_Value: 0.5
   vignetteEffect:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.196
   startingPosition:
     m_OverrideState: 1
-    m_Value: 1.25
+    m_Value: 1
   scale:
     m_OverrideState: 1
-    m_Value: 1.5
+    m_Value: 4
   streaksIntensity:
     m_OverrideState: 1
     m_Value: 0
   streaksLength:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 0.083
   streaksOrientation:
     m_OverrideState: 1
     m_Value: 0
   streaksThreshold:
     m_OverrideState: 1
-    m_Value: 0.25
+    m_Value: 1
   resolution:
     m_OverrideState: 1
     m_Value: 4
   chromaticAbberationIntensity:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 0.036
 --- !u!114 &1435198927965984918
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -371,16 +371,16 @@ MonoBehaviour:
   active: 1
   mode:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   quality:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 2
   intensity:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   clamp:
     m_OverrideState: 1
-    m_Value: 0.05
+    m_Value: 0.2
 --- !u!114 &3322053279517857306
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -396,25 +396,25 @@ MonoBehaviour:
   active: 1
   shadows:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0}
+    m_Value: {x: 1, y: 1, z: 1, w: -1}
   midtones:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0}
+    m_Value: {x: 1, y: 1, z: 1, w: 0.23902154}
   highlights:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0}
+    m_Value: {x: 1, y: 1, z: 1, w: 0.3663147}
   shadowsStart:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.0025
   shadowsEnd:
     m_OverrideState: 1
-    m_Value: 0.3
+    m_Value: 0.08
   highlightsStart:
     m_OverrideState: 1
-    m_Value: 0.55
+    m_Value: 0
   highlightsEnd:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.4
 --- !u!114 &4377800697154271778
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -439,7 +439,7 @@ MonoBehaviour:
     m_Value: 0
   smoothness:
     m_OverrideState: 1
-    m_Value: 0.2
+    m_Value: 1
   rounded:
     m_OverrideState: 1
     m_Value: 0
@@ -653,10 +653,10 @@ MonoBehaviour:
     m_Value: 0.1
   scaleBiasWithMinProbeDistance:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   samplingNoise:
     m_OverrideState: 1
-    m_Value: 0.1
+    m_Value: 1
   animateSamplingNoise:
     m_OverrideState: 1
     m_Value: 1
@@ -693,19 +693,19 @@ MonoBehaviour:
   active: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   xMultiplier:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   yMultiplier:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.115
   center:
     m_OverrideState: 1
-    m_Value: {x: 0.5, y: 0.5}
+    m_Value: {x: 0.2, y: 0.53}
   scale:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.87
 --- !u!114 &6287550396106975544
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -724,13 +724,13 @@ MonoBehaviour:
     m_Value: 1
   threshold:
     m_OverrideState: 1
-    m_Value: 0.9
+    m_Value: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 5
   scatter:
     m_OverrideState: 1
-    m_Value: 0.7
+    m_Value: 1
   clamp:
     m_OverrideState: 1
     m_Value: 65472
@@ -739,7 +739,7 @@ MonoBehaviour:
     m_Value: {r: 1, g: 1, b: 1, a: 1}
   highQualityFiltering:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   filter:
     m_OverrideState: 1
     m_Value: 0
@@ -771,10 +771,10 @@ MonoBehaviour:
   active: 1
   distance:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.663
   cropToFit:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.9
 --- !u!114 &7457923228680818519
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -790,13 +790,13 @@ MonoBehaviour:
   active: 1
   lift:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0}
+    m_Value: {x: 1, y: 1, z: 1, w: 0.0000000017102285}
   gamma:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0}
+    m_Value: {x: 1, y: 1, z: 1, w: 1}
   gain:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0}
+    m_Value: {x: 1, y: 1, z: 1, w: -0.994997}
 --- !u!114 &8417626124989104821
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -815,7 +815,7 @@ MonoBehaviour:
     m_Value: 1
   enabled:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   renderPassEvent:
     m_OverrideState: 1
     m_Value: 1
@@ -824,7 +824,7 @@ MonoBehaviour:
     m_Value: 0
   distortionSmoothing:
     m_OverrideState: 1
-    m_Value: 0.01
+    m_Value: 0.1
   tintColor:
     m_OverrideState: 1
     m_Value: {r: 1, g: 1, b: 1, a: 1}
@@ -836,7 +836,7 @@ MonoBehaviour:
     m_Value: 0
   verticalReferenceResolution:
     m_OverrideState: 1
-    m_Value: 1080
+    m_Value: 1440
   forcePointFiltering:
     m_OverrideState: 1
     m_Value: 0
@@ -846,57 +846,57 @@ MonoBehaviour:
     dimension: 1
   rgbStrength:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.84
   scanlineTex:
     m_OverrideState: 1
     m_Value: {fileID: 0}
     dimension: 1
   scanlineStrength:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   scanlineSize:
     m_OverrideState: 1
-    m_Value: 8
+    m_Value: 36
   scrollSpeed:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1.17
   pixelSize:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 256
   randomWear:
     m_OverrideState: 1
-    m_Value: 0.2
+    m_Value: 0.25
   aberrationStrength:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 4
   trackingTexture:
     m_OverrideState: 1
     m_Value: {fileID: 0}
     dimension: 1
   trackingSize:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 1.495
   trackingStrength:
     m_OverrideState: 1
-    m_Value: 0.1
+    m_Value: 50
   trackingSpeed:
     m_OverrideState: 1
     m_Value: 0.1
   trackingJitter:
     m_OverrideState: 1
-    m_Value: 0.01
+    m_Value: 0.0804
   trackingColorDamage:
     m_OverrideState: 1
-    m_Value: 0.05
+    m_Value: 0.519
   trackingLinesThreshold:
     m_OverrideState: 1
-    m_Value: 0.9
+    m_Value: 0.943
   trackingLinesColor:
     m_OverrideState: 1
     m_Value: {r: 1, g: 1, b: 1, a: 0.5}
   brightness:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   contrast:
     m_OverrideState: 1
     m_Value: 1

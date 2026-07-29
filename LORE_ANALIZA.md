@@ -1,8 +1,8 @@
-# Hladan grad — dramaturška analiza lore-a
+# GRADOMRAZ
 
 ## Završna slika
 
-*Hladan grad* nije priča o čovjeku koji spašava Maddie, nego o čovjeku koji je njezinu granicu protumačio kao zadatak. Rat, evakuacija i most stvaraju stvarnu vanjsku opasnost, ali protagonist od prvog poziva bira opasniju fikciju: ako je dovoljno hrabar, koristan i savršen, bit će voljen. Svaki predmet zato nije samo zagonetka nego korak u zamjeni odnosa posjedovanjem.
+*GRADOMRAZ* nije priča o čovjeku koji spašava Maddie, nego o čovjeku koji je njezinu granicu protumačio kao zadatak. Rat, evakuacija i most stvaraju stvarnu vanjsku opasnost, ali protagonist od prvog poziva bira opasniju fikciju: ako je dovoljno hrabar, koristan i savršen, bit će voljen. Svaki predmet zato nije samo zagonetka nego korak u zamjeni odnosa posjedovanjem.
 
 Maddie ne traži spas. Traži udaljenost. Pilot je već izgubio nogu štiteći je, a protagonist taj čin pogrešno čita kao obrazac koji treba ponoviti. Do kraja sebe pretvara u dokaz ljubavi, dok Maddie sve jasnije govori da ga ne poznaje i da je se boji. To je tragedija koja spaja cijelu igru: čovjek pokušava preći do druge osobe, ali uništava jedino što bi prijelaz moglo učiniti mogućim — njezinu slobodu.
 

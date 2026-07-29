@@ -13,17 +13,27 @@ public static class RenderPipelineUpgradeUtility
     [MenuItem("Tools/Repair/Upgrade Project to HDRP Safely")]
     public static void UpgradeProjectToHDRP()
     {
+        // Check if HDRP package is available
+        var hdrpType = GetHdrpType();
+        if (hdrpType == null)
+        {
+            Debug.LogError("HDRP upgrade failed: HDRP package is not available. Please install the HDRP package via the Package Manager.");
+            return;
+        }
         if (!TryGetHdrpAsset(out RenderPipelineAsset hdrpAsset))
         {
+            // If no HDRP asset exists, create a new one
             if (!CreateHdrpAsset(out hdrpAsset))
             {
+                // If creation fails, log an error and exit
                 Debug.LogError("HDRP upgrade failed: HDRP package or asset type is not available.");
                 return;
             }
         }
-
+        // Assign the HDRP asset to GraphicsSettings and QualitySettings
         if (!AssignRenderPipelineAsset(hdrpAsset))
         {
+            // If assignment fails, log an error and exit
             Debug.LogError("HDRP upgrade failed: could not assign the HDRP asset to graphics/quality settings.");
             return;
         }

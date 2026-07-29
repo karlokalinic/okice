@@ -51,6 +51,7 @@ namespace PixelCrushers.DialogueSystem
 		public Sequencer sequencer => m_sequencer;
 
 		public IDialogueUI dialogueUI
+
 		{
 			get
 			{
@@ -365,7 +366,6 @@ namespace PixelCrushers.DialogueSystem
 				FinishSubtitle();
 			}
 		}
-
 		private void OnCancelSubtitle()
 		{
 			if (lastSubtitle == null)

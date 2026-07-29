@@ -81,7 +81,7 @@ Bilješka je pribijena na stražnju stranu ormara.
 \"Pokušat ću opet sutra.\n\nIzgubio sam pilu.\"
 To je VENTIL CIJEVI.
 Nešto je na donjoj polici.
-To je bilješka proturena ispod tvojih vrata.
+Bilješka gurnuta ispod vrata.
 \"Svim stanarima Bloka 28,\n\nOvo je hitno.\n\nSmjesta evakuirajte grad.\"
 \"Blok 28 - Stanar 256\"
 \"Blok 28 - Stanar 254\"

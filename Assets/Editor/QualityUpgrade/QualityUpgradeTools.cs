@@ -1,4 +1,4 @@
-// Quality Upgrade Tools for HLADAN GRAD
+// Quality Upgrade Tools for GRADOMRAZ
 // Adds a Tools menu to restore the original rendering/quality settings if the
 // quality upgrade ever looks wrong, plus timestamped snapshots.
 //
@@ -32,7 +32,7 @@ namespace HladanGrad.QualityUpgrade
         private static string ProjectRoot => Directory.GetParent(Application.dataPath).FullName;
         private static string PristineBackupRoot => Path.Combine(ProjectRoot, PristineBackupFolder);
 
-        [MenuItem("Tools/HLADAN GRAD Quality/Restore Original Settings (UNDO Upgrade)", false, 10)]
+        [MenuItem("Tools/GRADOMRAZ Quality/Restore Original Settings (UNDO Upgrade)", false, 10)]
         public static void RestoreOriginalSettings()
         {
             if (!Directory.Exists(PristineBackupRoot))
@@ -86,7 +86,7 @@ namespace HladanGrad.QualityUpgrade
                 "OK");
         }
 
-        [MenuItem("Tools/HLADAN GRAD Quality/Create Timestamped Snapshot", false, 11)]
+        [MenuItem("Tools/GRADOMRAZ Quality/Create Timestamped Snapshot", false, 11)]
         public static void CreateSnapshot()
         {
             string stamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
@@ -107,7 +107,7 @@ namespace HladanGrad.QualityUpgrade
                 n + " settings file(s) copied to:\n\n" + snapDir, "OK");
         }
 
-        [MenuItem("Tools/HLADAN GRAD Quality/Restore English Dialogue (UNDO Translation)", false, 20)]
+        [MenuItem("Tools/GRADOMRAZ Quality/Restore English Dialogue (UNDO Translation)", false, 20)]
         public static void RestoreEnglishDialogue()
         {
             string trBak = Path.Combine(ProjectRoot, "_TranslationBackup");
@@ -153,7 +153,7 @@ namespace HladanGrad.QualityUpgrade
                 restored + " file(s) restored to English.", "OK");
         }
 
-        [MenuItem("Tools/HLADAN GRAD Quality/Toggle Color Space (Linear/Gamma)", false, 1)]
+        [MenuItem("Tools/GRADOMRAZ Quality/Toggle Color Space (Linear/Gamma)", false, 1)]
         public static void ToggleColorSpace()
         {
             ColorSpace now = PlayerSettings.colorSpace;
@@ -171,7 +171,7 @@ namespace HladanGrad.QualityUpgrade
                 "sure the CRT shader loaded (Tools ▸ ... ▸ Reimport Shaders).", "OK");
         }
 
-        [MenuItem("Tools/HLADAN GRAD Quality/Reimport Shaders (fix CRT load error)", false, 25)]
+        [MenuItem("Tools/GRADOMRAZ Quality/Reimport Shaders (fix CRT load error)", false, 25)]
         public static void ReimportShaders()
         {
             string[] shaderPaths =
@@ -200,7 +200,7 @@ namespace HladanGrad.QualityUpgrade
                 "persists, close Unity, delete Library/ShaderCache, and reopen.", "OK");
         }
 
-        [MenuItem("Tools/HLADAN GRAD Quality/Open Change Log", false, 30)]
+        [MenuItem("Tools/GRADOMRAZ Quality/Open Change Log", false, 30)]
         public static void OpenChangeLog()
         {
             string log = Path.Combine(ProjectRoot, "QUALITY_UPGRADE_LOG.md");

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
-  m_Name: UI/TrackedDevicePosition
-  m_EditorClassIdentifier:
+  m_Name: UI_TrackedDevicePosition
+  m_EditorClassIdentifier: 
   m_Asset: {fileID: 11400000, guid: 681194819ade13640a235856475dc627, type: 2}
   m_ActionId: 24908448-c609-4bc3-a128-ea258674378a

@@ -1,5 +1,5 @@
-// HLADAN GRAD — Debug tools for fast testing.
-// Adds Tools ▸ HLADAN GRAD Debug ▸ ... menu items that broadcast the game's OWN
+// GRADOMRAZ — Debug tools for fast testing.
+// Adds Tools ▸ GRADOMRAZ Debug ▸ ... menu items that broadcast the game's OWN
 // PlayMaker global events to jump between chapters / set resolution while playing.
 //
 // These use the exact global events the game itself uses (from PlayMakerGlobals),
@@ -16,10 +16,10 @@ namespace HladanGrad.DebugTools
     public static class HladanGradDebugTools
     {
         // ---- Chapter / act jumps (game's own events) ----
-        [MenuItem("Tools/HLADAN GRAD Debug/Start at Chapter 2 (Mirror Stage 2)", false, 10)]
+        [MenuItem("Tools/GRADOMRAZ Debug/Start at Chapter 2 (Mirror Stage 2)", false, 10)]
         public static void Chapter2() => Broadcast("debug / mirror stage 2");
 
-        [MenuItem("Tools/HLADAN GRAD Debug/Start at Chapter 3 (Act 2)", false, 11)]
+        [MenuItem("Tools/GRADOMRAZ Debug/Start at Chapter 3 (Act 2)", false, 11)]
         public static void Chapter3()
         {
             Broadcast("UNLOAD / ACT1");
@@ -27,21 +27,21 @@ namespace HladanGrad.DebugTools
         }
 
         // ---- Resolution helpers (game's own events) ----
-        [MenuItem("Tools/HLADAN GRAD Debug/Resolution/Set 1440p", false, 30)]
+        [MenuItem("Tools/GRADOMRAZ Debug/Resolution/Set 1440p", false, 30)]
         public static void Res1440() => Broadcast("1440p");
 
-        [MenuItem("Tools/HLADAN GRAD Debug/Resolution/Set 2160p", false, 31)]
+        [MenuItem("Tools/GRADOMRAZ Debug/Resolution/Set 2160p", false, 31)]
         public static void Res2160() => Broadcast("2160p");
 
-        [MenuItem("Tools/HLADAN GRAD Debug/Resolution/Set 1080p", false, 32)]
+        [MenuItem("Tools/GRADOMRAZ Debug/Resolution/Set 1080p", false, 32)]
         public static void Res1080() => Broadcast("1080p");
 
         // Menu items are only enabled while playing.
-        [MenuItem("Tools/HLADAN GRAD Debug/Start at Chapter 2 (Mirror Stage 2)", true)]
-        [MenuItem("Tools/HLADAN GRAD Debug/Start at Chapter 3 (Act 2)", true)]
-        [MenuItem("Tools/HLADAN GRAD Debug/Resolution/Set 1440p", true)]
-        [MenuItem("Tools/HLADAN GRAD Debug/Resolution/Set 2160p", true)]
-        [MenuItem("Tools/HLADAN GRAD Debug/Resolution/Set 1080p", true)]
+        [MenuItem("Tools/GRADOMRAZ Debug/Start at Chapter 2 (Mirror Stage 2)", true)]
+        [MenuItem("Tools/GRADOMRAZ Debug/Start at Chapter 3 (Act 2)", true)]
+        [MenuItem("Tools/GRADOMRAZ Debug/Resolution/Set 1440p", true)]
+        [MenuItem("Tools/GRADOMRAZ Debug/Resolution/Set 2160p", true)]
+        [MenuItem("Tools/GRADOMRAZ Debug/Resolution/Set 1080p", true)]
         public static bool ValidatePlaying() => Application.isPlaying;
 
         private static MethodInfo _broadcast;

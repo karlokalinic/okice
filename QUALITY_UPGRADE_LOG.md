@@ -1,30 +1,11 @@
-# HLADAN GRAD — Quality Upgrade Log
+# GRADOMRAZ — Quality Upgrade Log
 
-Project: **HLADAN GRAD** (KARLOLEGEND) · Unity **6000.4.0f1** · **URP** (Forward+)
-All changes below are **safe & reversible**. A pristine backup of every touched
-file was made **before** any edit, and a one‑click undo is in the editor menu:
-
-> **Tools ▸ HLADAN GRAD Quality ▸ Restore Original Settings (UNDO Upgrade)**
-
-Pristine backup location (outside `Assets/` so no duplicate GUIDs):
-`_QualityUpgradeBackup/`
-
-> **Revision 2 (2026‑07‑13):** Linear color space was **reverted** — on this
-> Gamma‑authored project it washed the colors out grey. **Color space stays
-> Gamma (`m_ActiveColorSpace: 0`).** Added 2560×1440 @ 200 Hz targeting, kept only
-> color‑neutral quality bumps, and added a Debug chapter‑jump menu.
-
-> **Revision 3 (2026‑07‑13):** Found the real cause of the grey — the **CRT
-> post‑effect shader was failing to load** (stale import artifact), so the retro
-> scanline/contrast/color grade was dead, flattening everything. Fixed the CRT
-> shader and **re‑enabled Linear** (`m_ActiveColorSpace: 1`) as requested — Linear
-> + the working CRT grade preserves/improves the look. Added a **Toggle Color
-> Space** menu and a **Reimport Shaders** menu. Also revised the Croatian
-> translation to a more polished, literary register.
+Project: **GRADOMRAZ**
+Author: *KARLOLEGEND*
 
 ---
 
-## What was NOT done (and why)
+## What was NOT done
 - **No HDRP / High‑Definition package.** URP already has HDR enabled
   (`m_SupportsHDR: 1`). Converting a working URP + CRT/retro project to HDRP is
   destructive (materials go magenta, post FX break, light units change) and was
@@ -44,9 +25,9 @@ The earlier "grey/washed out" was **not** Linear itself — it was the **CRT
 post‑effect shader failing to load** (`Assets/Resources/shaders/crt.shader`,
 a stale import artifact), so the scanline/contrast/tint grade was missing.
 With the CRT shader fixed, Linear now looks correct/better.
-- Fix used: force‑reimport of the shader (**Tools ▸ HLADAN GRAD Quality ▸
+- Fix used: force‑reimport of the shader (**Tools ▸ GRADOMRAZ Quality ▸
   Reimport Shaders**) + a content bump on the shader to trigger a clean import.
-- Instant A/B compare: **Tools ▸ HLADAN GRAD Quality ▸ Toggle Color Space**.
+- Instant A/B compare: **Tools ▸ GRADOMRAZ Quality ▸ Toggle Color Space**.
 - If Linear ever looks off, flip back to Gamma with that toggle (one click).
 
 ### 2. Resolution & refresh: **2560×1440 @ 200 Hz**
@@ -90,7 +71,7 @@ your GPU has headroom (this is real SSAA supersampling and does not change color
 ---
 
 ## How to undo
-1. In Unity: **Tools ▸ HLADAN GRAD Quality ▸ Restore Original Settings (UNDO Upgrade)**
+1. In Unity: **Tools ▸ GRADOMRAZ Quality ▸ Restore Original Settings (UNDO Upgrade)**
 2. Restart the Editor.
 
 Or manually copy the files from `_QualityUpgradeBackup/` back over the originals
@@ -98,7 +79,7 @@ Or manually copy the files from `_QualityUpgradeBackup/` back over the originals
 `Assets__MonoBehaviour__PC_RPAsset.asset` → `Assets/MonoBehaviour/PC_RPAsset.asset`).
 
 You can also save a **Timestamped Snapshot** of the current settings any time via
-**Tools ▸ HLADAN GRAD Quality ▸ Create Timestamped Snapshot** (`_QualitySnapshots/`).
+**Tools ▸ GRADOMRAZ Quality ▸ Create Timestamped Snapshot** (`_QualitySnapshots/`).
 
 ---
 
@@ -110,11 +91,11 @@ The game is a **single gameplay scene** driven by **PlayMaker** global events
 nothing new is introduced. **Enter Play mode and click "Igraj" to load the
 gameplay scene first**, then use:
 
-- **Tools ▸ HLADAN GRAD Debug ▸ Start at Chapter 2 (Mirror Stage 2)** → broadcasts
+- **Tools ▸ GRADOMRAZ Debug ▸ Start at Chapter 2 (Mirror Stage 2)** → broadcasts
   the game's `debug / mirror stage 2` event.
-- **Tools ▸ HLADAN GRAD Debug ▸ Start at Chapter 3 (Act 2)** → broadcasts
+- **Tools ▸ GRADOMRAZ Debug ▸ Start at Chapter 3 (Act 2)** → broadcasts
   `UNLOAD / ACT1` then `ACT 2 CHANGES` (the jet‑crash / bunker / Maddie act).
-- **Tools ▸ HLADAN GRAD Debug ▸ Resolution ▸ Set 1440p / 2160p / 1080p** →
+- **Tools ▸ GRADOMRAZ Debug ▸ Resolution ▸ Set 1440p / 2160p / 1080p** →
   broadcasts the game's resolution events.
 
 Menu items are greyed out unless the game is playing. They use
@@ -147,10 +128,10 @@ translation now uses **proper Croatian orthography** (č ć ž š đ), not ASCII
 
 - Font file: `Assets/Font/Jersey25-Regular.ttf`.
 - Build/apply it with the editor menu (TMP font asset is generated in‑editor):
-  - **Tools ▸ HLADAN GRAD Font ▸ 1. Enable Croatian Diacritics (safe fallback)** —
+  - **Tools ▸ GRADOMRAZ Font ▸ 1. Enable Croatian Diacritics (safe fallback)** —
     builds the Jersey 25 TMP font asset and adds it as a **fallback** on the game
     font, so diacritics render everywhere with **no scene/prefab edits**. Do this.
-  - **Tools ▸ HLADAN GRAD Font ▸ 2. Swap ENTIRE game to Jersey 25** — optional;
+  - **Tools ▸ GRADOMRAZ Font ▸ 2. Swap ENTIRE game to Jersey 25** — optional;
     changes every TMP text component to Jersey 25 for the full pixel look.
 - **Run option 1 at least once**, otherwise the new diacritics show as squares
   (the font asset must be generated first).
@@ -158,7 +139,7 @@ translation now uses **proper Croatian orthography** (č ć ž š đ), not ASCII
 ### Backup & undo
 - Original English database: `_TranslationBackup/AFTERLIVES Dialogue Database.asset`
 - Original English menu scenes: `_TranslationBackup/MainMenu.unity`, `SampleScene.unity`
-- Undo: **Tools ▸ HLADAN GRAD Quality ▸ Restore English Dialogue (UNDO Translation)**
+- Undo: **Tools ▸ GRADOMRAZ Quality ▸ Restore English Dialogue (UNDO Translation)**
   (restores the dialogue database **and** both menu scenes)
 - Reference files & re‑apply tooling: `_TranslationBackup/english_strings.txt`,
   `croatian_strings.txt`, `apply_translation.ps1` (to tweak wording: restore the

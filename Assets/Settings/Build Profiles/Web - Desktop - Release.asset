@@ -36,8 +36,9 @@ MonoBehaviour:
     - line: '|   useOnDemandResources: 0'
     - line: '|   accelerometerFrequency: 60'
     - line: '|   companyName: KARLOLEGEND'
-    - line: '|   productName: HLADAN GRAD'
-    - line: '|   defaultCursor: {instanceID: 0}'
+    - line: '|   productName: GRADOMRAZ'
+    - line: '|   defaultCursor: {fileID: 2800000, guid: c5e6746fff26b0944bccc1952f40d89e,
+        type: 3}'
     - line: '|   cursorHotspot: {x: 0, y: 0}'
     - line: '|   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b:
         0.1254902, a: 1}'
@@ -116,7 +117,7 @@ MonoBehaviour:
     - line: '|   submitAnalytics: 0'
     - line: '|   usePlayerLog: 1'
     - line: '|   dedicatedServerOptimizations: 0'
-    - line: '|   bakeCollisionMeshes: 0'
+    - line: '|   bakeCollisionMeshes: 1'
     - line: '|   forceSingleInstance: 0'
     - line: '|   useFlipModelSwapchain: 1'
     - line: '|   resizableWindow: 0'
@@ -314,11 +315,22 @@ MonoBehaviour:
     - line: '|   AndroidAppBundleSizeToValidate: 0'
     - line: '|   AndroidReportGooglePlayAppDependencies: 0'
     - line: '|   androidSymbolsSizeThreshold: 0'
-    - line: '|   m_BuildTargetIcons: []'
+    - line: '|   m_BuildTargetIcons:'
+    - line: '|   - m_BuildTarget: '
+    - line: '|     m_Icons:'
+    - line: '|     - serializedVersion: 2'
+    - line: '|       m_Icon: {fileID: 2800000, guid: 407d6e899c5195545b6772a2452220c1,
+        type: 3}'
+    - line: '|       m_Width: 128'
+    - line: '|       m_Height: 128'
+    - line: '|       m_Kind: 0'
     - line: '|   m_BuildTargetPlatformIcons: []'
     - line: '|   m_BuildTargetBatching:'
     - line: '|   - m_BuildTarget: Standalone'
     - line: '|     m_StaticBatching: 1'
+    - line: '|     m_DynamicBatching: 0'
+    - line: '|   - m_BuildTarget: WebGL'
+    - line: '|     m_StaticBatching: 0'
     - line: '|     m_DynamicBatching: 0'
     - line: '|   m_BuildTargetShaderSettings: []'
     - line: '|   m_BuildTargetGraphicsJobs: []'
@@ -337,11 +349,17 @@ MonoBehaviour:
     - line: '|     PRODUCT_DESCRIPTION: '
     - line: '|   mobileMTRendering: {}'
     - line: '|   m_BuildTargetGroupLightmapEncodingQuality: []'
-    - line: '|   m_BuildTargetGroupHDRCubemapEncodingQuality: []'
+    - line: '|   m_BuildTargetGroupHDRCubemapEncodingQuality:'
+    - line: '|   - serializedVersion: 2'
+    - line: '|     m_BuildTarget: WebGL'
+    - line: '|     m_EncodingQuality: 2'
     - line: '|   m_BuildTargetGroupLightmapSettings: []'
     - line: '|   m_BuildTargetGroupLoadStoreDebugModeSettings: []'
     - line: '|   m_BuildTargetNormalMapEncoding: []'
-    - line: '|   m_BuildTargetDefaultTextureCompressionFormat: []'
+    - line: '|   m_BuildTargetDefaultTextureCompressionFormat:'
+    - line: '|   - serializedVersion: 3'
+    - line: '|     m_BuildTarget: WebGL'
+    - line: '|     m_Formats: 05000000'
     - line: '|   playModeTestRunnerEnabled: 0'
     - line: '|   runPlayModeTestAsEditModeTest: 0'
     - line: '|   actionOnDotNetUnhandledException: 0'
@@ -580,14 +598,14 @@ MonoBehaviour:
     - line: '|   blurSplashScreenBackground: 0'
     - line: '|   spritePackerPolicy: '
     - line: '|   webGLMemorySize: 0'
-    - line: '|   webGLExceptionSupport: 0'
-    - line: '|   webGLNameFilesAsHashes: 0'
+    - line: '|   webGLExceptionSupport: 1'
+    - line: '|   webGLNameFilesAsHashes: 1'
     - line: '|   webGLShowDiagnostics: 0'
     - line: '|   webGLDataCaching: 1'
     - line: '|   webGLDebugSymbols: 0'
     - line: '|   webGLEmscriptenArgs: '
     - line: '|   webGLModulesDirectory: '
-    - line: '|   webGLTemplate: APPLICATION:PWA'
+    - line: '|   webGLTemplate: APPLICATION:Default'
     - line: '|   webGLAnalyzeBuildSize: 0'
     - line: '|   webGLUseEmbeddedResources: 0'
     - line: '|   webGLCompressionFormat: 0'
@@ -595,9 +613,9 @@ MonoBehaviour:
     - line: '|   webGLLinkerTarget: 1'
     - line: '|   webGLThreadsSupport: 0'
     - line: '|   webGLDecompressionFallback: 0'
-    - line: '|   webGLInitialMemorySize: 0'
+    - line: '|   webGLInitialMemorySize: 32'
     - line: '|   webGLMaximumMemorySize: 0'
-    - line: '|   webGLMemoryGrowthMode: 0'
+    - line: '|   webGLMemoryGrowthMode: 2'
     - line: '|   webGLMemoryLinearGrowthStep: 0'
     - line: '|   webGLMemoryGeometricGrowthStep: 0'
     - line: '|   webGLMemoryGeometricGrowthCap: 0'
@@ -728,11 +746,11 @@ MonoBehaviour:
     - line: '|   captureStartupLogs: {}'
     - line: '|   activeInputHandler: 2'
     - line: '|   windowsGamepadBackendHint: 0'
-    - line: '|   cloudProjectId: ef074251-f8a9-4e4e-b7ea-fa90887de78d'
+    - line: '|   cloudProjectId: 1ffc0cfb-15cc-45eb-8053-1a4bef9200df'
     - line: '|   framebufferDepthMemorylessMode: 0'
     - line: '|   qualitySettingsNames:'
     - line: '|   - PC'
-    - line: '|   projectName: COLD CITY'
+    - line: '|   projectName: ODNOSI'
     - line: '|   organizationId: karlokalinic'
     - line: '|   cloudEnabled: 0'
     - line: '|   legacyClampBlendShapeWeights: 0'
@@ -766,7 +784,27 @@ MonoBehaviour:
         m_InsightsSettingsContainer:
           m_BuildProfileEngineDiagnosticsState: 2
         m_AdaptivePerformanceEnabled: 0
-        m_CodeOptimization: 1
+        m_CodeOptimization: 3
         m_WebGLClientBrowserPath: 
         m_WebGLClientBrowserType: 0
         m_WebGLTextureSubtarget: 0
+--- !u!114 &9020336353008139536
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 15012, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: BuildAutomationSettings
+  m_EditorClassIdentifier: UnityEditor.dll::UnityEditor.Build.Profile.BuildAutomationSettings
+  m_OperatingSystemValue: windows11_24h2
+  m_OperatingSystemFamily: windows
+  m_XcodeVersion: default
+  m_AndroidSdkVersion: android_sdk_35
+  m_UnityArchitecture: 
+  m_MachineTypeId: win11_premium_v2
+  m_CredentialsId: 
+  m_BuildTarget: 20
