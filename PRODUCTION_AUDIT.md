@@ -9,9 +9,27 @@ Audit date: 2026-07-30
 - Restored `Boot.unity` as build index 0. The previous build script explicitly removed it, so the startup logo could never run in a produced build.
 - Reworked TMP repair cleanup so temporary font assets do not destroy atlas textures after those textures have been attached to persistent assets.
 - Added Croatian fallback-glyph validation for `ČĆŽŠĐčćžšđ`.
-- Changed project health checks to load scenes additively and restore the previous editor scene setup instead of repeatedly replacing the user's open scene.
+- Changed project health checks to inspect one scene at a time and restore the previous editor scene setup. Additive inspection created duplicate `PlayMakerGUI` and other singleton warnings that were caused by the audit itself.
 - Removed generated root build output (`Data/`) and Unity Version Control workspace metadata (`.plastic/`) from Git.
 - Prevented desktop startup code from running at the monitor's full refresh rate without a ceiling. Desktop runtime is capped at 120 FPS; WebGL remains controlled by its 60 FPS bootstrap.
+
+## Git LFS checkout requirement
+
+`Assets/Font/VT323-Regular SDF.asset` is stored through Git LFS. A checkout that contains only the small text pointer beginning with `version https://git-lfs.github.com/spec/v1` is incomplete and Unity will report the asset as corrupted.
+
+Repair the checkout without replacing the Unity asset or its GUID:
+
+```powershell
+git lfs install
+git lfs pull
+git lfs checkout -- "Assets/Font/VT323-Regular SDF.asset"
+```
+
+Do not regenerate or overwrite this asset until the LFS object has been recovered. Replacing an existing native Unity asset can invalidate sub-asset references even when the path remains unchanged.
+
+## Input system status
+
+The Input Manager deprecation message is currently informational, not a build error. The project still contains PlayMaker and Dialogue System code that calls legacy `UnityEngine.Input` APIs. Switching the project to Input System-only before those actions are migrated would break controls. Keep legacy input enabled for this repair branch; perform input migration as a separate tested task.
 
 ## Translation findings
 
@@ -30,6 +48,7 @@ A full language pass should be performed conversation by conversation with speak
 
 ## Remaining work requiring an actual Unity validation run
 
+- Pull all Git LFS objects before opening Unity.
 - Compile the branch in Unity 6000.4.0f1.
 - Run `KARLOLEGEND > GRADOMRAZ > Run Project Health Check` and inspect the generated report.
 - Resolve reported missing scripts in their original scenes or prefabs rather than deleting every missing component automatically.
