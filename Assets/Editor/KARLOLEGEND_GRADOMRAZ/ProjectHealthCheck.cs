@@ -20,6 +20,12 @@ namespace Karlolegend.Gradomraz.Editor
         [MenuItem("KARLOLEGEND/GRADOMRAZ/Run Project Health Check")]
         public static void Run()
         {
+            if (!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+            {
+                Debug.LogWarning("Project health check cancelled because modified scenes were not saved.");
+                return;
+            }
+
             Directory.CreateDirectory(Path.GetDirectoryName(ReportPath) ?? "Builds/GRADOMRAZ-Reports");
 
             var report = new StringBuilder();
@@ -143,67 +149,52 @@ namespace Karlolegend.Gradomraz.Editor
             {
                 foreach (var sceneEntry in scenes)
                 {
-                    var scene = SceneManager.GetSceneByPath(sceneEntry.path);
-                    var openedByHealthCheck = !scene.IsValid() || !scene.isLoaded;
+                    // Each scene is opened alone. Additive inspection produced false duplicate-singleton
+                    // warnings from PlayMakerGUI and other scene-level managers.
+                    var scene = EditorSceneManager.OpenScene(sceneEntry.path, OpenSceneMode.Single);
+                    var roots = scene.GetRootGameObjects();
+                    var allObjects = roots.SelectMany(GetSelfAndChildren).ToArray();
 
-                    if (openedByHealthCheck)
+                    var missingScripts = allObjects.Sum(CountMissingComponents);
+                    var cameras = allObjects.Count(go =>
                     {
-                        scene = EditorSceneManager.OpenScene(sceneEntry.path, OpenSceneMode.Additive);
-                    }
-
-                    try
+                        var camera = go.GetComponent<Camera>();
+                        return camera != null && camera.enabled;
+                    });
+                    var audioListeners = allObjects.Count(go =>
                     {
-                        var roots = scene.GetRootGameObjects();
-                        var allObjects = roots.SelectMany(GetSelfAndChildren).ToArray();
-
-                        var missingScripts = allObjects.Sum(CountMissingComponents);
-                        var cameras = allObjects.Count(go =>
-                        {
-                            var camera = go.GetComponent<Camera>();
-                            return camera != null && camera.enabled;
-                        });
-                        var audioListeners = allObjects.Count(go =>
-                        {
-                            var listener = go.GetComponent<AudioListener>();
-                            return listener != null && listener.enabled;
-                        });
-                        var eventSystems = allObjects.Count(go =>
-                        {
-                            var system = go.GetComponent<EventSystem>();
-                            return system != null && system.enabled;
-                        });
-                        var renderers = allObjects
-                            .Select(go => go.GetComponent<Renderer>())
-                            .Where(renderer => renderer != null)
-                            .ToArray();
-                        var renderersWithMissingMaterials = renderers.Count(RendererHasMissingMaterial);
-                        var tmpTextsWithMissingFont = allObjects
-                            .Select(go => go.GetComponent<TMP_Text>())
-                            .Count(text => text != null &&
-                                           (text.font == null ||
-                                            text.font.atlasTextures == null ||
-                                            text.font.atlasTextures.Length == 0 ||
-                                            text.font.atlasTextures[0] == null));
-
-                        report.AppendLine($"  Scene={scene.path}");
-                        report.AppendLine($"    GameObjects={allObjects.Length}");
-                        report.AppendLine($"    Cameras={cameras}");
-                        report.AppendLine($"    AudioListeners={audioListeners}");
-                        report.AppendLine($"    EventSystems={eventSystems}");
-                        report.AppendLine($"    Renderers={renderers.Length}");
-                        report.AppendLine($"    MissingScripts={missingScripts}");
-                        report.AppendLine($"    RenderersWithMissingMaterials={renderersWithMissingMaterials}");
-                        report.AppendLine($"    TMPTextsWithMissingFontAtlas={tmpTextsWithMissingFont}");
-
-                        severe += missingScripts + renderersWithMissingMaterials + tmpTextsWithMissingFont;
-                    }
-                    finally
+                        var listener = go.GetComponent<AudioListener>();
+                        return listener != null && listener.enabled;
+                    });
+                    var eventSystems = allObjects.Count(go =>
                     {
-                        if (openedByHealthCheck && scene.IsValid() && scene.isLoaded)
-                        {
-                            EditorSceneManager.CloseScene(scene, true);
-                        }
-                    }
+                        var system = go.GetComponent<EventSystem>();
+                        return system != null && system.enabled;
+                    });
+                    var renderers = allObjects
+                        .Select(go => go.GetComponent<Renderer>())
+                        .Where(renderer => renderer != null)
+                        .ToArray();
+                    var renderersWithMissingMaterials = renderers.Count(RendererHasMissingMaterial);
+                    var tmpTextsWithMissingFont = allObjects
+                        .Select(go => go.GetComponent<TMP_Text>())
+                        .Count(text => text != null &&
+                                       (text.font == null ||
+                                        text.font.atlasTextures == null ||
+                                        text.font.atlasTextures.Length == 0 ||
+                                        text.font.atlasTextures[0] == null));
+
+                    report.AppendLine($"  Scene={scene.path}");
+                    report.AppendLine($"    GameObjects={allObjects.Length}");
+                    report.AppendLine($"    Cameras={cameras}");
+                    report.AppendLine($"    AudioListeners={audioListeners}");
+                    report.AppendLine($"    EventSystems={eventSystems}");
+                    report.AppendLine($"    Renderers={renderers.Length}");
+                    report.AppendLine($"    MissingScripts={missingScripts}");
+                    report.AppendLine($"    RenderersWithMissingMaterials={renderersWithMissingMaterials}");
+                    report.AppendLine($"    TMPTextsWithMissingFontAtlas={tmpTextsWithMissingFont}");
+
+                    severe += missingScripts + renderersWithMissingMaterials + tmpTextsWithMissingFont;
                 }
             }
             finally
