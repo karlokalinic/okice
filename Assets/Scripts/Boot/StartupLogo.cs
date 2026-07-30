@@ -1,66 +1,92 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
 
+[RequireComponent(typeof(Camera))]
 [RequireComponent(typeof(VideoPlayer))]
 public sealed class StartupLogo : MonoBehaviour
 {
-    [Header("Scene loaded after the logo")]
+    [Header("Scene loaded after the creator video")]
     [SerializeField] private string nextSceneName = "MainMenu";
     [SerializeField, Min(1f)] private float fallbackDelaySeconds = 15f;
 
+    private Camera bootCamera;
     private VideoPlayer videoPlayer;
     private AsyncOperation nextSceneLoading;
     private bool transitionStarted;
 
     private void Awake()
     {
+        bootCamera = GetComponent<Camera>();
         videoPlayer = GetComponent<VideoPlayer>();
 
+        ConfigureBootCamera();
+
 #if UNITY_WEBGL && !UNITY_EDITOR
+        // Unity VideoPlayer support differs between browsers. WebGL proceeds directly rather
+        // than exposing an unprepared or permanently black video surface.
         videoPlayer.enabled = false;
-        return;
 #else
+        ConfigureVideoPlayer();
+#endif
+    }
+
+    private void Start()
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        BeginPreloadingNextScene();
+        StartCoroutine(ActivateWebGlSceneWhenReady());
+#else
+        // Give video decoding first access to disk/GPU resources. Loading the menu before
+        // Prepare() caused the startup camera to remain visible as an empty black Unity scene.
+        videoPlayer.Prepare();
+        StartCoroutine(ContinueAfterFallbackDelay());
+#endif
+    }
+
+    private void ConfigureBootCamera()
+    {
+        // The only valid image in this scene is the creator video. Nothing from the scene or
+        // URP post-processing is allowed to flash before the first decoded video frame.
+        bootCamera.clearFlags = CameraClearFlags.SolidColor;
+        bootCamera.backgroundColor = Color.black;
+        bootCamera.cullingMask = 0;
+        bootCamera.allowHDR = false;
+        bootCamera.allowMSAA = false;
+
+        if (bootCamera.TryGetComponent<UniversalAdditionalCameraData>(out var cameraData))
+        {
+            cameraData.renderPostProcessing = false;
+            cameraData.allowHDROutput = false;
+        }
+    }
+
+    private void ConfigureVideoPlayer()
+    {
         videoPlayer.playOnAwake = false;
         videoPlayer.isLooping = false;
         videoPlayer.waitForFirstFrame = true;
-
+        videoPlayer.skipOnDrop = false;
         videoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
-        videoPlayer.targetCamera = Camera.main;
+        videoPlayer.targetCamera = bootCamera;
         videoPlayer.targetCameraAlpha = 1f;
         videoPlayer.aspectRatio = VideoAspectRatio.FitInside;
 
         videoPlayer.prepareCompleted += HandlePrepared;
         videoPlayer.loopPointReached += HandleFinished;
         videoPlayer.errorReceived += HandleError;
-#endif
-    }
-
-    private void Start()
-    {
-        // Load the main menu behind the logo, but do not show it yet.
-        nextSceneLoading = SceneManager.LoadSceneAsync(
-            nextSceneName,
-            LoadSceneMode.Single
-        );
-
-        if (nextSceneLoading != null)
-        {
-            nextSceneLoading.allowSceneActivation = false;
-        }
-
-#if UNITY_WEBGL && !UNITY_EDITOR
-        StartCoroutine(ActivateWebGlSceneWhenReady());
-#else
-        // Prepare first to avoid starting with missing or black frames.
-        videoPlayer.Prepare();
-        StartCoroutine(ContinueAfterFallbackDelay());
-#endif
     }
 
     private void HandlePrepared(VideoPlayer player)
     {
+        if (transitionStarted)
+        {
+            return;
+        }
+
+        BeginPreloadingNextScene();
         player.Play();
     }
 
@@ -71,16 +97,39 @@ public sealed class StartupLogo : MonoBehaviour
 
     private void HandleError(VideoPlayer player, string message)
     {
-        Debug.LogError($"Startup video error: {message}");
-
-        // Never trap the player on the startup screen.
+        Debug.LogError($"Creator video failed to play: {message}");
         ContinueToNextScene();
+    }
+
+    private void BeginPreloadingNextScene()
+    {
+        if (nextSceneLoading != null || transitionStarted)
+        {
+            return;
+        }
+
+        if (!Application.CanStreamedLevelBeLoaded(nextSceneName))
+        {
+            Debug.LogError($"Startup scene cannot load '{nextSceneName}'. Check Build Settings.");
+            return;
+        }
+
+        nextSceneLoading = SceneManager.LoadSceneAsync(nextSceneName, LoadSceneMode.Single);
+        if (nextSceneLoading != null)
+        {
+            nextSceneLoading.allowSceneActivation = false;
+        }
     }
 
     private IEnumerator ContinueAfterFallbackDelay()
     {
         yield return new WaitForSecondsRealtime(fallbackDelaySeconds);
-        ContinueToNextScene();
+
+        if (!transitionStarted)
+        {
+            Debug.LogWarning("Creator video timed out; continuing to the main menu.");
+            ContinueToNextScene();
+        }
     }
 
     private IEnumerator ActivateWebGlSceneWhenReady()
@@ -101,6 +150,7 @@ public sealed class StartupLogo : MonoBehaviour
         }
 
         transitionStarted = true;
+        videoPlayer?.Stop();
 
         if (nextSceneLoading != null)
         {
@@ -108,7 +158,7 @@ public sealed class StartupLogo : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadSceneAsync(nextSceneName);
+            SceneManager.LoadSceneAsync(nextSceneName, LoadSceneMode.Single);
         }
     }
 
