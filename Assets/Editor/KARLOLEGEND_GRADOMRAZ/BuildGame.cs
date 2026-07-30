@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -16,56 +17,35 @@ namespace Karlolegend.Gradomraz.Editor
         private const string WebGlOutputPath = "Builds/WebGL";
         private const string ItchWebGlArchivePath = "Builds/GRADOMRAZ-by-KARLOLEGEND-WebGL-itch.zip";
         private const string BootScenePath = "Assets/Scenes/Boot.unity";
+        private const string MainMenuScenePath = "Assets/Scenes/MainMenu.unity";
         private const string PipelineAssetPath = "Assets/MonoBehaviour/PC_RPAsset.asset";
+        private const string DialogueDatabasePath = "Assets/MonoBehaviour/AFTERLIVES Dialogue Database.asset";
+        private const int MinimumExpectedConversationCount = 70;
 
         [MenuItem("KARLOLEGEND/GRADOMRAZ/Build Windows 64")]
         public static void BuildWindows64()
         {
-            Selection.activeObject = null;
-            TmpFontAssetRepair.Run();
-
+            PrepareBuild();
             var scenes = GetPlayableScenes();
+            RecreateDirectory(Path.GetDirectoryName(OutputPath));
 
-            if (scenes.Length == 0)
-            {
-                UnityEngine.Debug.LogError("Build failed: no playable scenes in EditorBuildSettings.");
-                EditorApplication.Exit(1);
-                return;
-            }
-
-            var outputDirectory = Path.GetDirectoryName(OutputPath);
-            if (!string.IsNullOrEmpty(outputDirectory))
-            {
-                if (Directory.Exists(outputDirectory))
-                {
-                    Directory.Delete(outputDirectory, true);
-                }
-
-                Directory.CreateDirectory(outputDirectory);
-            }
-
-            var options = new BuildPlayerOptions
+            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
                 scenes = scenes,
                 locationPathName = OutputPath,
                 target = BuildTarget.StandaloneWindows64,
                 options = BuildOptions.None
-            };
+            });
 
-            var report = BuildPipeline.BuildPlayer(options);
-            var summary = report.summary;
-            UnityEngine.Debug.Log(
-                $"Windows build result={summary.result}, errors={summary.totalErrors}, warnings={summary.totalWarnings}, size={summary.totalSize}, output={OutputPath}");
-
-            if (summary.result != BuildResult.Succeeded)
-            {
-                EditorApplication.Exit(1);
-            }
+            LogSummary("Windows", report, OutputPath);
+            ThrowIfBuildFailed(report, "Windows");
         }
 
         [MenuItem("KARLOLEGEND/GRADOMRAZ/Build WebGL for itch.io")]
         public static void BuildWebGL()
         {
+            PrepareBuild();
+
             PlayerSettings.WebGL.template = "PROJECT:Itch";
             PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli;
             PlayerSettings.WebGL.dataCaching = true;
@@ -74,21 +54,10 @@ namespace Karlolegend.Gradomraz.Editor
             PlayerSettings.WebGL.memoryGrowthMode = WebGLMemoryGrowthMode.Geometric;
 
             var scenes = GetPlayableScenes();
-
-            if (scenes.Length == 0)
-            {
-                UnityEngine.Debug.LogError("Build failed: no playable scenes in EditorBuildSettings.");
-                EditorApplication.Exit(1);
-                return;
-            }
-
-            if (Directory.Exists(WebGlOutputPath))
-            {
-                Directory.Delete(WebGlOutputPath, true);
-            }
+            RecreateDirectory(WebGlOutputPath);
 
             BuildReport report;
-            using (var pipelineSettings = ApplyWebGlPipelineSettings())
+            using (ApplyWebGlPipelineSettings())
             {
                 report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
                 {
@@ -99,18 +68,47 @@ namespace Karlolegend.Gradomraz.Editor
                 });
             }
 
-            var summary = report.summary;
-            if (summary.result == BuildResult.Succeeded)
+            if (report.summary.result == BuildResult.Succeeded)
             {
                 CreateItchArchive();
             }
 
-            UnityEngine.Debug.Log(
-                $"WebGL build result={summary.result}, errors={summary.totalErrors}, warnings={summary.totalWarnings}, size={summary.totalSize}, output={WebGlOutputPath}, itchArchive={ItchWebGlArchivePath}");
+            LogSummary("WebGL", report, WebGlOutputPath);
+            ThrowIfBuildFailed(report, "WebGL");
+        }
 
-            if (summary.result != BuildResult.Succeeded)
+        private static void PrepareBuild()
+        {
+            Selection.activeObject = null;
+
+            if (!TmpFontAssetRepair.EnsureBuildReady(out var fontError))
             {
-                EditorApplication.Exit(1);
+                throw new BuildFailedException(fontError);
+            }
+
+            ValidateDialogueDatabase();
+        }
+
+        private static void ValidateDialogueDatabase()
+        {
+            var database = AssetDatabase.LoadMainAssetAtPath(DialogueDatabasePath);
+            if (database == null)
+            {
+                throw new BuildFailedException($"Missing dialogue database: {DialogueDatabasePath}");
+            }
+
+            var serializedDatabase = new SerializedObject(database);
+            var conversations = serializedDatabase.FindProperty("conversations");
+            if (conversations == null)
+            {
+                throw new BuildFailedException($"Dialogue database has no serialized conversations array: {DialogueDatabasePath}");
+            }
+
+            if (conversations.arraySize < MinimumExpectedConversationCount)
+            {
+                throw new BuildFailedException(
+                    $"Dialogue database appears truncated: found {conversations.arraySize} conversations, expected at least {MinimumExpectedConversationCount}. " +
+                    "Restore the database before building.");
             }
         }
 
@@ -121,15 +119,80 @@ namespace Karlolegend.Gradomraz.Editor
                 File.Delete(ItchWebGlArchivePath);
             }
 
-            ZipFile.CreateFromDirectory(WebGlOutputPath, ItchWebGlArchivePath, System.IO.Compression.CompressionLevel.Optimal, false);
+            ZipFile.CreateFromDirectory(
+                WebGlOutputPath,
+                ItchWebGlArchivePath,
+                System.IO.Compression.CompressionLevel.Optimal,
+                false);
         }
 
         private static string[] GetPlayableScenes()
         {
-            return EditorBuildSettings.scenes
-                .Where(scene => scene.enabled && !string.Equals(scene.path, BootScenePath, StringComparison.OrdinalIgnoreCase))
+            var scenes = EditorBuildSettings.scenes
+                .Where(scene => scene.enabled && !string.IsNullOrWhiteSpace(scene.path))
                 .Select(scene => scene.path)
-                .ToArray();
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            InsertRequiredScene(scenes, MainMenuScenePath, insertAtStart: false);
+            InsertRequiredScene(scenes, BootScenePath, insertAtStart: true);
+
+            if (scenes.Count == 0)
+            {
+                throw new BuildFailedException("Build failed: no playable scenes are available.");
+            }
+
+            return scenes.ToArray();
+        }
+
+        private static void InsertRequiredScene(List<string> scenes, string scenePath, bool insertAtStart)
+        {
+            if (AssetDatabase.LoadAssetAtPath<SceneAsset>(scenePath) == null)
+            {
+                throw new BuildFailedException($"Required scene is missing: {scenePath}");
+            }
+
+            scenes.RemoveAll(path => string.Equals(path, scenePath, StringComparison.OrdinalIgnoreCase));
+            if (insertAtStart)
+            {
+                scenes.Insert(0, scenePath);
+            }
+            else
+            {
+                scenes.Add(scenePath);
+            }
+        }
+
+        private static void RecreateDirectory(string directory)
+        {
+            if (string.IsNullOrWhiteSpace(directory))
+            {
+                return;
+            }
+
+            if (Directory.Exists(directory))
+            {
+                Directory.Delete(directory, true);
+            }
+
+            Directory.CreateDirectory(directory);
+        }
+
+        private static void LogSummary(string platformName, BuildReport report, string output)
+        {
+            var summary = report.summary;
+            Debug.Log(
+                $"{platformName} build result={summary.result}, errors={summary.totalErrors}, warnings={summary.totalWarnings}, " +
+                $"size={summary.totalSize}, output={output}");
+        }
+
+        private static void ThrowIfBuildFailed(BuildReport report, string platformName)
+        {
+            if (report.summary.result != BuildResult.Succeeded)
+            {
+                throw new BuildFailedException(
+                    $"{platformName} build failed with {report.summary.totalErrors} error(s) and {report.summary.totalWarnings} warning(s).");
+            }
         }
 
         private static PipelineSettingsSnapshot ApplyWebGlPipelineSettings()
@@ -137,7 +200,7 @@ namespace Karlolegend.Gradomraz.Editor
             var asset = AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>(PipelineAssetPath);
             if (asset == null)
             {
-                throw new InvalidOperationException($"WebGL build requires render pipeline asset at {PipelineAssetPath}.");
+                throw new BuildFailedException($"WebGL build requires render pipeline asset at {PipelineAssetPath}.");
             }
 
             var snapshot = new PipelineSettingsSnapshot(asset);

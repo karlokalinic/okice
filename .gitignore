@@ -9,6 +9,9 @@
 /MemoryCaptures/
 /Recordings/
 
+# Player/build output accidentally copied to the project root
+/Data/
+
 # Unity generated project files
 /*.csproj
 /*.sln
@@ -27,6 +30,9 @@
 /.vscode/
 /.idea/
 
+# Unity Version Control workspace metadata (Git is authoritative here)
+/.plastic/
+
 # OS noise
 .DS_Store
 Thumbs.db
@@ -35,6 +41,7 @@ Desktop.ini
 # Local repair/build artifacts
 /_CodexRepair/
 /uam/
+/_TranslationBackup/
 /_CodexRepair/Backups/
 /_CodexRepair/Builds/
 /_CodexRepair/Logs/

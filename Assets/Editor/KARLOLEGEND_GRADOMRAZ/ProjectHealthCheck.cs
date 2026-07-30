@@ -14,7 +14,10 @@ namespace Karlolegend.Gradomraz.Editor
     public static class ProjectHealthCheck
     {
         private const string ReportPath = "Builds/GRADOMRAZ-Reports/ProjectHealthReport.txt";
+        private const string DialogueDatabasePath = "Assets/MonoBehaviour/AFTERLIVES Dialogue Database.asset";
+        private const int MinimumExpectedConversationCount = 70;
 
+        [MenuItem("KARLOLEGEND/GRADOMRAZ/Run Project Health Check")]
         public static void Run()
         {
             Directory.CreateDirectory(Path.GetDirectoryName(ReportPath) ?? "Builds/GRADOMRAZ-Reports");
@@ -26,6 +29,7 @@ namespace Karlolegend.Gradomraz.Editor
             report.AppendLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             report.AppendLine();
 
+            severeIssues += CheckDialogueDatabase(report);
             severeIssues += CheckMaterials(report);
             severeIssues += CheckScenes(report);
 
@@ -35,10 +39,44 @@ namespace Karlolegend.Gradomraz.Editor
             File.WriteAllText(ReportPath, report.ToString(), Encoding.UTF8);
             Debug.Log(report.ToString());
 
-            if (severeIssues > 0)
+            if (severeIssues <= 0)
+            {
+                return;
+            }
+
+            Debug.LogError($"Project health check found {severeIssues} severe issue(s). Report: {ReportPath}");
+            if (Application.isBatchMode)
             {
                 EditorApplication.Exit(1);
             }
+        }
+
+        private static int CheckDialogueDatabase(StringBuilder report)
+        {
+            report.AppendLine("Dialogue Database Summary");
+
+            var database = AssetDatabase.LoadMainAssetAtPath(DialogueDatabasePath);
+            if (database == null)
+            {
+                report.AppendLine($"  Missing={DialogueDatabasePath}");
+                report.AppendLine();
+                return 1;
+            }
+
+            var serializedDatabase = new SerializedObject(database);
+            var conversations = serializedDatabase.FindProperty("conversations");
+            if (conversations == null)
+            {
+                report.AppendLine("  ConversationsProperty=missing");
+                report.AppendLine();
+                return 1;
+            }
+
+            report.AppendLine($"  Conversations={conversations.arraySize}");
+            report.AppendLine($"  ExpectedMinimum={MinimumExpectedConversationCount}");
+            report.AppendLine();
+
+            return conversations.arraySize < MinimumExpectedConversationCount ? 1 : 0;
         }
 
         private static int CheckMaterials(StringBuilder report)
@@ -96,39 +134,81 @@ namespace Karlolegend.Gradomraz.Editor
         {
             var severe = 0;
             var scenes = EditorBuildSettings.scenes.Where(scene => scene.enabled).ToArray();
+            var originalSetup = EditorSceneManager.GetSceneManagerSetup();
+
             report.AppendLine("Scene Summary");
             report.AppendLine($"  EnabledBuildScenes={scenes.Length}");
 
-            foreach (var sceneEntry in scenes)
+            try
             {
-                var scene = EditorSceneManager.OpenScene(sceneEntry.path, OpenSceneMode.Single);
-                var roots = scene.GetRootGameObjects();
-                var allObjects = roots.SelectMany(GetSelfAndChildren).ToArray();
-
-                var missingScripts = allObjects.Sum(CountMissingComponents);
-                var cameras = allObjects.Select(go => go.GetComponent<Camera>()).Count(camera => camera != null && camera.enabled);
-                var audioListeners = allObjects.Select(go => go.GetComponent<AudioListener>()).Count(listener => listener != null && listener.enabled);
-                var eventSystems = allObjects.Select(go => go.GetComponent<EventSystem>()).Count(system => system != null && system.enabled);
-                var renderers = allObjects.Select(go => go.GetComponent<Renderer>()).Where(renderer => renderer != null).ToArray();
-                var renderersWithMissingMaterials = renderers.Count(RendererHasMissingMaterial);
-                var tmpTextsWithMissingFont = allObjects
-                    .Select(go => go.GetComponent<TMP_Text>())
-                    .Count(text => text != null && (text.font == null || text.font.atlasTextures == null || text.font.atlasTextures.Length == 0 || text.font.atlasTextures[0] == null));
-
-                report.AppendLine($"  Scene={scene.path}");
-                report.AppendLine($"    GameObjects={allObjects.Length}");
-                report.AppendLine($"    Cameras={cameras}");
-                report.AppendLine($"    AudioListeners={audioListeners}");
-                report.AppendLine($"    EventSystems={eventSystems}");
-                report.AppendLine($"    Renderers={renderers.Length}");
-                report.AppendLine($"    MissingScripts={missingScripts}");
-                report.AppendLine($"    RenderersWithMissingMaterials={renderersWithMissingMaterials}");
-                report.AppendLine($"    TMPTextsWithMissingFontAtlas={tmpTextsWithMissingFont}");
-
-                if (missingScripts > 0 || cameras == 0 || renderersWithMissingMaterials > 0 || tmpTextsWithMissingFont > 0)
+                foreach (var sceneEntry in scenes)
                 {
-                    severe += missingScripts + renderersWithMissingMaterials + tmpTextsWithMissingFont + (cameras == 0 ? 1 : 0);
+                    var scene = SceneManager.GetSceneByPath(sceneEntry.path);
+                    var openedByHealthCheck = !scene.IsValid() || !scene.isLoaded;
+
+                    if (openedByHealthCheck)
+                    {
+                        scene = EditorSceneManager.OpenScene(sceneEntry.path, OpenSceneMode.Additive);
+                    }
+
+                    try
+                    {
+                        var roots = scene.GetRootGameObjects();
+                        var allObjects = roots.SelectMany(GetSelfAndChildren).ToArray();
+
+                        var missingScripts = allObjects.Sum(CountMissingComponents);
+                        var cameras = allObjects.Count(go =>
+                        {
+                            var camera = go.GetComponent<Camera>();
+                            return camera != null && camera.enabled;
+                        });
+                        var audioListeners = allObjects.Count(go =>
+                        {
+                            var listener = go.GetComponent<AudioListener>();
+                            return listener != null && listener.enabled;
+                        });
+                        var eventSystems = allObjects.Count(go =>
+                        {
+                            var system = go.GetComponent<EventSystem>();
+                            return system != null && system.enabled;
+                        });
+                        var renderers = allObjects
+                            .Select(go => go.GetComponent<Renderer>())
+                            .Where(renderer => renderer != null)
+                            .ToArray();
+                        var renderersWithMissingMaterials = renderers.Count(RendererHasMissingMaterial);
+                        var tmpTextsWithMissingFont = allObjects
+                            .Select(go => go.GetComponent<TMP_Text>())
+                            .Count(text => text != null &&
+                                           (text.font == null ||
+                                            text.font.atlasTextures == null ||
+                                            text.font.atlasTextures.Length == 0 ||
+                                            text.font.atlasTextures[0] == null));
+
+                        report.AppendLine($"  Scene={scene.path}");
+                        report.AppendLine($"    GameObjects={allObjects.Length}");
+                        report.AppendLine($"    Cameras={cameras}");
+                        report.AppendLine($"    AudioListeners={audioListeners}");
+                        report.AppendLine($"    EventSystems={eventSystems}");
+                        report.AppendLine($"    Renderers={renderers.Length}");
+                        report.AppendLine($"    MissingScripts={missingScripts}");
+                        report.AppendLine($"    RenderersWithMissingMaterials={renderersWithMissingMaterials}");
+                        report.AppendLine($"    TMPTextsWithMissingFontAtlas={tmpTextsWithMissingFont}");
+
+                        severe += missingScripts + renderersWithMissingMaterials + tmpTextsWithMissingFont;
+                    }
+                    finally
+                    {
+                        if (openedByHealthCheck && scene.IsValid() && scene.isLoaded)
+                        {
+                            EditorSceneManager.CloseScene(scene, true);
+                        }
+                    }
                 }
+            }
+            finally
+            {
+                EditorSceneManager.RestoreSceneManagerSetup(originalSetup);
             }
 
             report.AppendLine();
@@ -147,7 +227,9 @@ namespace Karlolegend.Gradomraz.Editor
 
         private static GameObject[] GetSelfAndChildren(GameObject root)
         {
-            return root.GetComponentsInChildren<Transform>(true).Select(transform => transform.gameObject).ToArray();
+            return root.GetComponentsInChildren<Transform>(true)
+                .Select(transform => transform.gameObject)
+                .ToArray();
         }
     }
 }

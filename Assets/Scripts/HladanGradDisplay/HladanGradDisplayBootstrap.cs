@@ -2,17 +2,23 @@ using UnityEngine;
 
 public static class HladanGradDisplayBootstrap
 {
+    private const int DefaultFrameRate = 60;
+    private const int MaximumFrameRate = 120;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Init()
     {
-        RefreshRate refreshRate = Screen.currentResolution.refreshRateRatio;
-        int numerator = (int)refreshRate.numerator;
-        int denominator = (int)refreshRate.denominator;
-        int refreshRateHz = denominator > 0
-            ? numerator / denominator
-            : -1;
+#if UNITY_WEBGL && !UNITY_EDITOR
+        return;
+#else
+        var refreshRate = Screen.currentResolution.refreshRateRatio;
+        var denominator = (int)refreshRate.denominator;
+        var refreshRateHz = denominator > 0
+            ? Mathf.RoundToInt((float)refreshRate.numerator / denominator)
+            : DefaultFrameRate;
 
-        QualitySettings.vSyncCount = 1;
-        Application.targetFrameRate = refreshRateHz > 0 ? refreshRateHz : -1;
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = Mathf.Clamp(refreshRateHz, DefaultFrameRate, MaximumFrameRate);
+#endif
     }
 }
