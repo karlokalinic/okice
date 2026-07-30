@@ -42,7 +42,7 @@ public sealed class StartupLogo : MonoBehaviour
         // Give video decoding first access to disk/GPU resources. Loading the menu before
         // Prepare() caused the startup camera to remain visible as an empty black Unity scene.
         videoPlayer.Prepare();
-        StartCoroutine(ContinueAfterFallbackDelay());
+        StartCoroutine(ContinueIfPreparationStalls());
 #endif
     }
 
@@ -88,6 +88,7 @@ public sealed class StartupLogo : MonoBehaviour
 
         BeginPreloadingNextScene();
         player.Play();
+        StartCoroutine(ContinueIfPlaybackStalls(player));
     }
 
     private void HandleFinished(VideoPlayer player)
@@ -121,13 +122,26 @@ public sealed class StartupLogo : MonoBehaviour
         }
     }
 
-    private IEnumerator ContinueAfterFallbackDelay()
+    private IEnumerator ContinueIfPreparationStalls()
     {
         yield return new WaitForSecondsRealtime(fallbackDelaySeconds);
 
+        if (!transitionStarted && !videoPlayer.isPrepared)
+        {
+            Debug.LogWarning("Creator video preparation timed out; continuing to the main menu.");
+            ContinueToNextScene();
+        }
+    }
+
+    private IEnumerator ContinueIfPlaybackStalls(VideoPlayer player)
+    {
+        var expectedDuration = player.length > 0d ? (float)player.length : fallbackDelaySeconds;
+        var maximumPlaybackTime = Mathf.Max(fallbackDelaySeconds, expectedDuration + 3f);
+        yield return new WaitForSecondsRealtime(maximumPlaybackTime);
+
         if (!transitionStarted)
         {
-            Debug.LogWarning("Creator video timed out; continuing to the main menu.");
+            Debug.LogWarning("Creator video playback timed out; continuing to the main menu.");
             ContinueToNextScene();
         }
     }
