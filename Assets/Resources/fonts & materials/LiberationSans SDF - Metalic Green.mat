@@ -11,12 +11,12 @@ Material:
   m_Shader: {fileID: 4800000, guid: 2cb999aa34e944e0a9a5f06d88099c1d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
+  m_ValidKeywords: []
+  m_InvalidKeywords:
   - BEVEL_ON
   - GLOW_ON
   - OUTLINE_ON
   - UNDERLAY_ON
-  m_InvalidKeywords: []
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 381121449880167954, guid: abc56fcfe369dc646af51e756ebec709, type: 2}
+        m_Texture: {fileID: 8994994983918069501, guid: abc56fcfe369dc646af51e756ebec709, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OutlineTex:
@@ -84,6 +84,7 @@ Material:
     - _ScaleY: 1
     - _ShaderFlags: 0
     - _Sharpness: 0
+    - _Softness: 0
     - _SpecularPower: 1
     - _Stencil: 0
     - _StencilComp: 8
@@ -102,6 +103,7 @@ Material:
     - _WeightNormal: 0
     m_Colors:
     - _ClipRect: {r: -10000, g: -10000, b: 10000, a: 10000}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
     - _FaceColor: {r: 0, g: 0.75735635, b: 0, a: 1}
     - _GlowColor: {r: 0, g: 1, b: 0, a: 0.5}

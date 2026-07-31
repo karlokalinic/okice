@@ -43067,7 +43067,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 17.069824, y: -5.199951}
+  m_AnchoredPosition: {x: 17.069824, y: -5.200012}
   m_SizeDelta: {x: 603.3, y: 44.87}
   m_Pivot: {x: 0, y: 0}
 --- !u!224 &1986
@@ -52413,7 +52413,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: b0f92d43c96e4334f83f78575e3bcf53, type: 2}
+  sharedProfile: {fileID: 11400000, guid: 00e3cc8ddd5ae474c9b4b94b0c3dd69b, type: 2}
 --- !u!114 &2158
 MonoBehaviour:
   m_ObjectHideFlags: 0

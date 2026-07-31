@@ -18,48 +18,48 @@ MonoBehaviour:
     m_Value: 1
   enabled:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   renderPassEvent:
     m_OverrideState: 1
     m_Value: 1
   distortionStrength:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.034
   distortionSmoothing:
     m_OverrideState: 1
-    m_Value: 0.01
+    m_Value: 0.0657
   tintColor:
-    m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_OverrideState: 0
+    m_Value: {r: 0.5188679, g: 0.40873086, b: 0.40873086, a: 1}
   backgroundColor:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {r: 0, g: 0, b: 0, a: 1}
   scaleParameters:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   verticalReferenceResolution:
     m_OverrideState: 1
-    m_Value: 1080
+    m_Value: 2000
   forcePointFiltering:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   rgbTex:
     m_OverrideState: 1
     m_Value: {fileID: 0}
     dimension: 1
   rgbStrength:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.05
   scanlineTex:
     m_OverrideState: 1
     m_Value: {fileID: 0}
     dimension: 1
   scanlineStrength:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.681
   scanlineSize:
     m_OverrideState: 1
-    m_Value: 8
+    m_Value: 2
   scrollSpeed:
     m_OverrideState: 1
     m_Value: 0
@@ -68,41 +68,41 @@ MonoBehaviour:
     m_Value: 1
   randomWear:
     m_OverrideState: 1
-    m_Value: 0.2
+    m_Value: 0.5
   aberrationStrength:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 0.55
   trackingTexture:
     m_OverrideState: 1
     m_Value: {fileID: 0}
     dimension: 1
   trackingSize:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 1.588
   trackingStrength:
     m_OverrideState: 1
-    m_Value: 0.1
+    m_Value: 26.4
   trackingSpeed:
     m_OverrideState: 1
-    m_Value: 0.1
+    m_Value: -1.06
   trackingJitter:
     m_OverrideState: 1
-    m_Value: 0.01
+    m_Value: 0.0083
   trackingColorDamage:
     m_OverrideState: 1
-    m_Value: 0.05
+    m_Value: 0.034
   trackingLinesThreshold:
     m_OverrideState: 1
-    m_Value: 0.9
+    m_Value: 0.691
   trackingLinesColor:
     m_OverrideState: 1
     m_Value: {r: 1, g: 1, b: 1, a: 0.5}
   brightness:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 2.086
   contrast:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 1.396
   enableInterlacing:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0

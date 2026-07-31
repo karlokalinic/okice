@@ -11,26 +11,26 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 558a8e2b6826cf840aae193990ba9f2e, type: 3}
   m_Name: ShadowsMidtonesHighlights
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   active: 1
   shadows:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0}
+    m_Value: {x: 1, y: 1, z: 1, w: 0.37743685}
   midtones:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0}
+    m_Value: {x: 1, y: 1, z: 1, w: -0.19493987}
   highlights:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0}
+    m_Value: {x: 1, y: 1, z: 1, w: 0.5101618}
   shadowsStart:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.18
   shadowsEnd:
     m_OverrideState: 1
-    m_Value: 0.3
+    m_Value: 0.45
   highlightsStart:
     m_OverrideState: 1
-    m_Value: 0.55
+    m_Value: 0.68
   highlightsEnd:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 2.02

@@ -4,6 +4,7 @@ path = Path(r'C:\Users\kalin\Downloads\AssetRipper_win_x64\okice\okice\Assets\Mo
 text = path.read_text(encoding='utf-8')
 
 replacements = [
+    ('Prvo poglavlje', 'ZRACALO.'),
     ('Zaključano je.', 'Zaključano.'),
     ('Odlazak.', 'Idem.'),
     ('ODLAZAK', 'IDEM'),
@@ -60,7 +61,7 @@ replacements = [
     ('To je ljudska koža.', 'To je ljudska koža.'),
     ('To je mali lokot sa simbolom oka.', 'To je mali lokot sa simbolom oka.'),
     ('To je KLJUČ OKA (3 UPORABE).', 'To je KLJUČ OKA (3 uporabe).'),
-    ('To je bilješka.', 'To je bilješka.'),
+    ('To je bilješka, gurnuta ispod vrata.', 'To je bilješka, gurnuta ispod vrata.'),
     ('"Hodnici su prazni.\n\nZaglavio sam ovdje, okružen svim ovim zrcalima."', '"Hodnici su prazni.\n\nZaglavio sam ovdje, okružen ovim zrcalima."'),
     ('"Od sada ću gledati samo one slomljene."', '"Od sada ću gledati samo slomljene."'),
     ('Bilješka je pribijena za stražnju stranu ormara.', 'Bilješka je pribijena na stražnju stranu ormara.'),

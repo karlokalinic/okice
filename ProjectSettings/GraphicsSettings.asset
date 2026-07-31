@@ -34,34 +34,6 @@ GraphicsSettings:
   - {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 10783, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 19, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 65, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 66, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 67, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 109, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 110, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 107, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 111, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 9000, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 9001, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 9002, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 9003, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 9004, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 9007, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 9100, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 9102, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 9101, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 68, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10757, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 15309, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 15308, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 19011, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 15304, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 15312, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 113, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 16000, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 16001, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 17000, guid: 0000000000000000f000000000000000, type: 0}
   m_PreloadedShaders: []
   m_PreloadShadersBatchTimeLimit: -1
   m_SpritesDefaultMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
@@ -70,58 +42,7 @@ GraphicsSettings:
   m_TransparencySortAxis: {x: 0, y: 0, z: 1}
   m_DefaultRenderingPath: 1
   m_DefaultMobileRenderingPath: 1
-  m_TierSettings:
-  - serializedVersion: 5
-    m_BuildTarget: 1
-    m_Tier: 0
-    m_Settings:
-      standardShaderQuality: 2
-      renderingPath: 1
-      hdrMode: 1
-      realtimeGICPUUsage: 25
-      useReflectionProbeBoxProjection: 1
-      useReflectionProbeBlending: 1
-      useHDR: 1
-      useDetailNormalMap: 1
-      useCascadedShadowMaps: 1
-      prefer32BitShadowMaps: 0
-      enableLPPV: 1
-      useDitherMaskForAlphaBlendedShadows: 1
-    m_Automatic: 0
-  - serializedVersion: 5
-    m_BuildTarget: 1
-    m_Tier: 1
-    m_Settings:
-      standardShaderQuality: 2
-      renderingPath: 1
-      hdrMode: 1
-      realtimeGICPUUsage: 25
-      useReflectionProbeBoxProjection: 1
-      useReflectionProbeBlending: 1
-      useHDR: 1
-      useDetailNormalMap: 1
-      useCascadedShadowMaps: 1
-      prefer32BitShadowMaps: 0
-      enableLPPV: 1
-      useDitherMaskForAlphaBlendedShadows: 1
-    m_Automatic: 0
-  - serializedVersion: 5
-    m_BuildTarget: 1
-    m_Tier: 2
-    m_Settings:
-      standardShaderQuality: 2
-      renderingPath: 1
-      hdrMode: 1
-      realtimeGICPUUsage: 50
-      useReflectionProbeBoxProjection: 1
-      useReflectionProbeBlending: 1
-      useHDR: 1
-      useDetailNormalMap: 1
-      useCascadedShadowMaps: 1
-      prefer32BitShadowMaps: 0
-      enableLPPV: 1
-      useDitherMaskForAlphaBlendedShadows: 1
-    m_Automatic: 0
+  m_TierSettings: []
   m_LightmapStripping: 0
   m_FogStripping: 0
   m_InstancingStripping: 0
@@ -137,13 +58,12 @@ GraphicsSettings:
   m_FogKeepExp2: 1
   m_AlbedoSwatchInfos: []
   m_RenderPipelineGlobalSettingsMap:
-    UnityEngine.Rendering.HighDefinition.HDRenderPipeline: {fileID: 11400000, guid: 5bac620bd7f81f8449b67b197d4e9a5f, type: 2}
     UnityEngine.Rendering.Universal.UniversalRenderPipeline: {fileID: 11400000, guid: 972d39f732d8e604d96a69cdbff022ee, type: 2}
   m_ShaderBuildSettings:
     keywordDeclarationOverrides: []
   m_LightsUseLinearIntensity: 1
   m_LightsUseColorTemperature: 1
   m_LogWhenShaderIsCompiled: 0
-  m_LightProbeOutsideHullStrategy: 0
-  m_CameraRelativeLightCulling: 1
-  m_CameraRelativeShadowCulling: 1
+  m_LightProbeOutsideHullStrategy: 1
+  m_CameraRelativeLightCulling: 0
+  m_CameraRelativeShadowCulling: 0
