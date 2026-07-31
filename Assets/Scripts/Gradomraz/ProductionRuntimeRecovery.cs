@@ -88,7 +88,6 @@ namespace Karlolegend.Gradomraz
 
         private IEnumerator RecoverMenuAfterInitialization(Scene scene)
         {
-            // Let the original scene finish Awake/OnEnable, then replace its broken callbacks.
             yield return null;
 
             foreach (var button in Object.FindObjectsByType<Button>(
@@ -119,7 +118,6 @@ namespace Karlolegend.Gradomraz
 
         private static void ReplaceClick(Button button, UnityEngine.Events.UnityAction action)
         {
-            // Replacing the complete event removes persistent Inspector callbacks as well.
             button.onClick = new Button.ButtonClickedEvent();
             button.onClick.AddListener(action);
             button.interactable = true;
@@ -224,7 +222,6 @@ namespace Karlolegend.Gradomraz
                     continue;
                 }
 
-                // Volume.profile creates a runtime instance; the source asset is not overwritten.
                 var profile = volume.profile;
                 if (profile == null)
                 {
