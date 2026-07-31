@@ -5,34 +5,22 @@ using UnityEngine;
 
 namespace Karlolegend.Gradomraz.Editor
 {
-	/// <summary>
-	/// Prevents Unity from rewriting serialized shader assets that are not safe to save.
-	/// </summary>
-	class PreserveSerializedShaders
-		// AssetModificationProcessor is a new API added since Unity 3.5. However, it is not in the UnityEditor namespace until Unity 4.0.
-#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017_1_OR_NEWER
-		: UnityEditor.AssetModificationProcessor
-#elif UNITY_3_5
-		: AssetModificationProcessor
-#endif
-	{
-		private static readonly List<string> _pathList = new List<string>();
+    internal sealed class PreserveSerializedShaders : AssetModificationProcessor
+    {
+        private static string[] OnWillSaveAssets(string[] paths)
+        {
+            var saveablePaths = new List<string>(paths.Length);
 
-		private static string[] OnWillSaveAssets(string[] paths)
-		{
-			_pathList.Clear();
-			foreach (string path in paths)
-			{
-				if (path.EndsWith(".asset", StringComparison.Ordinal) && AssetDatabase.LoadMainAssetAtPath(path) is Shader)
-				{
-					Debug.Log(string.Format("Prevented Unity from overwriting serialized shader asset: {0}", path));
-				}
-				else
-				{
-					_pathList.Add(path);
-				}
-			}
-			return _pathList.ToArray();
-		}
-	}
+            foreach (var path in paths)
+            {
+                if (!path.EndsWith(".asset", StringComparison.Ordinal) ||
+                    AssetDatabase.LoadMainAssetAtPath(path) is not Shader)
+                {
+                    saveablePaths.Add(path);
+                }
+            }
+
+            return saveablePaths.ToArray();
+        }
+    }
 }
