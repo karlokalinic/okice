@@ -2,17 +2,16 @@ using UnityEngine;
 
 public static class HladanGradDisplayBootstrap
 {
+    private const int ProductionFrameRate = 60;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Init()
     {
-        RefreshRate refreshRate = Screen.currentResolution.refreshRateRatio;
-        int numerator = (int)refreshRate.numerator;
-        int denominator = (int)refreshRate.denominator;
-        int refreshRateHz = denominator > 0
-            ? numerator / denominator
-            : -1;
-
-        QualitySettings.vSyncCount = 1;
-        Application.targetFrameRate = refreshRateHz > 0 ? refreshRateHz : -1;
+        // Do not bind simulation/render cost to the physical monitor refresh rate. On 144/165/200 Hz
+        // displays the previous code forced the restored project and all fullscreen effects to run
+        // several times more often than the original production target.
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = ProductionFrameRate;
+        Application.backgroundLoadingPriority = ThreadPriority.Normal;
     }
 }
