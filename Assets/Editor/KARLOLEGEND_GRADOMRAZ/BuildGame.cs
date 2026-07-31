@@ -18,7 +18,9 @@ namespace Karlolegend.Gradomraz.Editor
         [MenuItem("KARLOLEGEND/GRADOMRAZ/Build Windows 64")]
         public static void BuildWindows64()
         {
+            PlayerSettings.allowHDRDisplaySupport = false;
             RecreateDirectory(Path.GetDirectoryName(OutputPath));
+
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
                 scenes = GetPlayableScenes(),
