@@ -11,22 +11,22 @@ using UnityEngine.UI;
 namespace Karlolegend.Gradomraz
 {
     /// <summary>
-    /// Production safety layer for restored scenes whose serialized menu callbacks or legacy
-    /// post-processing data are incomplete. It does not edit source scenes or run in Edit Mode.
+    /// Minimal production recovery for the restored main menu and the excessively dark runtime
+    /// volume. It deliberately avoids dependencies on the scene's missing legacy scripts.
     /// </summary>
     public sealed class ProductionRuntimeRecovery : MonoBehaviour
     {
-        private const string MainMenuSceneName = "MainMenu";
-        private const string GameplaySceneName = "SampleScene";
-        private const string ExposurePreference = "GRADOMRAZ_DisplayExposure";
-        private const float DefaultExposure = 0.8f;
+        private const string MainMenuScene = "MainMenu";
+        private const string GameplayScene = "SampleScene";
+        private const string ExposureKey = "GRADOMRAZ_DisplayExposure";
+        private const float DefaultExposure = 1f;
 
         private static ProductionRuntimeRecovery instance;
 
-        private bool transitionRunning;
-        private GameObject loadingOverlay;
-        private GameObject fallbackOptionsOverlay;
-        private UnityEngine.UI.Text fallbackOptionsStatus;
+        private bool loading;
+        private bool showOptions;
+        private float loadingProgress;
+        private string statusMessage = string.Empty;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Bootstrap()
@@ -36,7 +36,7 @@ namespace Karlolegend.Gradomraz
                 return;
             }
 
-            var host = new GameObject("GRADOMRAZ Production Runtime Recovery");
+            var host = new GameObject("GRADOMRAZ Production Runtime");
             DontDestroyOnLoad(host);
             instance = host.AddComponent<ProductionRuntimeRecovery>();
         }
@@ -51,8 +51,8 @@ namespace Karlolegend.Gradomraz
 
             instance = this;
             DontDestroyOnLoad(gameObject);
+            ApplyProductionTiming();
 
-            ApplyStableFramePacing();
             SceneManager.sceneLoaded -= HandleSceneLoaded;
             SceneManager.sceneLoaded += HandleSceneLoaded;
         }
@@ -68,104 +68,102 @@ namespace Karlolegend.Gradomraz
 
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            StartCoroutine(StabilizeLoadedScene(scene));
-        }
-
-        private IEnumerator StabilizeLoadedScene(Scene scene)
-        {
-            // Wait until Awake/OnEnable from the restored scene has completed before repairing UI.
-            yield return null;
+            loading = false;
+            loadingProgress = 1f;
+            statusMessage = string.Empty;
+            showOptions = false;
 
             Time.timeScale = 1f;
             AudioListener.pause = false;
-            ApplyStableFramePacing();
-            StabilizeGlobalVolumes(scene);
+            ApplyProductionTiming();
+            StabilizeSceneVolumes(scene);
 
-            if (scene.name == MainMenuSceneName)
+            if (scene.name == MainMenuScene)
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
-                RecoverMainMenuButtons(scene);
+                StartCoroutine(RecoverMenuAfterInitialization(scene));
             }
         }
 
-        private static void ApplyStableFramePacing()
+        private IEnumerator RecoverMenuAfterInitialization(Scene scene)
         {
-            // The previous bootstrap attempted to render at the monitor refresh rate. On a 200 Hz
-            // display that made the restored scene and every fullscreen effect run up to 200 fps.
-            QualitySettings.vSyncCount = 0;
-            Application.targetFrameRate = 60;
-            Application.backgroundLoadingPriority = ThreadPriority.Normal;
-        }
+            // Let the original scene finish Awake/OnEnable, then replace its broken callbacks.
+            yield return null;
 
-        private void RecoverMainMenuButtons(Scene scene)
-        {
-            foreach (var button in GetSceneComponents<Button>(scene))
+            foreach (var button in Object.FindObjectsByType<Button>(
+                         FindObjectsInactive.Include,
+                         FindObjectsSortMode.None))
             {
-                if (button == null)
+                if (button == null || button.gameObject.scene != scene)
                 {
                     continue;
                 }
 
-                var descriptor = GetButtonDescriptor(button);
+                var descriptor = Describe(button);
 
-                if (IsNewGameButton(descriptor))
+                if (IsNewGame(descriptor))
                 {
-                    button.onClick.RemoveAllListeners();
-                    button.onClick.AddListener(() => BeginSceneTransition(GameplaySceneName, button));
-                    button.interactable = true;
+                    ReplaceClick(button, () => StartGame(button));
                 }
-                else if (IsOptionsButton(descriptor))
+                else if (IsOptions(descriptor))
                 {
-                    button.onClick.RemoveAllListeners();
-                    button.onClick.AddListener(() => ToggleOptions(scene, button));
-                    button.interactable = true;
+                    ReplaceClick(button, ToggleOptions);
                 }
-                else if (IsQuitButton(descriptor))
+                else if (IsQuit(descriptor))
                 {
-                    button.onClick.RemoveAllListeners();
-                    button.onClick.AddListener(Application.Quit);
-                    button.interactable = true;
+                    ReplaceClick(button, () => Application.Quit());
                 }
             }
         }
 
-        private void BeginSceneTransition(string sceneName, Button sourceButton)
+        private static void ReplaceClick(Button button, UnityEngine.Events.UnityAction action)
         {
-            if (transitionRunning)
+            // Replacing the complete event removes persistent Inspector callbacks as well.
+            button.onClick = new Button.ButtonClickedEvent();
+            button.onClick.AddListener(action);
+            button.interactable = true;
+        }
+
+        private void StartGame(Button sourceButton)
+        {
+            if (loading)
             {
                 return;
             }
 
-            if (!Application.CanStreamedLevelBeLoaded(sceneName))
+            if (!Application.CanStreamedLevelBeLoaded(GameplayScene))
             {
-                Debug.LogError($"Cannot start game because scene '{sceneName}' is not present in the build.");
+                statusMessage = $"SCENA '{GameplayScene}' NIJE UKLJUČENA U BUILD.";
+                Debug.LogError(statusMessage);
                 return;
             }
-
-            transitionRunning = true;
-            Time.timeScale = 1f;
-            AudioListener.pause = false;
 
             if (sourceButton != null)
             {
                 sourceButton.interactable = false;
             }
 
-            StartCoroutine(LoadSceneProduction(sceneName));
+            StartCoroutine(LoadGameplay());
         }
 
-        private IEnumerator LoadSceneProduction(string sceneName)
+        private IEnumerator LoadGameplay()
         {
-            ShowLoadingOverlay();
+            loading = true;
+            showOptions = false;
+            loadingProgress = 0f;
+            statusMessage = "UČITAVANJE";
+
+            Time.timeScale = 1f;
+            AudioListener.pause = false;
             yield return null;
 
-            var operation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+            var operation = SceneManager.LoadSceneAsync(GameplayScene, LoadSceneMode.Single);
             if (operation == null)
             {
-                Debug.LogError($"Unity returned no loading operation for scene '{sceneName}'.");
-                transitionRunning = false;
-                HideLoadingOverlay();
+                loading = false;
+                statusMessage = "UNITY NIJE POKRENUO UČITAVANJE SCENE.";
+                Debug.LogError(statusMessage);
                 yield break;
             }
 
@@ -173,125 +171,92 @@ namespace Karlolegend.Gradomraz
 
             while (!operation.isDone)
             {
-                UpdateLoadingOverlay(operation.progress);
+                loadingProgress = Mathf.Clamp01(operation.progress / 0.9f);
                 yield return null;
             }
-
-            UpdateLoadingOverlay(1f);
-            yield return null;
-            HideLoadingOverlay();
-            transitionRunning = false;
         }
 
-        private void ToggleOptions(Scene scene, Button sourceButton)
+        private void ToggleOptions()
         {
-            Time.timeScale = 1f;
-            AudioListener.pause = false;
-
-            var existingPanel = FindExistingOptionsPanel(scene, sourceButton);
-            if (existingPanel != null)
+            if (loading)
             {
-                existingPanel.SetActive(!existingPanel.activeSelf);
                 return;
             }
 
-            EnsureFallbackOptionsOverlay();
-            fallbackOptionsOverlay.SetActive(!fallbackOptionsOverlay.activeSelf);
-            UpdateFallbackOptionsStatus();
+            showOptions = !showOptions;
+            statusMessage = string.Empty;
+            Time.timeScale = 1f;
+            AudioListener.pause = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
 
-        private static GameObject FindExistingOptionsPanel(Scene scene, Button sourceButton)
+        private void AdjustExposure(float delta)
         {
-            GameObject bestCandidate = null;
-            var bestScore = int.MinValue;
+            var exposure = Mathf.Clamp(
+                PlayerPrefs.GetFloat(ExposureKey, DefaultExposure) + delta,
+                0f,
+                2.5f);
 
-            foreach (var rectTransform in GetSceneComponents<RectTransform>(scene))
-            {
-                if (rectTransform == null || rectTransform.gameObject == sourceButton.gameObject)
-                {
-                    continue;
-                }
-
-                if (rectTransform.IsChildOf(sourceButton.transform) || sourceButton.transform.IsChildOf(rectTransform))
-                {
-                    continue;
-                }
-
-                var descriptor = Normalize(rectTransform.gameObject.name);
-                if (!ContainsAny(descriptor, "OPTIONS", "SETTINGS", "OPCIJE", "POSTAVKE"))
-                {
-                    continue;
-                }
-
-                if (rectTransform.GetComponent<Button>() != null)
-                {
-                    continue;
-                }
-
-                var score = 0;
-                if (!rectTransform.gameObject.activeSelf) score += 4;
-                if (ContainsAny(descriptor, "PANEL", "MENU", "WINDOW", "ROOT")) score += 3;
-                if (rectTransform.GetComponent<CanvasGroup>() != null) score += 2;
-                if (rectTransform.GetComponentsInChildren<Button>(true).Length > 0) score += 1;
-
-                if (score > bestScore)
-                {
-                    bestCandidate = rectTransform.gameObject;
-                    bestScore = score;
-                }
-            }
-
-            return bestCandidate;
+            PlayerPrefs.SetFloat(ExposureKey, exposure);
+            PlayerPrefs.Save();
+            StabilizeSceneVolumes(SceneManager.GetActiveScene());
         }
 
-        private void StabilizeGlobalVolumes(Scene scene)
+        private static void ApplyProductionTiming()
         {
-            var exposure = PlayerPrefs.GetFloat(ExposurePreference, DefaultExposure);
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = 60;
+            Application.backgroundLoadingPriority = ThreadPriority.BelowNormal;
+        }
 
-            foreach (var volume in GetSceneComponents<Volume>(scene))
+        private static void StabilizeSceneVolumes(Scene scene)
+        {
+            var exposure = PlayerPrefs.GetFloat(ExposureKey, DefaultExposure);
+
+            foreach (var volume in Object.FindObjectsByType<Volume>(
+                         FindObjectsInactive.Include,
+                         FindObjectsSortMode.None))
             {
-                if (volume == null || !volume.isGlobal || volume.sharedProfile == null)
+                if (volume == null || volume.gameObject.scene != scene ||
+                    !volume.isGlobal || volume.sharedProfile == null)
                 {
                     continue;
                 }
 
-                // Accessing profile creates a runtime instance. The source asset stays untouched.
+                // Volume.profile creates a runtime instance; the source asset is not overwritten.
                 var profile = volume.profile;
                 if (profile == null)
                 {
                     continue;
                 }
 
-                DisableComponent<MotionBlur>(profile);
-                DisableComponent<DepthOfField>(profile);
-                DisableComponent<FilmGrain>(profile);
-                DisableComponent<Vignette>(profile);
-                DisableComponent<ShadowsMidtonesHighlights>(profile);
-                DisableComponent<ChannelMixer>(profile);
-                DisableComponent<SplitToning>(profile);
-                DisableComponent<ColorCurves>(profile);
-                DisableComponent<ScreenSpaceLensFlare>(profile);
-                DisableComponent<LensDistortion>(profile);
+                Disable<MotionBlur>(profile);
+                Disable<DepthOfField>(profile);
+                Disable<FilmGrain>(profile);
+                Disable<Vignette>(profile);
+                Disable<ShadowsMidtonesHighlights>(profile);
+                Disable<ScreenSpaceLensFlare>(profile);
 
                 if (profile.TryGet<ColorAdjustments>(out var colorAdjustments))
                 {
                     colorAdjustments.active = true;
                     colorAdjustments.postExposure.Override(exposure);
-                    colorAdjustments.contrast.Override(8f);
-                    colorAdjustments.saturation.Override(-4f);
+                    colorAdjustments.contrast.Override(10f);
+                    colorAdjustments.saturation.Override(-5f);
                     colorAdjustments.colorFilter.Override(Color.white);
                 }
 
                 if (profile.TryGet<Bloom>(out var bloom))
                 {
                     bloom.active = true;
-                    bloom.intensity.Override(Mathf.Min(bloom.intensity.value, 0.25f));
+                    bloom.intensity.Override(Mathf.Min(bloom.intensity.value, 0.2f));
                     bloom.highQualityFiltering.Override(false);
                 }
             }
         }
 
-        private static void DisableComponent<T>(VolumeProfile profile) where T : VolumeComponent
+        private static void Disable<T>(VolumeProfile profile) where T : VolumeComponent
         {
             if (profile.TryGet<T>(out var component))
             {
@@ -299,210 +264,114 @@ namespace Karlolegend.Gradomraz
             }
         }
 
-        private void EnsureFallbackOptionsOverlay()
+        private void OnGUI()
         {
-            if (fallbackOptionsOverlay != null)
+            if (!loading && !showOptions && string.IsNullOrEmpty(statusMessage))
             {
                 return;
             }
 
-            fallbackOptionsOverlay = CreateOverlayCanvas("GRADOMRAZ Recovery Options", 32760);
-            fallbackOptionsOverlay.transform.SetParent(transform, false);
+            var previousDepth = GUI.depth;
+            GUI.depth = -10000;
 
-            var panel = CreateImage("Panel", fallbackOptionsOverlay.transform, new Color(0.025f, 0.025f, 0.03f, 0.96f));
-            Stretch(panel.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            if (loading)
+            {
+                DrawLoadingOverlay();
+            }
+            else if (showOptions)
+            {
+                DrawOptionsOverlay();
+            }
+            else
+            {
+                DrawStatusOverlay();
+            }
 
-            CreateText("Title", panel.transform, "OPCIJE", 34, new Vector2(0.2f, 0.78f), new Vector2(0.8f, 0.9f));
-            fallbackOptionsStatus = CreateText("Status", panel.transform, string.Empty, 20, new Vector2(0.2f, 0.64f), new Vector2(0.8f, 0.75f));
+            GUI.depth = previousDepth;
+        }
 
-            CreateButton(panel.transform, "PUNI ZASLON", new Vector2(0.3f, 0.51f), new Vector2(0.7f, 0.59f), () =>
+        private void DrawLoadingOverlay()
+        {
+            GUI.Box(new Rect(0f, 0f, Screen.width, Screen.height), GUIContent.none);
+
+            var percent = Mathf.RoundToInt(loadingProgress * 100f);
+            var labelRect = new Rect(0f, Screen.height * 0.45f, Screen.width, 60f);
+            var previousSize = GUI.skin.label.fontSize;
+            var previousAlignment = GUI.skin.label.alignment;
+            GUI.skin.label.fontSize = 26;
+            GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+            GUI.Label(labelRect, $"UČITAVANJE… {percent}%");
+            GUI.skin.label.fontSize = previousSize;
+            GUI.skin.label.alignment = previousAlignment;
+        }
+
+        private void DrawOptionsOverlay()
+        {
+            var width = Mathf.Min(560f, Screen.width - 40f);
+            var height = 430f;
+            var area = new Rect(
+                (Screen.width - width) * 0.5f,
+                (Screen.height - height) * 0.5f,
+                width,
+                height);
+
+            GUI.Box(new Rect(0f, 0f, Screen.width, Screen.height), GUIContent.none);
+            GUILayout.BeginArea(area, GUI.skin.window);
+            GUILayout.Space(12f);
+            GUILayout.Label("OPCIJE", CenteredLabel(28));
+            GUILayout.Space(20f);
+
+            var exposure = PlayerPrefs.GetFloat(ExposureKey, DefaultExposure);
+            GUILayout.Label($"SVJETLINA: {exposure:0.0}", CenteredLabel(20));
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("TAMNIJE", GUILayout.Height(45f))) AdjustExposure(-0.2f);
+            if (GUILayout.Button("SVJETLIJE", GUILayout.Height(45f))) AdjustExposure(0.2f);
+            GUILayout.EndHorizontal();
+
+            GUILayout.Space(12f);
+            if (GUILayout.Button(
+                    Screen.fullScreen ? "PROZORSKI NAČIN" : "PUNI ZASLON",
+                    GUILayout.Height(45f)))
             {
                 Screen.fullScreen = !Screen.fullScreen;
-                UpdateFallbackOptionsStatus();
-            });
-
-            CreateButton(panel.transform, "V-SYNC", new Vector2(0.3f, 0.41f), new Vector2(0.7f, 0.49f), () =>
-            {
-                var enableVSync = QualitySettings.vSyncCount == 0;
-                QualitySettings.vSyncCount = enableVSync ? 1 : 0;
-                Application.targetFrameRate = enableVSync ? -1 : 60;
-                UpdateFallbackOptionsStatus();
-            });
-
-            CreateButton(panel.transform, "SVJETLIJE", new Vector2(0.3f, 0.31f), new Vector2(0.495f, 0.39f), () => AdjustExposure(0.2f));
-            CreateButton(panel.transform, "TAMNIJE", new Vector2(0.505f, 0.31f), new Vector2(0.7f, 0.39f), () => AdjustExposure(-0.2f));
-            CreateButton(panel.transform, "NATRAG", new Vector2(0.3f, 0.18f), new Vector2(0.7f, 0.26f), () => fallbackOptionsOverlay.SetActive(false));
-
-            fallbackOptionsOverlay.SetActive(false);
-        }
-
-        private void AdjustExposure(float delta)
-        {
-            var exposure = Mathf.Clamp(
-                PlayerPrefs.GetFloat(ExposurePreference, DefaultExposure) + delta,
-                -0.5f,
-                2.5f);
-
-            PlayerPrefs.SetFloat(ExposurePreference, exposure);
-            PlayerPrefs.Save();
-            StabilizeGlobalVolumes(SceneManager.GetActiveScene());
-            UpdateFallbackOptionsStatus();
-        }
-
-        private void UpdateFallbackOptionsStatus()
-        {
-            if (fallbackOptionsStatus == null)
-            {
-                return;
             }
 
-            var exposure = PlayerPrefs.GetFloat(ExposurePreference, DefaultExposure);
-            var sync = QualitySettings.vSyncCount > 0 ? "UKLJUČEN" : "ISKLJUČEN / 60 FPS";
-            fallbackOptionsStatus.text = $"SVJETLINA {exposure:+0.0;-0.0;0.0}    V-SYNC {sync}";
-        }
-
-        private void ShowLoadingOverlay()
-        {
-            if (loadingOverlay == null)
+            if (GUILayout.Button(
+                    QualitySettings.vSyncCount > 0 ? "V-SYNC: UKLJUČEN" : "V-SYNC: ISKLJUČEN / 60 FPS",
+                    GUILayout.Height(45f)))
             {
-                loadingOverlay = CreateOverlayCanvas("GRADOMRAZ Loading", 32767);
-                loadingOverlay.transform.SetParent(transform, false);
-
-                var background = CreateImage("Background", loadingOverlay.transform, Color.black);
-                Stretch(background.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-                CreateText("LoadingText", background.transform, "UČITAVANJE… 0%", 26, new Vector2(0.25f, 0.44f), new Vector2(0.75f, 0.56f));
+                var enable = QualitySettings.vSyncCount == 0;
+                QualitySettings.vSyncCount = enable ? 1 : 0;
+                Application.targetFrameRate = enable ? -1 : 60;
             }
 
-            loadingOverlay.SetActive(true);
-        }
-
-        private void UpdateLoadingOverlay(float progress)
-        {
-            if (loadingOverlay == null)
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("NATRAG", GUILayout.Height(50f)))
             {
-                return;
+                showOptions = false;
             }
 
-            var text = loadingOverlay.GetComponentInChildren<UnityEngine.UI.Text>(true);
-            if (text != null)
+            GUILayout.Space(12f);
+            GUILayout.EndArea();
+        }
+
+        private void DrawStatusOverlay()
+        {
+            var rect = new Rect(20f, Screen.height - 90f, Screen.width - 40f, 60f);
+            GUI.Box(rect, statusMessage);
+        }
+
+        private static GUIStyle CenteredLabel(int fontSize)
+        {
+            return new GUIStyle(GUI.skin.label)
             {
-                var normalizedProgress = Mathf.Clamp01(progress / 0.9f);
-                text.text = $"UČITAVANJE… {Mathf.RoundToInt(normalizedProgress * 100f)}%";
-            }
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = fontSize,
+                wordWrap = true
+            };
         }
 
-        private void HideLoadingOverlay()
-        {
-            if (loadingOverlay != null)
-            {
-                loadingOverlay.SetActive(false);
-            }
-        }
-
-        private static GameObject CreateOverlayCanvas(string name, int sortingOrder)
-        {
-            var gameObject = new GameObject(name, typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
-            var canvas = gameObject.GetComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = sortingOrder;
-
-            var scaler = gameObject.GetComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
-            scaler.matchWidthOrHeight = 0.5f;
-            return gameObject;
-        }
-
-        private static Image CreateImage(string name, Transform parent, Color color)
-        {
-            var gameObject = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-            gameObject.transform.SetParent(parent, false);
-            var image = gameObject.GetComponent<Image>();
-            image.color = color;
-            return image;
-        }
-
-        private static UnityEngine.UI.Text CreateText(
-            string name,
-            Transform parent,
-            string value,
-            int fontSize,
-            Vector2 anchorMin,
-            Vector2 anchorMax)
-        {
-            var gameObject = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(UnityEngine.UI.Text));
-            gameObject.transform.SetParent(parent, false);
-
-            var rectTransform = gameObject.GetComponent<RectTransform>();
-            Stretch(rectTransform, anchorMin, anchorMax, Vector2.zero, Vector2.zero);
-
-            var text = gameObject.GetComponent<UnityEngine.UI.Text>();
-            text.text = value;
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            text.fontSize = fontSize;
-            text.alignment = TextAnchor.MiddleCenter;
-            text.color = Color.white;
-            text.raycastTarget = false;
-            return text;
-        }
-
-        private static Button CreateButton(
-            Transform parent,
-            string label,
-            Vector2 anchorMin,
-            Vector2 anchorMax,
-            UnityEngine.Events.UnityAction action)
-        {
-            var image = CreateImage(label, parent, new Color(0.15f, 0.15f, 0.18f, 1f));
-            Stretch(image.rectTransform, anchorMin, anchorMax, Vector2.zero, Vector2.zero);
-
-            var button = image.gameObject.AddComponent<Button>();
-            button.targetGraphic = image;
-            button.onClick.AddListener(action);
-            CreateText("Label", image.transform, label, 20, Vector2.zero, Vector2.one);
-            return button;
-        }
-
-        private static void Stretch(RectTransform rect, Vector2 anchorMin, Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax)
-        {
-            rect.anchorMin = anchorMin;
-            rect.anchorMax = anchorMax;
-            rect.offsetMin = offsetMin;
-            rect.offsetMax = offsetMax;
-        }
-
-        private static T[] GetSceneComponents<T>(Scene scene) where T : Component
-        {
-            var count = 0;
-            var roots = scene.GetRootGameObjects();
-
-            foreach (var root in roots)
-            {
-                if (root != null)
-                {
-                    count += root.GetComponentsInChildren<T>(true).Length;
-                }
-            }
-
-            var results = new T[count];
-            var offset = 0;
-
-            foreach (var root in roots)
-            {
-                if (root == null)
-                {
-                    continue;
-                }
-
-                var components = root.GetComponentsInChildren<T>(true);
-                components.CopyTo(results, offset);
-                offset += components.Length;
-            }
-
-            return results;
-        }
-
-        private static string GetButtonDescriptor(Button button)
+        private static string Describe(Button button)
         {
             var builder = new StringBuilder(button.gameObject.name);
 
@@ -512,54 +381,14 @@ namespace Karlolegend.Gradomraz
                 builder.Append(' ').Append(tmp.text);
             }
 
-            var legacyText = button.GetComponentInChildren<UnityEngine.UI.Text>(true);
-            if (legacyText != null)
+            var legacy = button.GetComponentInChildren<UnityEngine.UI.Text>(true);
+            if (legacy != null)
             {
-                builder.Append(' ').Append(legacyText.text);
+                builder.Append(' ').Append(legacy.text);
             }
 
-            return Normalize(builder.ToString());
-        }
-
-        private static bool IsNewGameButton(string descriptor)
-        {
-            return (descriptor.Contains("NEW") && descriptor.Contains("GAME")) ||
-                   (descriptor.Contains("NOVA") && descriptor.Contains("IGRA")) ||
-                   ContainsAny(descriptor, "START GAME", "POKRENI IGRU");
-        }
-
-        private static bool IsOptionsButton(string descriptor)
-        {
-            return ContainsAny(descriptor, "OPTIONS", "SETTINGS", "OPCIJE", "POSTAVKE");
-        }
-
-        private static bool IsQuitButton(string descriptor)
-        {
-            return ContainsAny(descriptor, "QUIT", "EXIT", "IZLAZ", "IZADI");
-        }
-
-        private static bool ContainsAny(string value, params string[] candidates)
-        {
-            foreach (var candidate in candidates)
-            {
-                if (value.Contains(candidate))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private static string Normalize(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return string.Empty;
-            }
-
-            var decomposed = value.Normalize(NormalizationForm.FormD);
-            var builder = new StringBuilder(decomposed.Length);
+            var decomposed = builder.ToString().Normalize(NormalizationForm.FormD);
+            builder.Clear();
 
             foreach (var character in decomposed)
             {
@@ -570,6 +399,26 @@ namespace Karlolegend.Gradomraz
             }
 
             return builder.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+        private static bool IsNewGame(string value)
+        {
+            return (value.Contains("NEW") && value.Contains("GAME")) ||
+                   (value.Contains("NOVA") && value.Contains("IGRA")) ||
+                   value.Contains("START GAME") ||
+                   value.Contains("POKRENI IGRU");
+        }
+
+        private static bool IsOptions(string value)
+        {
+            return value.Contains("OPTIONS") || value.Contains("SETTINGS") ||
+                   value.Contains("OPCIJE") || value.Contains("POSTAVKE");
+        }
+
+        private static bool IsQuit(string value)
+        {
+            return value.Contains("QUIT") || value.Contains("EXIT") ||
+                   value.Contains("IZLAZ") || value.Contains("IZADI");
         }
     }
 }
