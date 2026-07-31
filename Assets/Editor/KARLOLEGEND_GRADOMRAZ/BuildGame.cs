@@ -18,14 +18,10 @@ namespace Karlolegend.Gradomraz.Editor
         [MenuItem("KARLOLEGEND/GRADOMRAZ/Build Windows 64")]
         public static void BuildWindows64()
         {
-            PrepareBuild();
-            var scenes = GetPlayableScenes();
-
             RecreateDirectory(Path.GetDirectoryName(OutputPath));
-
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
-                scenes = scenes,
+                scenes = GetPlayableScenes(),
                 locationPathName = OutputPath,
                 target = BuildTarget.StandaloneWindows64,
                 options = BuildOptions.None
@@ -37,8 +33,6 @@ namespace Karlolegend.Gradomraz.Editor
         [MenuItem("KARLOLEGEND/GRADOMRAZ/Build WebGL for itch.io")]
         public static void BuildWebGL()
         {
-            PrepareBuild();
-
             PlayerSettings.WebGL.template = "PROJECT:Itch";
             PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli;
             PlayerSettings.WebGL.dataCaching = true;
@@ -46,14 +40,10 @@ namespace Karlolegend.Gradomraz.Editor
             PlayerSettings.WebGL.maximumMemorySize = 2048;
             PlayerSettings.WebGL.memoryGrowthMode = WebGLMemoryGrowthMode.Geometric;
 
-            var scenes = GetPlayableScenes();
             RecreateDirectory(WebGlOutputPath);
-
-            // Deliberately use the same URP asset as the Editor and Windows build.
-            // Platform-specific pipeline mutations were the source of visually different builds.
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
-                scenes = scenes,
+                scenes = GetPlayableScenes(),
                 locationPathName = WebGlOutputPath,
                 target = BuildTarget.WebGL,
                 options = BuildOptions.None
@@ -65,13 +55,6 @@ namespace Karlolegend.Gradomraz.Editor
             }
 
             ReportResult("WebGL", report, WebGlOutputPath);
-        }
-
-        private static void PrepareBuild()
-        {
-            Selection.activeObject = null;
-            TmpFontAssetRepair.Run();
-            RenderConsistencyBuildGuard.ApplyProjectSettings();
         }
 
         private static string[] GetPlayableScenes()
@@ -88,8 +71,7 @@ namespace Karlolegend.Gradomraz.Editor
 
             if (!string.Equals(scenes[0], BootScenePath, StringComparison.OrdinalIgnoreCase))
             {
-                throw new InvalidOperationException(
-                    $"Build failed: {BootScenePath} must be the first enabled scene, but the first scene is {scenes[0]}.");
+                throw new InvalidOperationException($"Build failed: {BootScenePath} must be the first enabled scene.");
             }
 
             return scenes;
@@ -117,19 +99,13 @@ namespace Karlolegend.Gradomraz.Editor
                 File.Delete(ItchWebGlArchivePath);
             }
 
-            ZipFile.CreateFromDirectory(
-                WebGlOutputPath,
-                ItchWebGlArchivePath,
-                System.IO.Compression.CompressionLevel.Optimal,
-                false);
+            ZipFile.CreateFromDirectory(WebGlOutputPath, ItchWebGlArchivePath, CompressionLevel.Optimal, false);
         }
 
         private static void ReportResult(string platformName, BuildReport report, string output)
         {
             var summary = report.summary;
-            Debug.Log(
-                $"{platformName} build result={summary.result}, errors={summary.totalErrors}, " +
-                $"warnings={summary.totalWarnings}, size={summary.totalSize}, output={output}");
+            Debug.Log($"{platformName} build: {summary.result}, errors={summary.totalErrors}, warnings={summary.totalWarnings}, output={output}");
 
             if (summary.result != BuildResult.Succeeded && Application.isBatchMode)
             {
