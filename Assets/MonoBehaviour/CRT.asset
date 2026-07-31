@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8030be0c9aa7bc07ff121776fe02faaf, type: 3}
   m_Name: CRT
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
