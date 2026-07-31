@@ -4,158 +4,114 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
 
-[RequireComponent(typeof(Camera))]
-[RequireComponent(typeof(VideoPlayer))]
+[RequireComponent(typeof(Camera), typeof(VideoPlayer))]
 public sealed class StartupLogo : MonoBehaviour
 {
-    [Header("Scene loaded after the creator video")]
     [SerializeField] private string nextSceneName = "MainMenu";
     [SerializeField, Min(1f)] private float fallbackDelaySeconds = 15f;
 
-    private Camera bootCamera;
     private VideoPlayer videoPlayer;
-    private AsyncOperation nextSceneLoading;
-    private bool transitionStarted;
+    private AsyncOperation sceneLoad;
+    private bool transitionRequested;
 
     private void Awake()
     {
-        bootCamera = GetComponent<Camera>();
-        videoPlayer = GetComponent<VideoPlayer>();
-        ConfigureBootCamera();
+        Time.timeScale = 1f;
+        Application.backgroundLoadingPriority = ThreadPriority.Normal;
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-        videoPlayer.enabled = false;
-#else
-        ConfigureVideoPlayer();
-#endif
-    }
+        var cameraComponent = GetComponent<Camera>();
+        cameraComponent.clearFlags = CameraClearFlags.SolidColor;
+        cameraComponent.backgroundColor = Color.black;
+        cameraComponent.cullingMask = 0;
+        cameraComponent.allowHDR = false;
+        cameraComponent.allowMSAA = false;
 
-    private void Start()
-    {
-        Application.backgroundLoadingPriority = ThreadPriority.BelowNormal;
-
-#if UNITY_WEBGL && !UNITY_EDITOR
-        BeginTransition();
-#else
-        // Do not load the restored main menu while the 4K creator video is decoding.
-        // Running both jobs together caused severe stalls on startup.
-        videoPlayer.Prepare();
-        StartCoroutine(ContinueIfPreparationStalls());
-#endif
-    }
-
-    private void ConfigureBootCamera()
-    {
-        bootCamera.clearFlags = CameraClearFlags.SolidColor;
-        bootCamera.backgroundColor = Color.black;
-        bootCamera.cullingMask = 0;
-        bootCamera.allowHDR = false;
-        bootCamera.allowMSAA = false;
-
-        if (bootCamera.TryGetComponent<UniversalAdditionalCameraData>(out var cameraData))
+        if (cameraComponent.TryGetComponent<UniversalAdditionalCameraData>(out var cameraData))
         {
             cameraData.renderPostProcessing = false;
             cameraData.allowHDROutput = false;
         }
-    }
 
-    private void ConfigureVideoPlayer()
-    {
+        videoPlayer = GetComponent<VideoPlayer>();
         videoPlayer.playOnAwake = false;
         videoPlayer.isLooping = false;
         videoPlayer.waitForFirstFrame = true;
-        videoPlayer.skipOnDrop = false;
+        videoPlayer.skipOnDrop = true;
         videoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
-        videoPlayer.targetCamera = bootCamera;
+        videoPlayer.targetCamera = cameraComponent;
         videoPlayer.targetCameraAlpha = 1f;
         videoPlayer.aspectRatio = VideoAspectRatio.FitInside;
-
-        videoPlayer.prepareCompleted += HandlePrepared;
-        videoPlayer.loopPointReached += HandleFinished;
-        videoPlayer.errorReceived += HandleError;
+        videoPlayer.prepareCompleted += OnPrepared;
+        videoPlayer.loopPointReached += OnFinished;
+        videoPlayer.errorReceived += OnVideoError;
     }
 
-    private void HandlePrepared(VideoPlayer player)
-    {
-        if (transitionStarted)
-        {
-            return;
-        }
-
-        player.Play();
-        StartCoroutine(ContinueIfPlaybackStalls(player));
-    }
-
-    private void HandleFinished(VideoPlayer player)
-    {
-        BeginTransition();
-    }
-
-    private void HandleError(VideoPlayer player, string message)
-    {
-        Debug.LogError($"Creator video failed to play: {message}");
-        BeginTransition();
-    }
-
-    private IEnumerator ContinueIfPreparationStalls()
-    {
-        yield return new WaitForSecondsRealtime(fallbackDelaySeconds);
-
-        if (!transitionStarted && !videoPlayer.isPrepared)
-        {
-            Debug.LogWarning("Creator video preparation timed out; continuing to the main menu.");
-            BeginTransition();
-        }
-    }
-
-    private IEnumerator ContinueIfPlaybackStalls(VideoPlayer player)
-    {
-        var expectedDuration = player.length > 0d ? (float)player.length : fallbackDelaySeconds;
-        var maximumPlaybackTime = Mathf.Max(fallbackDelaySeconds, expectedDuration + 3f);
-        yield return new WaitForSecondsRealtime(maximumPlaybackTime);
-
-        if (!transitionStarted)
-        {
-            Debug.LogWarning("Creator video playback timed out; continuing to the main menu.");
-            BeginTransition();
-        }
-    }
-
-    private void BeginTransition()
-    {
-        if (transitionStarted)
-        {
-            return;
-        }
-
-        transitionStarted = true;
-        StartCoroutine(LoadNextScene());
-    }
-
-    private IEnumerator LoadNextScene()
+    private void Start()
     {
         if (!Application.CanStreamedLevelBeLoaded(nextSceneName))
         {
-            Debug.LogError($"Startup scene cannot load '{nextSceneName}'. Check Build Settings.");
-            yield break;
+            Debug.LogError($"Startup scene '{nextSceneName}' is not included in Build Settings.");
+            return;
         }
 
-        // Leave the final decoded logo frame on the camera while the menu loads. Do not expose
-        // scene geometry, a Unity skybox or an intermediate post-processing frame.
-        yield return null;
+        sceneLoad = SceneManager.LoadSceneAsync(nextSceneName, LoadSceneMode.Single);
+        sceneLoad.allowSceneActivation = false;
 
-        nextSceneLoading = SceneManager.LoadSceneAsync(nextSceneName, LoadSceneMode.Single);
-        if (nextSceneLoading == null)
+#if UNITY_WEBGL && !UNITY_EDITOR
+        videoPlayer.enabled = false;
+        RequestTransition();
+#else
+        videoPlayer.Prepare();
+        StartCoroutine(FallbackAfterDelay());
+#endif
+    }
+
+    private void OnPrepared(VideoPlayer player)
+    {
+        if (!transitionRequested)
         {
-            Debug.LogError($"Unity did not create a load operation for '{nextSceneName}'.");
-            yield break;
+            player.Play();
+        }
+    }
+
+    private void OnFinished(VideoPlayer player)
+    {
+        RequestTransition();
+    }
+
+    private void OnVideoError(VideoPlayer player, string message)
+    {
+        Debug.LogError($"Startup video error: {message}");
+        RequestTransition();
+    }
+
+    private IEnumerator FallbackAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(fallbackDelaySeconds);
+        RequestTransition();
+    }
+
+    private void RequestTransition()
+    {
+        if (transitionRequested)
+        {
+            return;
         }
 
-        nextSceneLoading.allowSceneActivation = true;
+        transitionRequested = true;
+        StartCoroutine(ActivateWhenReady());
+    }
 
-        while (!nextSceneLoading.isDone)
+    private IEnumerator ActivateWhenReady()
+    {
+        while (sceneLoad != null && sceneLoad.progress < 0.9f)
         {
             yield return null;
+        }
+
+        if (sceneLoad != null)
+        {
+            sceneLoad.allowSceneActivation = true;
         }
     }
 
@@ -166,8 +122,8 @@ public sealed class StartupLogo : MonoBehaviour
             return;
         }
 
-        videoPlayer.prepareCompleted -= HandlePrepared;
-        videoPlayer.loopPointReached -= HandleFinished;
-        videoPlayer.errorReceived -= HandleError;
+        videoPlayer.prepareCompleted -= OnPrepared;
+        videoPlayer.loopPointReached -= OnFinished;
+        videoPlayer.errorReceived -= OnVideoError;
     }
 }
