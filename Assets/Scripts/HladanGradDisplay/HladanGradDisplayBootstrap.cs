@@ -8,5 +8,11 @@ public static class HladanGradDisplayBootstrap
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
         Application.backgroundLoadingPriority = ThreadPriority.Normal;
+
+        var hdr = HDROutputSettings.main;
+        if (hdr.available && hdr.active)
+        {
+            hdr.RequestHDRModeChange(false);
+        }
     }
 }
