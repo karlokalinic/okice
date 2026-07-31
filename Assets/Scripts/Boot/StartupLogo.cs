@@ -17,7 +17,6 @@ public sealed class StartupLogo : MonoBehaviour
     private void Awake()
     {
         Time.timeScale = 1f;
-        Application.backgroundLoadingPriority = ThreadPriority.Normal;
 
         var cameraComponent = GetComponent<Camera>();
         cameraComponent.clearFlags = CameraClearFlags.SolidColor;
