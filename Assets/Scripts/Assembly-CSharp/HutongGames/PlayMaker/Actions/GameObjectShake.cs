@@ -1,306 +1,318 @@
-using System;
 using UnityEngine;
 
 namespace HutongGames.PlayMaker.Actions
 {
-	[ActionCategory(ActionCategory.GameObject)]
-	[Tooltip("Shake an object (GameObject: Camera, Canvas, Cube, etc)")]
-	[HelpUrl("http://hutonggames.com/playmakerforum/index.php?topic=9928")]
-	public class GameObjectShake : FsmStateAction
-	{
-		public enum LerpInterpolationType
-		{
-			Off = 0,
-			Linear = 1,
-			Quadratic = 2,
-			EaseIn = 3,
-			EaseOut = 4,
-			Smoothstep = 5,
-			Smootherstep = 6,
-			DeltaTime = 7,
-			SimpleSine = 8,
-			DoubleSine = 9,
-			DoubleByHalfSine = 10,
-			Curve = 11
-		}
+    [ActionCategory(ActionCategory.GameObject)]
+    [Tooltip("Shake an object (GameObject: Camera, Canvas, Cube, etc)")]
+    [HelpUrl("http://hutonggames.com/playmakerforum/index.php?topic=9928")]
+    public class GameObjectShake : FsmStateAction
+    {
+        public enum LerpInterpolationType
+        {
+            Off = 0,
+            Linear = 1,
+            Quadratic = 2,
+            EaseIn = 3,
+            EaseOut = 4,
+            Smoothstep = 5,
+            Smootherstep = 6,
+            DeltaTime = 7,
+            SimpleSine = 8,
+            DoubleSine = 9,
+            DoubleByHalfSine = 10,
+            Curve = 11
+        }
 
-		[ActionSection("Set GameObject")]
-		[RequiredField]
-		[UIHint(UIHint.Variable)]
-		[Tooltip("GameObject to shake")]
-		public FsmOwnerDefault gameObject;
+        [ActionSection("Set GameObject")]
+        [RequiredField]
+        [UIHint(UIHint.Variable)]
+        [Tooltip("GameObject to shake")]
+        public FsmOwnerDefault gameObject;
 
-		[ActionSection("Setup")]
-		[Tooltip("Amount of Time for shake")]
-		public FsmFloat setTime;
+        [ActionSection("Setup")]
+        [Tooltip("Amount of Time for shake")]
+        public FsmFloat setTime;
 
-		[Tooltip("Shake strength. If interpolation is off, use low numbers such as 0,02 for subtle shake of camera for example.")]
-		public FsmFloat shakeAmount;
+        [Tooltip("Shake strength. If interpolation is off, use low numbers such as 0,02 for subtle shake of camera for example.")]
+        public FsmFloat shakeAmount;
 
-		[ActionSection("Interpolation Setup")]
-		[Tooltip("Select interpolation type. Off means interpolation + shake speed are disabled")]
-		public LerpInterpolationType interpolation;
+        [ActionSection("Interpolation Setup")]
+        [Tooltip("Select interpolation type. Off means interpolation + shake speed are disabled")]
+        public LerpInterpolationType interpolation;
 
-		[Tooltip("If interpolation is on, recommended shake speed above 1f (depends on selection!)")]
-		public FsmFloat shakeSpeed;
+        [Tooltip("If interpolation is on, recommended shake speed above 1f (depends on selection!)")]
+        public FsmFloat shakeSpeed;
 
-		[Tooltip("Only works if interpolation is to curve!)")]
-		public FsmAnimationCurve lerpCurve;
+        [Tooltip("Only works if interpolation is to curve!")]
+        public FsmAnimationCurve lerpCurve;
 
-		[ActionSection("Rotation Setup")]
-		[Tooltip("Set rotation strength. 0 = Off/disabled")]
-		public FsmFloat rotationAmount;
+        [ActionSection("Rotation Setup")]
+        [Tooltip("Set rotation strength. 0 = Off/disabled")]
+        public FsmFloat rotationAmount;
 
-		[ActionSection("Events")]
-		[Tooltip("Leave state when finished shaking")]
-		public FsmBool exitOnFinish;
+        [ActionSection("Events")]
+        [Tooltip("Leave state when finished shaking")]
+        public FsmBool exitOnFinish;
 
-		public FsmEvent exit;
+        public FsmEvent exit;
 
-		[ActionSection("")]
-		[UIHint(UIHint.Description)]
-		[Tooltip("Repeat this action every frame. To allow a loop force quit, set Fsm Bool (true = active) and change it to false in game")]
-		public FsmBool loop;
+        [ActionSection("")]
+        [UIHint(UIHint.Description)]
+        [Tooltip("Repeat this action every frame. To allow a loop force quit, set Fsm Bool (true = active) and change it to false in game")]
+        public FsmBool loop;
 
-		private Vector3 originalPos;
+        private Transform targetTransform;
+        private Vector3 originalPosition;
+        private Vector3 targetPosition;
+        private Quaternion originalRotation;
+        private Quaternion targetRotation;
+        private float remainingTime;
+        private float interpolationFactor;
+        private float rotationStrength;
+        private bool useInterpolation;
+        private bool useCurve;
+        private bool rotate;
+        private bool isCamera;
 
-		private Vector3 newPos;
+        public override void Reset()
+        {
+            gameObject = null;
+            loop = false;
+            exitOnFinish = false;
+            setTime = 1f;
+            shakeAmount = 0.02f;
+            shakeSpeed = 1f;
+            rotationAmount = 0.3f;
+            interpolation = LerpInterpolationType.Linear;
+        }
 
-		private Quaternion newPosRot;
+        public override void OnPreprocess()
+        {
+            Fsm.HandleLateUpdate = true;
+        }
 
-		private bool lerpOn = true;
+        public override void OnEnter()
+        {
+            GameObject targetObject = Fsm.GetOwnerDefaultTarget(gameObject);
+            if (targetObject == null)
+            {
+                Finish();
+                return;
+            }
 
-		private bool animationCurvebool;
+            targetTransform = targetObject.transform;
+            isCamera = targetObject.GetComponent<Camera>() != null;
+            originalPosition = targetTransform.localPosition;
+            originalRotation = targetTransform.localRotation;
+            remainingTime = Mathf.Max(0f, setTime.Value);
+            rotationStrength = Mathf.Abs(rotationAmount.Value);
+            rotate = rotationStrength > Mathf.Epsilon;
+            interpolationFactor = GetInterpolation(Mathf.Abs(shakeSpeed.Value / 30f), interpolation);
+            targetPosition = originalPosition + CreatePositionOffset();
+            targetRotation = CreateRotationTarget();
 
-		private Transform objTransform;
+            ApplyShake();
+        }
 
-		private GameObject gameObject2;
+        public override void OnUpdate()
+        {
+            if (!isCamera)
+            {
+                Tick();
+            }
+        }
 
-		private float shakeTime;
+        public override void OnLateUpdate()
+        {
+            if (isCamera)
+            {
+                Tick();
+            }
+        }
 
-		private Quaternion OriginalRot;
+        public override void OnExit()
+        {
+            RestoreTransform();
+        }
 
-		private float lerpFactor = 0.5f;
+        private void Tick()
+        {
+            if (targetTransform == null)
+            {
+                Finish();
+                return;
+            }
 
-		private bool rotation;
+            if (loop.Value)
+            {
+                ApplyShake();
+                return;
+            }
 
-		private float rotationIntent;
+            if (remainingTime <= 0f)
+            {
+                RestoreTransform();
 
-		private float rotationDecay;
+                if (exitOnFinish.Value)
+                {
+                    Fsm.Event(exit);
+                    Finish();
+                }
 
-		private bool isCamera;
+                return;
+            }
 
-		private float t;
+            ApplyShake();
+        }
 
-		public override void Reset()
-		{
-			gameObject = null;
-			loop = false;
-			rotation = true;
-			exitOnFinish = false;
-			shakeTime = 0f;
-			setTime = 1f;
-			shakeAmount = 0.02f;
-			lerpFactor = 1f;
-			shakeSpeed = 1f;
-			rotationAmount = 0.3f;
-			animationCurvebool = false;
-			isCamera = false;
-		}
+        private void ApplyShake()
+        {
+            if (useInterpolation)
+            {
+                ApplyInterpolatedPosition();
+            }
+            else
+            {
+                targetTransform.localPosition = originalPosition + CreatePositionOffset();
+                DecreaseRemainingTime();
+            }
 
-		public override void OnPreprocess()
-		{
-			if (isCamera)
-			{
-				base.Fsm.HandleLateUpdate = true;
-			}
-		}
+            if (rotate)
+            {
+                ApplyRotation();
+            }
+        }
 
-		public override void OnEnter()
-		{
-			gameObject2 = base.Fsm.GetOwnerDefaultTarget(gameObject);
-			objTransform = gameObject2.GetComponent(typeof(Transform)) as Transform;
-			if (gameObject2.GetComponent<Camera>() != null)
-			{
-				isCamera = true;
-			}
-			originalPos = objTransform.localPosition;
-			OriginalRot = objTransform.localRotation;
-			shakeTime = setTime.Value;
-			rotationIntent = rotationAmount.Value;
-			t = shakeSpeed.Value / 30f;
-			t = GetInterpolation(Mathf.Abs(t), interpolation);
-			if (loop.Value)
-			{
-				lerpFactor = 0f;
-				exitOnFinish = false;
-			}
-			else
-			{
-				lerpFactor = 1f;
-			}
-			if (rotationAmount.Value > 0f || rotationAmount.Value < 0f)
-			{
-				rotation = true;
-			}
-			DoObjShake();
-		}
+        private void ApplyInterpolatedPosition()
+        {
+            float threshold = Mathf.Max(Mathf.Abs(shakeAmount.Value) / 30f, 0.0001f);
+            if ((targetTransform.localPosition - targetPosition).sqrMagnitude <= threshold * threshold)
+            {
+                targetPosition = originalPosition + CreatePositionOffset();
+            }
 
-		public override void OnUpdate()
-		{
-			if (!isCamera)
-			{
-				doSetup();
-			}
-		}
+            targetTransform.localPosition = Vector3.Lerp(
+                targetTransform.localPosition,
+                targetPosition,
+                GetCurrentBlend());
 
-		public override void OnLateUpdate()
-		{
-			if (isCamera)
-			{
-				doSetup();
-			}
-		}
+            DecreaseRemainingTime();
+        }
 
-		private void doSetup()
-		{
-			if (loop.Value)
-			{
-				DoObjShake();
-			}
-			else if (shakeTime <= 0f)
-			{
-				objTransform.localPosition = originalPos;
-				objTransform.localRotation = OriginalRot;
-				newPos = objTransform.localPosition;
-				if (exitOnFinish.Value)
-				{
-					base.Fsm.Event(exit);
-					if (shakeTime <= 0f)
-					{
-						Finish();
-					}
-				}
-			}
-			else
-			{
-				DoObjShake();
-			}
-		}
+        private void ApplyRotation()
+        {
+            if (Quaternion.Angle(targetTransform.localRotation, targetRotation) <= 0.05f)
+            {
+                targetRotation = CreateRotationTarget();
+            }
 
-		private void DoObjShake()
-		{
-			if (shakeTime > 0f || loop.Value)
-			{
-				if (lerpOn)
-				{
-					DoObjShakeLerp();
-				}
-				else if (!lerpOn)
-				{
-					objTransform.localPosition = originalPos + UnityEngine.Random.insideUnitSphere * shakeAmount.Value;
-					shakeTime -= Time.deltaTime * lerpFactor;
-				}
-				if (rotation)
-				{
-					DoObjShakerotation();
-				}
-			}
-		}
+            targetTransform.localRotation = Quaternion.Slerp(
+                targetTransform.localRotation,
+                targetRotation,
+                GetCurrentBlend());
 
-		private void DoObjShakerotation()
-		{
-			newPosRot = objTransform.localRotation;
-			objTransform.localRotation = new Quaternion(OriginalRot.x + UnityEngine.Random.Range(0f - rotationIntent, rotationIntent) * 0.2f, OriginalRot.y + UnityEngine.Random.Range(0f - rotationIntent, rotationIntent) * 0.2f, OriginalRot.z + UnityEngine.Random.Range(0f - rotationIntent, rotationIntent) * 0.2f, OriginalRot.w + UnityEngine.Random.Range(0f - rotationIntent, rotationIntent) * 0.2f);
-			if (animationCurvebool)
-			{
-				objTransform.localRotation = Quaternion.Lerp(newPosRot, objTransform.localRotation, lerpCurve.curve.Evaluate(shakeTime));
-			}
-			else if (lerpOn)
-			{
-				objTransform.localRotation = Quaternion.Lerp(newPosRot, objTransform.localRotation, t);
-			}
-			rotationIntent -= Time.deltaTime * t;
-		}
+            if (!loop.Value)
+            {
+                rotationStrength = Mathf.MoveTowards(
+                    rotationStrength,
+                    0f,
+                    Time.deltaTime * Mathf.Max(Mathf.Abs(interpolationFactor), 0.01f));
+            }
+        }
 
-		private void DoObjShakeLerp()
-		{
-			newPos = objTransform.localPosition;
-			if (Vector3.Distance(newPos, objTransform.localPosition) <= shakeAmount.Value / 30f)
-			{
-				newPos = originalPos + UnityEngine.Random.insideUnitSphere * shakeAmount.Value;
-			}
-			if (animationCurvebool)
-			{
-				objTransform.localPosition = Vector3.Lerp(objTransform.localPosition, newPos, lerpCurve.curve.Evaluate(shakeTime));
-			}
-			else if (!animationCurvebool)
-			{
-				objTransform.localPosition = Vector3.Lerp(objTransform.localPosition, newPos, t);
-			}
-			shakeTime -= Time.deltaTime;
-		}
+        private Vector3 CreatePositionOffset()
+        {
+            Vector3 offset = Random.insideUnitSphere * shakeAmount.Value;
 
-		private float GetInterpolation(float t, LerpInterpolationType type)
-		{
-			switch (type)
-			{
-			case LerpInterpolationType.Quadratic:
-				lerpOn = true;
-				animationCurvebool = false;
-				return Time.timeSinceLevelLoad * setTime.Value;
-			case LerpInterpolationType.EaseIn:
-				lerpOn = true;
-				animationCurvebool = false;
-				return 1f - Mathf.Cos(t * MathF.PI * 0.5f);
-			case LerpInterpolationType.EaseOut:
-				lerpOn = true;
-				animationCurvebool = false;
-				return Mathf.Sin(t * MathF.PI * 0.5f);
-			case LerpInterpolationType.Smoothstep:
-				lerpOn = true;
-				animationCurvebool = false;
-				return t * t * (3f - 2f * t);
-			case LerpInterpolationType.Smootherstep:
-				animationCurvebool = false;
-				lerpOn = true;
-				return t * t * t * (t * (6f * t - 15f) + 10f);
-			case LerpInterpolationType.DeltaTime:
-				lerpOn = true;
-				animationCurvebool = false;
-				return Time.deltaTime * t;
-			case LerpInterpolationType.SimpleSine:
-				lerpOn = true;
-				animationCurvebool = false;
-				return t * Mathf.Sin(Time.timeSinceLevelLoad);
-			case LerpInterpolationType.DoubleSine:
-				lerpOn = true;
-				animationCurvebool = false;
-				return t * Mathf.Sin(Time.timeSinceLevelLoad / setTime.Value);
-			case LerpInterpolationType.DoubleByHalfSine:
-				lerpOn = true;
-				animationCurvebool = false;
-				return t * (1.5f * Mathf.Sin(Time.timeSinceLevelLoad * setTime.Value));
-			case LerpInterpolationType.Curve:
-				lerpOn = true;
-				animationCurvebool = true;
-				return t;
-			case LerpInterpolationType.Off:
-				animationCurvebool = false;
-				lerpOn = false;
-				return t;
-			default:
-				return t;
-			}
-		}
+            // Moving a camera forward/backward during shake can push nearby ceiling meshes
+            // through the near clip plane. Camera shake stays in the image plane instead.
+            if (isCamera)
+            {
+                offset.z = 0f;
+            }
 
-		public override string ErrorCheck()
-		{
-			if (gameObject == null)
-			{
-				return "Need GameObject";
-			}
-			return "";
-		}
-	}
+            return offset;
+        }
+
+        private Quaternion CreateRotationTarget()
+        {
+            if (!rotate)
+            {
+                return originalRotation;
+            }
+
+            Vector3 eulerOffset = new Vector3(
+                Random.Range(-rotationStrength, rotationStrength),
+                Random.Range(-rotationStrength, rotationStrength),
+                Random.Range(-rotationStrength, rotationStrength));
+
+            return originalRotation * Quaternion.Euler(eulerOffset);
+        }
+
+        private float GetCurrentBlend()
+        {
+            if (useCurve && lerpCurve != null && lerpCurve.curve != null)
+            {
+                float duration = Mathf.Max(setTime.Value, 0.0001f);
+                float elapsed = 1f - Mathf.Clamp01(remainingTime / duration);
+                return Mathf.Clamp01(lerpCurve.curve.Evaluate(elapsed));
+            }
+
+            return Mathf.Clamp01(Mathf.Abs(interpolationFactor));
+        }
+
+        private void DecreaseRemainingTime()
+        {
+            if (!loop.Value)
+            {
+                remainingTime -= Time.deltaTime;
+            }
+        }
+
+        private void RestoreTransform()
+        {
+            if (targetTransform == null)
+            {
+                return;
+            }
+
+            targetTransform.localPosition = originalPosition;
+            targetTransform.localRotation = originalRotation;
+        }
+
+        private float GetInterpolation(float value, LerpInterpolationType type)
+        {
+            useInterpolation = type != LerpInterpolationType.Off;
+            useCurve = type == LerpInterpolationType.Curve;
+
+            switch (type)
+            {
+                case LerpInterpolationType.Quadratic:
+                    return Time.timeSinceLevelLoad * setTime.Value;
+                case LerpInterpolationType.EaseIn:
+                    return 1f - Mathf.Cos(value * Mathf.PI * 0.5f);
+                case LerpInterpolationType.EaseOut:
+                    return Mathf.Sin(value * Mathf.PI * 0.5f);
+                case LerpInterpolationType.Smoothstep:
+                    return value * value * (3f - 2f * value);
+                case LerpInterpolationType.Smootherstep:
+                    return value * value * value * (value * (6f * value - 15f) + 10f);
+                case LerpInterpolationType.DeltaTime:
+                    return Time.deltaTime * value;
+                case LerpInterpolationType.SimpleSine:
+                    return value * Mathf.Sin(Time.timeSinceLevelLoad);
+                case LerpInterpolationType.DoubleSine:
+                    return value * Mathf.Sin(Time.timeSinceLevelLoad / Mathf.Max(setTime.Value, 0.0001f));
+                case LerpInterpolationType.DoubleByHalfSine:
+                    return value * 1.5f * Mathf.Sin(Time.timeSinceLevelLoad * setTime.Value);
+                default:
+                    return value;
+            }
+        }
+
+        public override string ErrorCheck()
+        {
+            return gameObject == null ? "Need GameObject" : string.Empty;
+        }
+    }
 }
