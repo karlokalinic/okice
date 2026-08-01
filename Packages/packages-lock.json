@@ -7,14 +7,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.adaptiveperformance": {
-      "version": "6.0.0",
-      "depth": 0,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.modules.adaptiveperformance": "1.0.0"
-      }
-    },
     "com.unity.burst": {
       "version": "1.8.28",
       "depth": 2,
@@ -244,15 +236,6 @@
         "com.unity.ext.nunit": "2.0.3",
         "com.unity.modules.imgui": "1.0.0",
         "com.unity.modules.uielements": "1.0.0"
-      }
-    },
-    "com.unity.visualeffectgraph": {
-      "version": "17.4.0",
-      "depth": 0,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.shadergraph": "17.4.0",
-        "com.unity.render-pipelines.core": "17.4.0"
       }
     },
     "com.unity.modules.adaptiveperformance": {
