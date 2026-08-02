@@ -1,0 +1,6 @@
+<linker>
+  <assembly fullname="Assembly-CSharp">
+    <type fullname="HutongGames.PlayMaker.Actions.*" preserve="all" />
+    <type fullname="PixelCrushers.DialogueSystem.PlayMaker.*" preserve="all" />
+  </assembly>
+</linker>
