@@ -101,7 +101,11 @@ namespace Karlolegend.Gradomraz.Editor
                 File.Delete(ItchWebGlArchivePath);
             }
 
-            ZipFile.CreateFromDirectory(WebGlOutputPath, ItchWebGlArchivePath, CompressionLevel.Optimal, false);
+            ZipFile.CreateFromDirectory(
+                WebGlOutputPath,
+                ItchWebGlArchivePath,
+                System.IO.Compression.CompressionLevel.Optimal,
+                false);
         }
 
         private static void ReportResult(string platformName, BuildReport report, string output)
