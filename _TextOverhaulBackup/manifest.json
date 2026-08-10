@@ -1,0 +1,17 @@
+{
+  "Assets/MonoBehaviour/AFTERLIVES Dialogue Database.asset": {
+    "backup": "Assets__MonoBehaviour__AFTERLIVES Dialogue Database.asset",
+    "sha256": "3a0db1fc71919f287b9e7019eb65dee00d7eddcb987e2a7c1e4aaa96e8449427",
+    "bytes": 801054
+  },
+  "Assets/Scenes/MainMenu.unity": {
+    "backup": "Assets__Scenes__MainMenu.unity",
+    "sha256": "aae774ec14a6c6fb3577b4f7444d3a35cc57e9964b75099f26c462da2d00fe32",
+    "bytes": 1838296
+  },
+  "Assets/Scenes/SampleScene.unity": {
+    "backup": "Assets__Scenes__SampleScene.unity",
+    "sha256": "defc549aa3883dcf65db54f7698d9e20933eb58c83a7372b77f9431c3f212d51",
+    "bytes": 57647870
+  }
+}

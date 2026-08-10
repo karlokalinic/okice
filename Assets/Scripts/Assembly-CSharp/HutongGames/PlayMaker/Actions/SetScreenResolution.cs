@@ -32,7 +32,9 @@ namespace HutongGames.PlayMaker.Actions
 
 		public override void OnEnter()
 		{
+			#if !UNITY_WEBGL || UNITY_EDITOR
 			Screen.SetResolution(width.Value, height.Value, fullscreen.Value);
+			#endif
 			Finish();
 		}
 	}

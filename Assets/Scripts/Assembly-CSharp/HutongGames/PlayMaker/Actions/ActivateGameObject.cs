@@ -6,6 +6,8 @@ namespace HutongGames.PlayMaker.Actions
 	[Tooltip("Activates/deactivates a Game Object. Use this to hide/show areas, or enable/disable many Behaviours at once.")]
 	public class ActivateGameObject : FsmStateAction
 	{
+		private const string PersistentLampGroupName = "two lamps";
+
 		[RequiredField]
 		[Tooltip("The Game Object to activate/deactivate.")]
 		public FsmOwnerDefault gameObject;
@@ -24,6 +26,8 @@ namespace HutongGames.PlayMaker.Actions
 		public bool everyFrame;
 
 		private GameObject activatedGameObject;
+
+		private Light[] activatedLampLights;
 
 		public override void Reset()
 		{
@@ -50,7 +54,11 @@ namespace HutongGames.PlayMaker.Actions
 
 		public override void OnExit()
 		{
-			if (!(activatedGameObject == null) && resetOnExit)
+			if (activatedLampLights != null && resetOnExit)
+			{
+				SetLampLightsActive(!activate.Value);
+			}
+			else if (!(activatedGameObject == null) && resetOnExit)
 			{
 				if (recursive.Value)
 				{
@@ -68,6 +76,17 @@ namespace HutongGames.PlayMaker.Actions
 			GameObject ownerDefaultTarget = base.Fsm.GetOwnerDefaultTarget(gameObject);
 			if (!(ownerDefaultTarget == null))
 			{
+				if (ownerDefaultTarget.name == PersistentLampGroupName)
+				{
+					ownerDefaultTarget.SetActive(true);
+					activatedLampLights = ownerDefaultTarget.GetComponentsInChildren<Light>(true);
+					if (activatedLampLights.Length != 0)
+					{
+						SetLampLightsActive(activate.Value);
+						return;
+					}
+				}
+
 				if (recursive.Value)
 				{
 					SetActiveRecursively(ownerDefaultTarget, activate.Value);
@@ -77,6 +96,17 @@ namespace HutongGames.PlayMaker.Actions
 					ownerDefaultTarget.SetActive(activate.Value);
 				}
 				activatedGameObject = ownerDefaultTarget;
+			}
+		}
+
+		private void SetLampLightsActive(bool state)
+		{
+			foreach (Light lampLight in activatedLampLights)
+			{
+				if (lampLight != null)
+				{
+					lampLight.enabled = state;
+				}
 			}
 		}
 

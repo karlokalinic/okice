@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
+using TMPro;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEditor.SceneManagement;
@@ -14,6 +16,73 @@ public static class ProjectRepair
     private const string GameplayScenePath = "Assets/Scenes/SampleScene.unity";
     private const string GameplayVolumeProfilePath = "Assets/MonoBehaviour/New Volume Profile.asset";
     private const string MotionBlurPath = "Assets/MonoBehaviour/MotionBlur.asset";
+    private const string DialogueFontPath = "Assets/Font/VT323-Regular SDF.asset";
+
+    [MenuItem("Tools/Project Repair/Bake Performance Fonts")]
+    public static void BakePerformanceFonts()
+    {
+        TMP_FontAsset font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(DialogueFontPath);
+        if (font == null)
+        {
+            throw new InvalidOperationException($"Could not load '{DialogueFontPath}'.");
+        }
+
+        if (font.atlasWidth != 1024 || font.atlasHeight != 1024)
+        {
+            throw new InvalidOperationException(
+                $"VT323 atlas must be 1024x1024, not {font.atlasWidth}x{font.atlasHeight}."
+            );
+        }
+        font.isMultiAtlasTexturesEnabled = false;
+
+        string requiredCharacters = BuildPerformanceFontCharacters();
+        string charactersToAdd = new string(
+            requiredCharacters
+                .Where(character =>
+                    font.characterTable.All(entry => entry.unicode != character)
+                )
+                .ToArray()
+        );
+        if (!string.IsNullOrEmpty(charactersToAdd))
+        {
+            font.atlasPopulationMode = AtlasPopulationMode.Dynamic;
+            if (!font.TryAddCharacters(charactersToAdd, out string missingCharacters))
+            {
+                throw new InvalidOperationException(
+                    $"VT323 is missing required glyphs: {missingCharacters}"
+                );
+            }
+        }
+
+        font.atlasPopulationMode = AtlasPopulationMode.Static;
+        EditorUtility.SetDirty(font);
+        EditorUtility.SetDirty(font.material);
+        foreach (Texture2D atlasTexture in font.atlasTextures)
+        {
+            EditorUtility.SetDirty(atlasTexture);
+        }
+
+        AssetDatabase.SaveAssets();
+        Debug.Log(
+            $"Baked {font.characterTable.Count} VT323 characters into a static "
+            + $"{font.atlasWidth}x{font.atlasHeight} atlas."
+        );
+    }
+
+    private static string BuildPerformanceFontCharacters()
+    {
+        StringBuilder characters = new StringBuilder(120);
+        for (char character = ' '; character <= '~'; character++)
+        {
+            characters.Append(character);
+        }
+
+        characters.Append(
+            "\u00a0\u0106\u0107\u010c\u010d\u0110\u0111\u0160\u0161\u017d\u017e"
+            + "\u2013\u2014\u2018\u2019\u201c\u201d\u2026"
+        );
+        return characters.ToString();
+    }
 
     [MenuItem("Tools/Project Repair/Audit Gameplay Freeze Paths")]
     public static void AuditGameplayFreezePaths()

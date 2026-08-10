@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>{{{ PRODUCT_NAME }}}</title>
+  <style>
+    html,body,#unity-container,#unity-canvas{width:100%;height:100%;margin:0;background:#000;overflow:hidden}
+    body{font-family:Consolas,monospace;color:#dbe3e4}
+    #unity-container{position:fixed;inset:0}
+    #unity-canvas{display:block;outline:0}
+    #loader{position:absolute;inset:0;z-index:10;display:grid;place-items:center;background:#030506;transition:opacity .5s ease,visibility .5s ease}
+    #loader.hide{opacity:0;visibility:hidden}
+    #panel{width:min(520px,76vw)}
+    #meta{display:flex;justify-content:space-between;font-size:9px;letter-spacing:.14em;color:#758188;margin-bottom:11px}
+    #bar{height:3px;background:#182025;overflow:hidden}
+    #fill{width:0;height:100%;background:#d8e66b;transition:width .16s linear}
+    #pct{margin-top:11px;font-size:10px;letter-spacing:.12em;color:#98a4a8}
+    #start{width:100%;height:42px;margin-top:18px;border:1px solid #758188;background:#030506;color:#dbe3e4;font:700 11px Consolas,monospace;letter-spacing:.14em;cursor:pointer}
+    #start:hover,#start:focus-visible{border-color:#d8e66b;color:#d8e66b;outline:0}
+    #start[hidden]{display:none}
+    #warning{display:none;position:absolute;left:10px;right:10px;bottom:10px;padding:12px;border:1px solid #7f3333;background:#180a0a;color:#f1b7b7;font-size:11px;line-height:1.45}
+  </style>
+</head>
+<body>
+  <div id="unity-container">
+    <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}} tabindex="-1"></canvas>
+    <div id="loader">
+      <div id="panel">
+        <div id="meta"><span>UNITY WEB RUNTIME</span><span>{{{ PRODUCT_VERSION }}}</span></div>
+        <div id="bar"><div id="fill"></div></div>
+        <div id="pct">READY</div>
+        <button id="start" type="button">START</button>
+      </div>
+    </div>
+    <div id="warning"></div>
+  </div>
+<script>
+  const canvas = document.querySelector("#unity-canvas");
+  const loader = document.querySelector("#loader");
+  const fill = document.querySelector("#fill");
+  const pct = document.querySelector("#pct");
+  const start = document.querySelector("#start");
+  const warning = document.querySelector("#warning");
+  const buildUrl = "Build";
+  const deliveryVersion = "20260807-2";
+  const versionedBuildUrl = (filename) => buildUrl + "/" + filename + "?delivery=" + deliveryVersion;
+  const loaderUrl = versionedBuildUrl("{{{ LOADER_FILENAME }}}");
+  const config = {
+    dataUrl: versionedBuildUrl("{{{ DATA_FILENAME }}}"),
+    frameworkUrl: versionedBuildUrl("{{{ FRAMEWORK_FILENAME }}}"),
+    codeUrl: versionedBuildUrl("{{{ CODE_FILENAME }}}"),
+#if MEMORY_FILENAME
+    memoryUrl: versionedBuildUrl("{{{ MEMORY_FILENAME }}}"),
+#endif
+#if SYMBOLS_FILENAME
+    symbolsUrl: versionedBuildUrl("{{{ SYMBOLS_FILENAME }}}"),
+#endif
+    streamingAssetsUrl: "StreamingAssets",
+    companyName: "{{{ COMPANY_NAME }}}",
+    productName: "{{{ PRODUCT_NAME }}}",
+    productVersion: "{{{ PRODUCT_VERSION }}}",
+    devicePixelRatio: 1
+  };
+
+  function showError(message) {
+    warning.style.display = "block";
+    warning.textContent = message;
+  }
+
+  start.addEventListener("click", () => {
+    start.hidden = true;
+    pct.textContent = "0%";
+    canvas.focus();
+
+    const script = document.createElement("script");
+    script.src = loaderUrl;
+    script.onload = () => {
+      createUnityInstance(canvas, config, (progress) => {
+        const value = Math.round(progress * 100);
+        fill.style.width = value + "%";
+        pct.textContent = value + "%";
+      }).then((unityInstance) => {
+        loader.classList.add("hide");
+        window.unityInstance = unityInstance;
+      }).catch(showError);
+    };
+    script.onerror = () => {
+      showError("Unity loader could not be fetched. Check the uploaded Build folder and server compression headers.");
+    };
+    document.body.appendChild(script);
+  }, { once: true });
+</script>
+</body>
+</html>
