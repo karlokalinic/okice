@@ -12,6 +12,7 @@ on:
   push:
     branches:
       - master
+      - chatgpt/mobile-webgl-port
     paths:
       - 'Assets/**'
       - 'Packages/**'
@@ -28,23 +29,44 @@ concurrency:
 
 jobs:
   build-mobile-webgl:
-    name: Build + analyze mobile WebGL
+    name: Preflight + build + smoke + analyze
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
+      # GitHub LFS quota is currently exhausted. Never let checkout fail opaquely:
+      # check out pointer stubs, classify them deterministically, and block only
+      # when an unresolved object is actually required by the Unity project.
+      GIT_LFS_SKIP_SMUDGE: '1'
       UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
     steps:
-      - name: Checkout
+      - name: Checkout source without LFS download
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-          lfs: true
+          fetch-depth: 1
+          lfs: false
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+
+      - name: Validate mobile source contract
+        run: node Tools/MobileWeb/preflight.mjs --root .
+
+      - name: Audit unresolved Git LFS objects
+        run: node Tools/MobileWeb/audit-lfs.mjs --root . --strict
+
+      - name: Require Unity CI license
+        if: env.UNITY_LICENSE == ''
+        shell: bash
+        run: |
+          echo '## Unity build blocked' >> "$GITHUB_STEP_SUMMARY"
+          echo '' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Static mobile validation passed, but repository secret `UNITY_LICENSE` is not configured.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'The job fails deliberately: a green check must mean an actual Unity build was produced and smoke-tested.' >> "$GITHUB_STEP_SUMMARY"
+          echo '::error::UNITY_LICENSE is not configured. Refusing to report a false-green mobile build.'
+          exit 1
 
       - name: Unity Library cache
         if: env.UNITY_LICENSE != ''
@@ -56,15 +78,6 @@ jobs:
             Library-WebGL-${{ runner.os }}-
             Library-WebGL-
 
-      - name: Unity license is not configured
-        if: env.UNITY_LICENSE == ''
-        shell: bash
-        run: |
-          echo '## Mobile WebGL CI' >> "$GITHUB_STEP_SUMMARY"
-          echo '' >> "$GITHUB_STEP_SUMMARY"
-          echo '⚠️ Unity build skipped because repository secret `UNITY_LICENSE` is not configured.' >> "$GITHUB_STEP_SUMMARY"
-          echo 'Add the Unity license secret once; subsequent PRs and master pushes will build automatically.' >> "$GITHUB_STEP_SUMMARY"
-
       - name: Build production mobile WebGL
         if: env.UNITY_LICENSE != ''
         uses: game-ci/unity-builder@v4
@@ -74,20 +87,15 @@ jobs:
           unityVersion: auto
           targetPlatform: WebGL
           buildMethod: Karlolegend.Gradomraz.Editor.GradomrazBuild.BuildMobileWebGL
+          allowDirtyBuild: true
+
+      - name: Smoke-test generated WebGL
+        if: env.UNITY_LICENSE != ''
+        run: node Tools/MobileWeb/smoke-build.mjs --root Builds/WebGL-Mobile
 
       - name: Analyze mobile payload
         if: env.UNITY_LICENSE != ''
         run: node Tools/MobileWeb/analyze-build.mjs --root Builds/WebGL-Mobile --report-dir Builds/Reports
-
-      - name: Verify hosting metadata
-        if: env.UNITY_LICENSE != ''
-        shell: bash
-        run: |
-          test -f Builds/WebGL-Mobile/index.html
-          test -f Builds/WebGL-Mobile/_headers
-          test -f Builds/WebGL-Mobile/DEPLOYMENT.txt
-          grep -q 'Content-Encoding: br' Builds/WebGL-Mobile/_headers
-          grep -q 'application/wasm' Builds/WebGL-Mobile/_headers
 
       - name: Upload mobile build and reports
         if: env.UNITY_LICENSE != '' && always()
