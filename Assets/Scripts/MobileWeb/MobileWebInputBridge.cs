@@ -12,8 +12,8 @@ namespace Karlolegend.Gradomraz.MobileWeb
     {
         public const string GameObjectName = "KARLOLEGEND_MobileWebInput";
 
-        private static readonly HashSet<string> PendingButtons = new(StringComparer.OrdinalIgnoreCase);
-        private static readonly HashSet<string> FrameButtons = new(StringComparer.OrdinalIgnoreCase);
+        private static readonly HashSet<string> PendingButtons = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private static readonly HashSet<string> FrameButtons = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         private static Vector2 pendingLookDelta;
         private static Vector2 frameLookDelta;
@@ -37,6 +37,15 @@ namespace Karlolegend.Gradomraz.MobileWeb
 #endif
         }
 
+        private void Awake()
+        {
+#if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
+            // Apply the thermal-safe production default before the HTML shell can
+            // send the player's selected profile. This also protects direct launches.
+            ApplyProfile("balanced");
+#endif
+        }
+
         private void Update()
         {
             frameLookDelta = pendingLookDelta;
@@ -48,6 +57,15 @@ namespace Karlolegend.Gradomraz.MobileWeb
                 FrameButtons.Add(button);
             }
             PendingButtons.Clear();
+        }
+
+        private void OnDisable()
+        {
+            move = Vector2.zero;
+            pendingLookDelta = Vector2.zero;
+            frameLookDelta = Vector2.zero;
+            PendingButtons.Clear();
+            FrameButtons.Clear();
         }
 
         public static bool GetButtonDown(string buttonName)
