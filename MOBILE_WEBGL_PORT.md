@@ -10,34 +10,77 @@ Primary acceptance devices:
 - iOS baseline: iPhone Safari, Safari 15+ compatibility floor.
 - Desktop WebGL remains a separate build and keeps the existing desktop-oriented behavior.
 
-The mobile build is not a naive copy of the PC WebGL build. It is a separate thermal, memory, download and input budget.
+The mobile build is not a naive copy of the PC WebGL build. It has separate thermal, memory, transfer, input and rendering budgets.
 
-## What the repository looked like before this port
+## One-command local workflow
+
+From the repository root on Windows:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\Tools\MobileWeb\mobile.ps1 All
+```
+
+`All` performs the complete local loop:
+
+1. reads the exact Unity editor version from `ProjectSettings/ProjectVersion.txt`;
+2. locates that Unity editor from Unity Hub or `UNITY_PATH`;
+3. runs the production Mobile WebGL build in batch mode;
+4. writes the Unity log under `Builds/Logs/`;
+5. analyzes the produced payload and writes JSON + Markdown reports under `Builds/Reports/`;
+6. starts a dependency-free local/LAN server with the correct Brotli and Wasm headers;
+7. opens the desktop test URL and prints LAN URLs for a phone on the same network.
+
+Individual modes are also available:
+
+```powershell
+.\Tools\MobileWeb\mobile.ps1 Build
+.\Tools\MobileWeb\mobile.ps1 Analyze
+.\Tools\MobileWeb\mobile.ps1 Serve
+```
+
+The server is for development/device testing. Production and iOS persistence/cache validation should still use an HTTPS deployment.
+
+## CI automation
+
+`.github/workflows/mobile-webgl.yml` runs on relevant pull-request changes, relevant pushes to `master`, and manual dispatch.
+
+Once repository secret `UNITY_LICENSE` is configured, CI automatically:
+
+1. checks out Git LFS content;
+2. caches the Unity `Library` directory;
+3. uses the project Unity version automatically;
+4. invokes `Karlolegend.Gradomraz.Editor.GradomrazBuild.BuildMobileWebGL` through GameCI;
+5. runs `Tools/MobileWeb/analyze-build.mjs`;
+6. verifies `_headers`, Brotli encoding metadata and Wasm MIME metadata;
+7. uploads the mobile build plus reports as a seven-day workflow artifact;
+8. places the payload report in the GitHub Actions job summary.
+
+If `UNITY_LICENSE` is absent, the workflow does not create a false failing build; it records that the Unity build was skipped and explains the one missing prerequisite.
+
+## Repository baseline before the port
 
 The project is Unity 6000.4.0f1 and uses URP 17.4.0. The enabled build sequence is Boot -> MainMenu -> SampleScene.
 
 The existing WebGL build was desktop-oriented:
 
-- WebGL template: `PROJECT:Itch`.
-- Brotli and data caching already enabled.
-- Initial WebAssembly heap: 512 MB.
-- Maximum heap: 2048 MB.
-- One `PC` quality level is used by WebGL.
-- Runtime target frame rate: 60 FPS.
-- URP keeps HDR, depth texture, opaque texture, 2x MSAA, 40 m shadow distance, two cascades and additional-light shadows.
-- The renderer has a full-resolution active Screen Space Ambient Occlusion feature.
-- Gameplay movement is PlayMaker `GetAxisVector` reading `Horizontal` / `Vertical`.
-- Camera look is PlayMaker `MouseLook` reading `Mouse X` / `Mouse Y`.
-- Interaction uses PlayMaker `GetButtonDown`, including the `Use` input.
-- There was no mobile touch control layer.
+- WebGL template: `PROJECT:Itch`;
+- Brotli and data caching already enabled;
+- initial WebAssembly heap: 512 MB;
+- maximum heap: 2048 MB;
+- one `PC` quality level used by WebGL;
+- runtime target frame rate: 60 FPS;
+- URP HDR, depth texture, opaque texture, 2x MSAA, 40 m shadow distance, two cascades and additional-light shadows;
+- full-resolution active Screen Space Ambient Occlusion feature;
+- movement through PlayMaker `GetAxisVector` reading `Horizontal` / `Vertical`;
+- camera look through PlayMaker `MouseLook` reading `Mouse X` / `Mouse Y`;
+- interactions through PlayMaker `GetButtonDown`;
+- no mobile touch layer.
 
-Those details are why simply opening the existing itch build on a phone is not a real mobile port.
+Simply opening the old itch build on a phone therefore was not a real mobile port.
 
-## Architecture added by this port
+## Mobile production build
 
-### Separate build target
-
-Use:
+Use the Unity menu:
 
 `KARLOLEGEND > GRADOMRAZ > Build Mobile WebGL (iOS Safari + Android Chrome)`
 
@@ -46,141 +89,164 @@ Output:
 - `Builds/WebGL-Mobile/`
 - `Builds/GRADOMRAZ-by-KARLOLEGEND-WebGL-mobile.zip`
 
-The build temporarily applies mobile publishing settings and restores the previous desktop WebGL settings afterward.
+The build applies the mobile configuration temporarily and restores the previous desktop WebGL configuration in `finally`, even when the build fails.
 
-Mobile release settings:
+Mobile release policy:
 
-- Brotli compression.
-- Unity data caching enabled.
-- ASTC Web texture subtarget.
-- Disk Size with LTO code optimization.
-- 384 MB initial heap.
-- 1024 MB maximum heap.
-- geometric heap growth.
-- `KARLOLEGEND_MOBILE_WEB` compile define only for this build.
+- custom `PROJECT:Mobile` template;
+- Brotli compression;
+- Unity data caching;
+- ASTC Web texture subtarget;
+- Disk Size with LTO Wasm optimization;
+- 384 MB initial heap;
+- 1024 MB maximum heap;
+- geometric memory growth;
+- low-power WebGL GPU preference;
+- content-hashed build filenames for immutable CDN caching;
+- Unity decompression fallback disabled so the browser/server path handles Brotli natively;
+- WebGL threads disabled for the broadest Safari deployment path;
+- WebGL exception support disabled in the shipping build;
+- debug symbols and diagnostics disabled;
+- `KARLOLEGEND_MOBILE_WEB` compile define only for this build;
 - Development Build remains off.
-- WebGL threading is deliberately not introduced in this first mobile profile. Broad Safari compatibility is more important than a theoretical CPU win that would add cross-origin isolation and SharedArrayBuffer deployment constraints.
 
-The 384/1024 MB values are a conservative starting envelope, not a final measurement. The initial heap must be changed after profiling real peak/typical heap usage.
+The 384/1024 MB heap envelope is a conservative measurement baseline, not a final magic number. It should move only after real device heap measurements.
 
-### Mobile HTML shell
+On a successful build the editor also emits:
+
+- `_headers` with Brotli MIME, Wasm MIME and immutable build-cache headers;
+- `DEPLOYMENT.txt` with the deployment invariants.
+
+## Mobile HTML shell
 
 `Assets/WebGLTemplates/Mobile/index.html` adds:
 
-- no build download until the player explicitly presses **Pokreni igru**;
+- no Unity payload download until the player explicitly presses **Pokreni igru**;
 - safe-area support for iPhone notches and browser chrome;
 - touch-first full-viewport canvas;
 - dynamic virtual joystick;
 - independent right-side drag camera control;
 - `KORISTI`, `SKOK`, `ALT` and menu buttons;
-- capped device-pixel ratio rather than rendering blindly at the phone's native DPR;
-- three explicit performance profiles;
-- fullscreen when the browser exposes the Fullscreen API;
-- landscape recommendation without preventing portrait fallback.
+- capped device-pixel ratio instead of blindly rendering at native phone DPR;
+- explicit Eco / Balanced / Quality profiles;
+- automatic pre-launch profile selection from available browser device/network signals;
+- automatic switch to Eco when Data Saver, slow mobile network, <=4 GB memory signal or <=4 hardware threads indicate a constrained device;
+- no automatic promotion to Quality: Quality is always an explicit user choice;
+- automatic re-evaluation if the network changes before launch and the user has not overridden the profile;
+- page visibility messages to Unity so background tabs stop wasting CPU/GPU/audio;
+- fullscreen where the browser exposes the Fullscreen API;
+- landscape recommendation without making portrait an artificial hard failure.
 
-Deferring the download until a deliberate press matters on mobile: visiting the page must not automatically burn tens of megabytes of mobile data or start heating the phone.
-
-### Input bridge
+## Input bridge
 
 `MobileWebInputBridge` receives browser pointer state through `unityInstance.SendMessage` and exposes one coherent input frame to the existing PlayMaker actions.
 
-The existing gameplay logic is preserved. The port patches only the lowest input seam:
+The existing gameplay logic remains the source of truth. The port patches only the lowest input seam:
 
-- `GetAxisVector` can read mobile move input.
-- `MouseLook` can read mobile look delta.
+- `GetAxisVector` can read mobile move input;
+- `MouseLook` can read mobile look delta;
 - `GetButtonDown` can read mobile action presses.
 
-Keyboard, mouse and controller behavior remain available because mobile values are combined with, rather than replacing, the existing Input Manager calls.
+Keyboard, mouse and controller behavior remain available because mobile values are combined with, rather than replacing, existing Input Manager calls.
 
-### Runtime profiles
+## Runtime profiles and adaptive governor
 
-#### Eco
+All mobile profiles are now adaptive. The selected profile defines the visual ceiling; a five-second runtime governor can reduce internal URP render scale when frame-time pressure persists and can recover it slowly after sustained headroom.
 
-Use when battery life, thermal stability or an older phone matters most.
+The governor does not randomly toggle the entire quality stack. It changes the cheapest high-impact control first: internal render scale.
 
-- 30 FPS.
-- HTML DPR cap 1.0.
-- URP render scale 0.75.
-- MSAA disabled.
-- 16 m shadow distance.
-- one shadow cascade.
-- one additional light per object.
-- HDR off.
+When the page becomes hidden, the mobile build drops to 5 FPS, pauses the audio listener and clears held movement/look state. On return it restores the active target and resets its measurement window.
+
+### Eco
+
+- 30 FPS;
+- HTML DPR cap 1.0;
+- URP render scale ceiling 0.75, adaptive floor 0.65;
+- MSAA disabled;
+- 16 m shadow distance;
+- one shadow cascade;
+- one additional light per object;
+- HDR off;
 - SSAO off.
 
-#### Balanced — default
+### Balanced — default on normal hardware
 
-This is the production default for a Galaxy A36-class device.
-
-- 30 FPS.
-- HTML DPR cap 1.5.
-- URP render scale 0.90.
-- 2x MSAA.
-- 24 m shadow distance.
-- one shadow cascade.
-- two additional lights per object.
-- HDR retained to preserve the authored grading/bloom response.
+- 30 FPS;
+- HTML DPR cap 1.5;
+- URP render scale ceiling 0.90, adaptive floor 0.72;
+- 2x MSAA;
+- 24 m shadow distance;
+- one shadow cascade;
+- two additional lights per object;
+- HDR retained to preserve the authored grading/bloom response;
 - SSAO off.
 
-#### Quality
+### Quality — manual opt-in
 
-This is opt-in because a 120 Hz phone display does not mean a Unity Web game should continuously render at 120 FPS.
+- 60 FPS target;
+- HTML DPR cap 1.75;
+- URP render scale ceiling 1.0, adaptive floor 0.78;
+- 2x MSAA;
+- 32 m shadow distance;
+- two shadow cascades;
+- HDR on;
+- SSAO on initially.
 
-- 60 FPS.
-- HTML DPR cap 1.75.
-- URP render scale 1.0.
-- 2x MSAA.
-- 32 m shadow distance.
-- two shadow cascades.
-- HDR on.
-- SSAO on.
+If Quality cannot sustain 60 FPS after render scale reaches its adaptive floor, the governor falls back to 30 FPS and disables SSAO instead of continuously heating/throttling the device.
 
-Quality is intentionally not the default. Doubling 30 -> 60 FPS approximately doubles the number of frames the CPU/GPU must prepare in the same time and is one of the fastest ways to increase battery drain and thermal throttling.
+## Automated build-size analysis
 
-## Why the Galaxy A36 is a useful baseline
+`Tools/MobileWeb/analyze-build.mjs` requires no npm packages. It recursively inspects the final mobile output and produces:
 
-The Galaxy A36 5G is a realistic mid-range rather than flagship-only target. Samsung sells 6 GB and 8 GB RAM variants, with a 6.7-inch 1080 x 2340 120 Hz display and 5000 mAh battery.
+- total output size;
+- served `Build/` payload size;
+- data / Wasm / JavaScript / image / audio category totals;
+- twenty largest files in JSON;
+- fifteen largest files in the Markdown report;
+- warnings for unusually large startup payloads, `.data`, Wasm, missing Brotli or missing hosting metadata;
+- actionable next-stage recommendations;
+- automatic GitHub Actions step-summary output when run in CI.
 
-The physical 1080 x 2340 panel must not be treated as a mandate to render Unity at the browser's full physical pixel count. On a high-DPR phone that is an expensive amount of fragment work for very limited visible gain, particularly with the project's deliberately retro/CRT presentation. The DPR cap plus URP render scale is the main fill-rate control.
+Warnings are informational by default. Use `--strict` only once a measured production baseline exists and the thresholds should become release gates.
 
-## Browser constraints
+This prevents premature asset destruction: Addressables, texture reduction and audio changes happen only when the generated build proves they are needed.
 
-Unity 6 currently lists mobile Web support for iOS Safari 15+ and Chrome 58+ on Android.
+## Browser/deployment constraints
 
-For iOS, serve the game as a top-level page when persistence/cache reliability matters. Safari does not support IndexedDB for content running inside an iframe, so an iframe-only deployment is a bad canonical mobile URL.
+For iOS, serve the game as a top-level page when persistence/cache reliability matters. An iframe-only deployment is not the canonical mobile route.
 
-Brotli should be served over HTTPS with correct `Content-Encoding: br` headers. Do not enable Unity's decompression fallback unless the host cannot provide the correct compressed-file headers; native browser decompression is more efficient.
+Production hosting should use HTTPS and preserve `Content-Encoding: br` for Brotli assets and `application/wasm` for Wasm. The generated `_headers` file covers a Cloudflare Pages-style static deployment automatically.
 
-## Performance acceptance budgets
+## Performance acceptance gates
 
-These are gates, not claims about the current unmeasured build.
+These are engineering gates, not claims about an unmeasured physical-device run.
 
-### Galaxy A36 6 GB / Chrome / Balanced
+### Galaxy A36-class Android / Chrome / Balanced
 
-- Startup: no automatic download before user gesture.
-- Gameplay target: stable 30 FPS; frame budget <= 33.3 ms.
-- 10-minute run: no progressive FPS collapse caused by thermal throttling.
-- No browser tab kill or out-of-memory reload.
-- Unity heap should normally fit close to the configured 384 MB initial allocation; if routine gameplay immediately grows far above it, measure and reset the initial heap instead of guessing.
-- Total tab memory should remain comfortably below the point where Android begins aggressive reclamation; practical engineering target: keep sustained use below roughly 800 MB and investigate anything approaching 1 GB.
-- Compressed first-load transfer target: <= 80 MB for the first shipping pass. If the build exceeds that, asset streaming/Addressables becomes Phase 2 rather than accepting a giant monolithic `.data` file.
+- no automatic build download before user gesture;
+- stable 30 FPS target, <=33.3 ms frame budget;
+- no progressive FPS collapse over a 10–15 minute route;
+- no browser tab kill or out-of-memory reload;
+- investigate routine Unity heap growth far above the 384 MB startup envelope;
+- investigate sustained total tab memory approaching 1 GB;
+- initial compressed/served Build payload target around <=80–90 MB before considering content streaming mandatory.
 
 ### iPhone / Safari / Balanced
 
-- Same 30 FPS target.
-- No WebGL context loss during scene transitions.
-- No reload caused by memory pressure.
-- Safe-area UI must remain tappable in landscape on devices with a notch/Dynamic Island.
-- Audio must start after the user's launch gesture.
-- Persistent saves/cache must be tested on a top-level page, not only inside an iframe.
+- same stable 30 FPS target;
+- no WebGL context loss during scene transitions;
+- no reload caused by memory pressure;
+- safe-area controls remain tappable in landscape;
+- audio starts from the explicit launch gesture;
+- persistent cache/save tested from a top-level HTTPS page.
 
-## Test procedure
+## Deterministic physical-device test
 
-1. Build `WebGL-Mobile` from a clean Unity import.
-2. Record the Build Report: code size, `.data` size, compressed transfer size and stripped assemblies.
-3. Host over HTTPS with Brotli headers and WebAssembly MIME type configured correctly.
-4. Android Chrome remote-debug the device from desktop Chrome.
-5. Run the same deterministic route for at least 10 minutes:
+1. Run `mobile.ps1 Build` or let CI produce the artifact.
+2. Read `Builds/Reports/mobile-webgl-report.md`.
+3. Deploy over HTTPS for canonical validation.
+4. Android Chrome remote-debug the device.
+5. Run the same 10–15 minute route:
    - Main Menu;
    - enter SampleScene;
    - continuous movement + camera rotation;
@@ -188,40 +254,42 @@ These are gates, not claims about the current unmeasured build.
    - one dialogue sequence;
    - pause/cancel;
    - revisit the heaviest visible area.
-6. Record FPS/frame time, JS/Wasm memory, Unity heap growth, GC spikes, network transfer and context errors.
-7. Repeat Eco and Quality profiles.
+6. Record FPS/frame time, JS/Wasm memory, Unity heap growth, GC spikes, transfer and context errors.
+7. Repeat Eco and Quality.
 8. Repeat on iOS Safari.
-9. Only then change heap limits, render scale, texture policy or profile defaults.
+9. Change heap limits, asset streaming or destructive quality settings only from the resulting evidence.
 
-For Android thermal validation, pair the browser measurements with ADB battery/thermal diagnostics where possible. A stable 30 FPS after 15 minutes is more valuable than a 60 FPS screenshot followed by throttling.
+For Android thermal validation, pair browser measurements with ADB battery/thermal diagnostics where practical. A stable 30 FPS after 15 minutes is more valuable than an initial 60 FPS followed by thermal collapse.
 
-## Phase 2 if the first build is still too large or hot
+## Phase 2 only if measurements justify it
 
-Do these in order; do not destroy visual fidelity indiscriminately.
+Do these in order:
 
-1. Build Report-driven texture audit: identify the largest textures actually included in the player.
-2. Audio audit: convert long ambience/music to streaming-friendly compressed formats and lower sample rate only where inaudible.
-3. Addressables/AssetBundles: move content that is not needed at startup out of the initial `.data` payload.
-4. Scene/mesh audit: static batching, occlusion data, duplicated materials and overdraw.
-5. Shader-variant stripping based on variants actually used by the project.
-6. Reassess depth/opaque texture requirements only after checking the CRT/retro shaders that consume them.
-7. Consider separate lighter renderer data if SSAO and other full-screen passes proliferate.
+1. Build Report-driven texture audit;
+2. audio residency/compression audit;
+3. Addressables/AssetBundles for content not needed at startup;
+4. scene/mesh/static batching/occlusion/overdraw audit;
+5. shader-variant stripping based on variants actually used;
+6. reassess depth/opaque texture requirements only after CRT/retro visual regression tests;
+7. introduce a separate lighter renderer asset if full-screen passes expand again.
 
 ## Deliberate non-changes
 
-The port does **not** globally lower the PC quality asset. Desktop rendering is not sacrificed to make the phone build work.
+The port does **not** globally lower the PC quality asset.
 
-It does **not** blindly disable the depth or opaque texture because the project contains custom retro/CRT rendering and those dependencies need a visual regression test first.
+It does **not** blindly disable depth or opaque textures because the custom retro/CRT rendering path must be regression-tested first.
 
-It does **not** enable WebGL threads in the first mobile release.
+It does **not** enable WebGL threads in the first production-mobile path.
 
-It does **not** immediately migrate the whole project to Addressables. The current project is a single PlayMaker-driven gameplay scene, so a large asset-loading refactor should happen only if Build Report and device memory measurements justify it.
+It does **not** pre-emptively migrate the whole project to Addressables. The analyzer and physical-device data decide whether that complexity is warranted.
 
-## Estimated work from this point
+## Remaining non-automatable gate
 
-- First bootable/touchable mobile build: this branch contains the required first-pass infrastructure; the remaining risk is Unity compilation/build validation and device behavior.
-- One real A36 + one iPhone playtest/fix cycle: approximately 4–8 focused engineering hours if no third-party WebGL incompatibility appears.
-- Production thermal/memory polish: approximately 1–3 additional days.
-- If the monolithic `.data` payload forces an Addressables refactor or a third-party plugin fails on mobile WebGL: add approximately 1–3 days depending on the offending asset/plugin graph.
+Most repetitive engineering is now automated. The remaining gate is physical evidence:
 
-The largest uncertainty is no longer "can Unity Web run on mobile?". In Unity 6 it is an officially supported target. The remaining uncertainty is the project's actual memory/build-size profile and whether every third-party gameplay/rendering component survives Safari's tighter browser constraints.
+- Unity 6000.4.0f1 must compile the branch successfully;
+- Galaxy A36-class Chrome must complete the soak route;
+- iOS Safari must complete the same route;
+- the real Build Report and runtime memory numbers must be recorded.
+
+No script can truthfully replace those device measurements. Everything around them — build settings, touch input, profile selection, frame-time adaptation, background throttling, compression/hosting metadata, payload analysis and CI artifact generation — is automated in this branch.
