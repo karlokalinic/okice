@@ -80,11 +80,23 @@ namespace Karlolegend.Gradomraz.MobileWeb
 
         private void OnDisable()
         {
-            move = Vector2.zero;
-            pendingLookDelta = Vector2.zero;
-            frameLookDelta = Vector2.zero;
-            PendingButtons.Clear();
-            FrameButtons.Clear();
+            ResetInputState();
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (!hasFocus)
+            {
+                ResetInputState();
+            }
+        }
+
+        private void OnApplicationPause(bool pauseStatus)
+        {
+            if (pauseStatus)
+            {
+                ResetInputState();
+            }
         }
 
         public static bool GetButtonDown(string buttonName)
@@ -122,6 +134,11 @@ namespace Karlolegend.Gradomraz.MobileWeb
             }
         }
 
+        public void ResetInput(string unused)
+        {
+            ResetInputState();
+        }
+
         public void ConfigureProfile(string profileName)
         {
 #if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
@@ -136,9 +153,7 @@ namespace Karlolegend.Gradomraz.MobileWeb
 
             if (pageHidden)
             {
-                move = Vector2.zero;
-                pendingLookDelta = Vector2.zero;
-                frameLookDelta = Vector2.zero;
+                ResetInputState();
                 Application.targetFrameRate = 5;
                 AudioListener.pause = true;
                 return;
@@ -146,6 +161,7 @@ namespace Karlolegend.Gradomraz.MobileWeb
 
             AudioListener.pause = false;
             Application.targetFrameRate = activeTargetFps;
+            consecutiveStableWindows = 0;
             ResetGovernorWindow();
 #endif
         }
@@ -207,6 +223,11 @@ namespace Karlolegend.Gradomraz.MobileWeb
             Application.backgroundLoadingPriority = ThreadPriority.Low;
 
             activeUrp = GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset;
+            if (activeUrp == null)
+            {
+                activeUrp = QualitySettings.renderPipeline as UniversalRenderPipelineAsset;
+            }
+
             if (activeUrp != null)
             {
                 activeUrp.renderScale = renderScale;
@@ -219,6 +240,7 @@ namespace Karlolegend.Gradomraz.MobileWeb
             }
 
             SetSsao(ssao);
+            consecutiveStableWindows = 0;
             ResetGovernorWindow();
         }
 
@@ -249,7 +271,11 @@ namespace Karlolegend.Gradomraz.MobileWeb
             var averageFrameSeconds = sampleFrameSeconds / Mathf.Max(1, sampleFrames);
             var slowRatio = (float)sampleSlowFrames / Mathf.Max(1, sampleFrames);
             var underPressure = averageFrameSeconds > targetFrameSeconds * 1.08f || slowRatio > 0.18f;
-            var veryStable = averageFrameSeconds < targetFrameSeconds * 0.78f && slowRatio < 0.02f;
+
+            // targetFrameRate intentionally caps the loop at 30/60 FPS, so a healthy
+            // window normally measures close to the target interval, not 20% faster.
+            // Recovery therefore uses a small hysteresis band around the cap.
+            var stableAtCap = averageFrameSeconds <= targetFrameSeconds * 1.03f && slowRatio < 0.02f;
 
             if (underPressure)
             {
@@ -262,13 +288,13 @@ namespace Karlolegend.Gradomraz.MobileWeb
                 else if (activeTargetFps > 30)
                 {
                     // Thermal safety: if Quality cannot sustain 60 FPS even at its
-                    // minimum resolution, preserve visual quality and settle at 30.
+                    // minimum resolution, preserve frame pacing and settle at 30.
                     activeTargetFps = 30;
                     Application.targetFrameRate = 30;
                     SetSsao(false);
                 }
             }
-            else if (veryStable && activeProfile != "eco")
+            else if (stableAtCap && activeProfile != "eco")
             {
                 consecutiveStableWindows++;
                 if (consecutiveStableWindows >= 3 && currentRenderScale < maxRenderScale - 0.01f)
@@ -305,6 +331,15 @@ namespace Karlolegend.Gradomraz.MobileWeb
                     feature.SetActive(enabled);
                 }
             }
+        }
+
+        private static void ResetInputState()
+        {
+            move = Vector2.zero;
+            pendingLookDelta = Vector2.zero;
+            frameLookDelta = Vector2.zero;
+            PendingButtons.Clear();
+            FrameButtons.Clear();
         }
 
         private void ResetGovernorWindow()
