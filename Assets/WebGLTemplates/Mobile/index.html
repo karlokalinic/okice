@@ -21,7 +21,8 @@
     .panel { width: min(92vw, 430px); }
     .eyebrow { margin-bottom: 10px; color: #8d979c; font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
     .brand { margin: 0 0 10px; font: 700 clamp(38px, 12vw, 66px)/.9 Georgia, "Times New Roman", serif; letter-spacing: -.035em; }
-    .copy { margin: 0 0 24px; color: #aeb6b8; font-size: 14px; line-height: 1.5; }
+    .copy { margin: 0 0 20px; color: #aeb6b8; font-size: 14px; line-height: 1.5; }
+    #auto-note { margin: -8px 0 18px; color: #7d888d; font-size: 11px; line-height: 1.4; }
     .profiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
     .profile { min-height: 64px; padding: 10px 8px; border: 1px solid #30383d; border-radius: 12px; background: #101519; text-align: left; cursor: pointer; }
     .profile strong, .profile span { display: block; }
@@ -70,14 +71,15 @@
         <div class="eyebrow">KARLOLEGEND · MOBILE WEB</div>
         <h1 class="brand">{{{ PRODUCT_NAME }}}</h1>
         <p id="orientation-note">Za igru je preporučen vodoravni položaj uređaja. Okreni mobitel prije pokretanja za bolji prikaz i manji GPU teret.</p>
-        <p class="copy">Igra se ne preuzima dok ne pritisneš Pokreni. Zadani način rada štedi bateriju i memoriju, ali zadržava puni vizualni identitet.</p>
+        <p class="copy">Igra se ne preuzima dok ne pritisneš Pokreni. Profil se automatski bira prema uređaju i mreži, a tijekom igre render se sam prilagođava opterećenju.</p>
+        <p id="auto-note"></p>
         <div class="profiles" role="radiogroup" aria-label="Kvaliteta">
           <button class="profile" data-profile="eco" data-dpr="1.0" type="button"><strong>Štednja</strong><span>30 FPS · lakši GPU</span></button>
-          <button class="profile is-selected" data-profile="balanced" data-dpr="1.5" type="button"><strong>Uravnoteženo</strong><span>30 FPS · preporučeno</span></button>
+          <button class="profile" data-profile="balanced" data-dpr="1.5" type="button"><strong>Uravnoteženo</strong><span>30 FPS · preporučeno</span></button>
           <button class="profile" data-profile="quality" data-dpr="1.75" type="button"><strong>Kvaliteta</strong><span>60 FPS · više topline</span></button>
         </div>
         <button id="start-button" type="button">Pokreni igru</button>
-        <p class="fineprint">Najbolje na Safari 15+ (iOS) i aktualnom Chromeu (Android). Za iOS koristi samostalnu stranicu umjesto iframea kada želiš pouzdan cache spremanja.</p>
+        <p class="fineprint">Automatika nikada sama ne bira Kvaliteta. Taj profil je ručni opt-in. Na iOS-u koristi samostalnu stranicu umjesto iframea za pouzdan cache spremanja.</p>
       </div>
     </section>
 
@@ -112,6 +114,8 @@
     const progressFill = document.querySelector('#progress-fill');
     const progressLabel = document.querySelector('#progress-label');
     const warningArea = document.querySelector('#unity-warning');
+    const autoNote = document.querySelector('#auto-note');
+    const profileButtons = [...document.querySelectorAll('.profile')];
     const touchCapable = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
     if (touchCapable) document.documentElement.classList.add('touch-capable');
 
@@ -119,15 +123,64 @@
     let selectedDpr = 1.5;
     let unityInstance = null;
     let bootStarted = false;
+    let userOverrodeProfile = false;
 
-    document.querySelectorAll('.profile').forEach(button => {
+    function detectAutomaticProfile() {
+      const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      const effectiveType = String(connection?.effectiveType || '').toLowerCase();
+      const saveData = connection?.saveData === true;
+      const memory = Number(navigator.deviceMemory || 0);
+      const cores = Number(navigator.hardwareConcurrency || 0);
+
+      const slowNetwork = saveData || effectiveType === 'slow-2g' || effectiveType === '2g' || effectiveType === '3g';
+      const constrainedMemory = memory > 0 && memory <= 4;
+      const constrainedCpu = cores > 0 && cores <= 4;
+      const profile = (slowNetwork || constrainedMemory || constrainedCpu) ? 'eco' : 'balanced';
+
+      const reasons = [];
+      if (saveData) reasons.push('Data Saver');
+      else if (slowNetwork) reasons.push(effectiveType.toUpperCase() + ' mreža');
+      if (constrainedMemory) reasons.push(`${memory} GB RAM signal`);
+      if (constrainedCpu) reasons.push(`${cores} CPU dretve`);
+
+      return { profile, reasons };
+    }
+
+    function selectProfile(profile, automatic = false) {
+      const button = profileButtons.find(item => item.dataset.profile === profile) || profileButtons.find(item => item.dataset.profile === 'balanced');
+      profileButtons.forEach(item => item.classList.toggle('is-selected', item === button));
+      selectedProfile = button.dataset.profile;
+      selectedDpr = Number(button.dataset.dpr || 1.5);
+
+      if (automatic) {
+        const detected = detectAutomaticProfile();
+        autoNote.textContent = detected.reasons.length
+          ? `Automatski profil: ${selectedProfile === 'eco' ? 'Štednja' : 'Uravnoteženo'} · ${detected.reasons.join(' · ')}`
+          : `Automatski profil: ${selectedProfile === 'eco' ? 'Štednja' : 'Uravnoteženo'}`;
+      } else {
+        autoNote.textContent = `Ručno odabrano: ${selectedProfile === 'eco' ? 'Štednja' : selectedProfile === 'quality' ? 'Kvaliteta' : 'Uravnoteženo'}`;
+      }
+    }
+
+    const automaticSelection = detectAutomaticProfile();
+    selectProfile(automaticSelection.profile, true);
+
+    profileButtons.forEach(button => {
       button.addEventListener('click', () => {
-        document.querySelectorAll('.profile').forEach(item => item.classList.remove('is-selected'));
-        button.classList.add('is-selected');
-        selectedProfile = button.dataset.profile;
-        selectedDpr = Number(button.dataset.dpr || 1.5);
+        userOverrodeProfile = true;
+        selectProfile(button.dataset.profile, false);
       });
     });
+
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (connection?.addEventListener) {
+      connection.addEventListener('change', () => {
+        if (!bootStarted && !userOverrodeProfile) {
+          const next = detectAutomaticProfile();
+          selectProfile(next.profile, true);
+        }
+      });
+    }
 
     function unityShowBanner(message, type) {
       const item = document.createElement('div');
@@ -142,6 +195,15 @@
     }
 
     function press(name) { send('PressButton', name); }
+
+    function publishVisibility() {
+      send('SetPageVisibility', document.hidden ? 'hidden' : 'visible');
+    }
+
+    document.addEventListener('visibilitychange', publishVisibility);
+    window.addEventListener('pagehide', () => send('SetPageVisibility', 'hidden'));
+    window.addEventListener('pageshow', () => send('SetPageVisibility', document.hidden ? 'hidden' : 'visible'));
+    window.addEventListener('blur', () => send('SetMove', '0,0'));
 
     function startGame() {
       if (bootStarted) return;
@@ -182,6 +244,7 @@
         }).then(instance => {
           unityInstance = instance;
           send('ConfigureProfile', selectedProfile);
+          publishVisibility();
           loadingScreen.remove();
           installTouchControls();
         }).catch(error => unityShowBanner(error, 'error'));
