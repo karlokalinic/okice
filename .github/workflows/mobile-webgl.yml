@@ -33,9 +33,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
-      # GitHub LFS quota is currently exhausted. Never let checkout fail opaquely:
-      # check out pointer stubs, classify them deterministically, and block only
-      # when an unresolved object is actually required by the Unity project.
       GIT_LFS_SKIP_SMUDGE: '1'
       UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
@@ -54,7 +51,13 @@ jobs:
       - name: Validate mobile source contract
         run: node Tools/MobileWeb/preflight.mjs --root .
 
-      - name: Audit unresolved Git LFS objects
+      - name: Inventory unresolved Git LFS objects
+        run: node Tools/MobileWeb/audit-lfs.mjs --root .
+
+      - name: Prepare quota-safe mobile CI workspace
+        run: node Tools/MobileWeb/prepare-ci-lfs.mjs --root .
+
+      - name: Prove no required LFS pointer remains
         run: node Tools/MobileWeb/audit-lfs.mjs --root . --strict
 
       - name: Require Unity CI license
@@ -63,7 +66,7 @@ jobs:
         run: |
           echo '## Unity build blocked' >> "$GITHUB_STEP_SUMMARY"
           echo '' >> "$GITHUB_STEP_SUMMARY"
-          echo 'Static mobile validation passed, but repository secret `UNITY_LICENSE` is not configured.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Static validation and LFS repair passed, but repository secret `UNITY_LICENSE` is not configured.' >> "$GITHUB_STEP_SUMMARY"
           echo 'The job fails deliberately: a green check must mean an actual Unity build was produced and smoke-tested.' >> "$GITHUB_STEP_SUMMARY"
           echo '::error::UNITY_LICENSE is not configured. Refusing to report a false-green mobile build.'
           exit 1
