@@ -12,12 +12,28 @@ namespace Karlolegend.Gradomraz.MobileWeb
     {
         public const string GameObjectName = "KARLOLEGEND_MobileWebInput";
 
+        private const float GovernorWindowSeconds = 5f;
+        private const float ScaleStep = 0.05f;
+
         private static readonly HashSet<string> PendingButtons = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private static readonly HashSet<string> FrameButtons = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         private static Vector2 pendingLookDelta;
         private static Vector2 frameLookDelta;
         private static Vector2 move;
+
+        private UniversalRenderPipelineAsset activeUrp;
+        private string activeProfile = "balanced";
+        private int activeTargetFps = 30;
+        private float minRenderScale = 0.72f;
+        private float maxRenderScale = 0.90f;
+        private float currentRenderScale = 0.90f;
+        private float sampleElapsed;
+        private float sampleFrameSeconds;
+        private int sampleFrames;
+        private int sampleSlowFrames;
+        private int consecutiveStableWindows;
+        private bool pageHidden;
 
         public static Vector2 Move => move;
         public static Vector2 LookDelta => frameLookDelta;
@@ -40,8 +56,7 @@ namespace Karlolegend.Gradomraz.MobileWeb
         private void Awake()
         {
 #if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
-            // Apply the thermal-safe production default before the HTML shell can
-            // send the player's selected profile. This also protects direct launches.
+            Application.runInBackground = false;
             ApplyProfile("balanced");
 #endif
         }
@@ -57,6 +72,10 @@ namespace Karlolegend.Gradomraz.MobileWeb
                 FrameButtons.Add(button);
             }
             PendingButtons.Clear();
+
+#if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
+            TickGovernor();
+#endif
         }
 
         private void OnDisable()
@@ -110,11 +129,35 @@ namespace Karlolegend.Gradomraz.MobileWeb
 #endif
         }
 
-        private static void ApplyProfile(string profileName)
+        public void SetPageVisibility(string state)
         {
-            var normalized = (profileName ?? string.Empty).Trim().ToLowerInvariant();
+#if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
+            pageHidden = string.Equals(state, "hidden", StringComparison.OrdinalIgnoreCase);
 
-            var targetFps = 30;
+            if (pageHidden)
+            {
+                move = Vector2.zero;
+                pendingLookDelta = Vector2.zero;
+                frameLookDelta = Vector2.zero;
+                Application.targetFrameRate = 5;
+                AudioListener.pause = true;
+                return;
+            }
+
+            AudioListener.pause = false;
+            Application.targetFrameRate = activeTargetFps;
+            ResetGovernorWindow();
+#endif
+        }
+
+        private void ApplyProfile(string profileName)
+        {
+            activeProfile = (profileName ?? string.Empty).Trim().ToLowerInvariant();
+            if (string.IsNullOrEmpty(activeProfile))
+            {
+                activeProfile = "balanced";
+            }
+
             var renderScale = 0.90f;
             var msaa = 2;
             var shadowDistance = 24f;
@@ -124,7 +167,11 @@ namespace Karlolegend.Gradomraz.MobileWeb
             var hdr = true;
             var ssao = false;
 
-            switch (normalized)
+            activeTargetFps = 30;
+            minRenderScale = 0.72f;
+            maxRenderScale = 0.90f;
+
+            switch (activeProfile)
             {
                 case "eco":
                     renderScale = 0.75f;
@@ -133,43 +180,139 @@ namespace Karlolegend.Gradomraz.MobileWeb
                     maxAdditionalLights = 1;
                     lodBias = 1.25f;
                     hdr = false;
+                    minRenderScale = 0.65f;
+                    maxRenderScale = 0.75f;
                     break;
 
                 case "quality":
-                    targetFps = 60;
+                    activeTargetFps = 60;
                     renderScale = 1.0f;
                     shadowDistance = 32f;
                     shadowCascades = 2;
                     lodBias = 2.0f;
                     ssao = true;
+                    minRenderScale = 0.78f;
+                    maxRenderScale = 1.0f;
+                    break;
+
+                default:
+                    activeProfile = "balanced";
                     break;
             }
 
             QualitySettings.vSyncCount = 0;
             QualitySettings.lodBias = lodBias;
             QualitySettings.realtimeReflectionProbes = false;
-            Application.targetFrameRate = targetFps;
+            Application.targetFrameRate = activeTargetFps;
             Application.backgroundLoadingPriority = ThreadPriority.Low;
 
-            if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset urp)
+            activeUrp = GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset;
+            if (activeUrp != null)
             {
-                urp.renderScale = renderScale;
-                urp.msaaSampleCount = msaa;
-                urp.shadowDistance = shadowDistance;
-                urp.shadowCascadeCount = shadowCascades;
-                urp.maxAdditionalLightsCount = maxAdditionalLights;
-                urp.supportsHDR = hdr;
+                activeUrp.renderScale = renderScale;
+                activeUrp.msaaSampleCount = msaa;
+                activeUrp.shadowDistance = shadowDistance;
+                activeUrp.shadowCascadeCount = shadowCascades;
+                activeUrp.maxAdditionalLightsCount = maxAdditionalLights;
+                activeUrp.supportsHDR = hdr;
+                currentRenderScale = renderScale;
             }
 
-            // Full-resolution SSAO is one of the clearest fill-rate costs in the current PC renderer.
-            // Keep it disabled in Eco/Balanced and allow it only in the explicit Quality profile.
+            SetSsao(ssao);
+            ResetGovernorWindow();
+        }
+
+        private void TickGovernor()
+        {
+            if (pageHidden || activeUrp == null || Time.unscaledDeltaTime <= 0f)
+            {
+                return;
+            }
+
+            var delta = Mathf.Min(Time.unscaledDeltaTime, 0.25f);
+            var targetFrameSeconds = 1f / Mathf.Max(1, activeTargetFps);
+
+            sampleElapsed += delta;
+            sampleFrameSeconds += delta;
+            sampleFrames++;
+
+            if (delta > targetFrameSeconds * 1.25f)
+            {
+                sampleSlowFrames++;
+            }
+
+            if (sampleElapsed < GovernorWindowSeconds)
+            {
+                return;
+            }
+
+            var averageFrameSeconds = sampleFrameSeconds / Mathf.Max(1, sampleFrames);
+            var slowRatio = (float)sampleSlowFrames / Mathf.Max(1, sampleFrames);
+            var underPressure = averageFrameSeconds > targetFrameSeconds * 1.08f || slowRatio > 0.18f;
+            var veryStable = averageFrameSeconds < targetFrameSeconds * 0.78f && slowRatio < 0.02f;
+
+            if (underPressure)
+            {
+                consecutiveStableWindows = 0;
+
+                if (currentRenderScale > minRenderScale + 0.01f)
+                {
+                    SetRenderScale(currentRenderScale - ScaleStep);
+                }
+                else if (activeTargetFps > 30)
+                {
+                    // Thermal safety: if Quality cannot sustain 60 FPS even at its
+                    // minimum resolution, preserve visual quality and settle at 30.
+                    activeTargetFps = 30;
+                    Application.targetFrameRate = 30;
+                    SetSsao(false);
+                }
+            }
+            else if (veryStable && activeProfile != "eco")
+            {
+                consecutiveStableWindows++;
+                if (consecutiveStableWindows >= 3 && currentRenderScale < maxRenderScale - 0.01f)
+                {
+                    SetRenderScale(currentRenderScale + ScaleStep);
+                    consecutiveStableWindows = 0;
+                }
+            }
+            else
+            {
+                consecutiveStableWindows = 0;
+            }
+
+            ResetGovernorWindow();
+        }
+
+        private void SetRenderScale(float value)
+        {
+            currentRenderScale = Mathf.Clamp(value, minRenderScale, maxRenderScale);
+            currentRenderScale = Mathf.Round(currentRenderScale * 20f) / 20f;
+
+            if (activeUrp != null)
+            {
+                activeUrp.renderScale = currentRenderScale;
+            }
+        }
+
+        private static void SetSsao(bool enabled)
+        {
             foreach (var feature in Resources.FindObjectsOfTypeAll<ScriptableRendererFeature>())
             {
                 if (feature != null && feature.name.IndexOf("ScreenSpaceAmbientOcclusion", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    feature.SetActive(ssao);
+                    feature.SetActive(enabled);
                 }
             }
+        }
+
+        private void ResetGovernorWindow()
+        {
+            sampleElapsed = 0f;
+            sampleFrameSeconds = 0f;
+            sampleFrames = 0;
+            sampleSlowFrames = 0;
         }
 
         private static bool TryParsePair(string value, out Vector2 pair)
