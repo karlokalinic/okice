@@ -71,12 +71,18 @@ namespace Karlolegend.Gradomraz.Editor
             var previousMaximumMemory = PlayerSettings.WebGL.maximumMemorySize;
             var previousGrowthMode = PlayerSettings.WebGL.memoryGrowthMode;
             var previousPowerPreference = PlayerSettings.WebGL.powerPreference;
+            var previousNameFilesAsHashes = PlayerSettings.WebGL.nameFilesAsHashes;
+            var previousDecompressionFallback = PlayerSettings.WebGL.decompressionFallback;
+            var previousThreadsSupport = PlayerSettings.WebGL.threadsSupport;
+            var previousExceptionSupport = PlayerSettings.WebGL.exceptionSupport;
+            var previousDebugSymbols = PlayerSettings.WebGL.debugSymbolMode;
+            var previousShowDiagnostics = PlayerSettings.WebGL.showDiagnostics;
             var previousTextureSubtarget = EditorUserBuildSettings.webGLBuildSubtarget;
             var previousCodeOptimization = UnityEditor.WebGL.UserBuildSettings.codeOptimization;
 
             try
             {
-                // Mobile-web release policy: small download, conservative heap, no development payload.
+                // Shipping mobile-web policy. All changes are temporary and are restored in finally.
                 PlayerSettings.WebGL.template = "PROJECT:Mobile";
                 PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli;
                 PlayerSettings.WebGL.dataCaching = true;
@@ -84,11 +90,15 @@ namespace Karlolegend.Gradomraz.Editor
                 PlayerSettings.WebGL.maximumMemorySize = 1024;
                 PlayerSettings.WebGL.memoryGrowthMode = WebGLMemoryGrowthMode.Geometric;
                 PlayerSettings.WebGL.powerPreference = WebGLPowerPreference.LowPower;
+                PlayerSettings.WebGL.nameFilesAsHashes = true;
+                PlayerSettings.WebGL.decompressionFallback = false;
+                PlayerSettings.WebGL.threadsSupport = false;
+                PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.None;
+                PlayerSettings.WebGL.debugSymbolMode = WebGLDebugSymbolMode.Off;
+                PlayerSettings.WebGL.showDiagnostics = false;
 
-                // ASTC is the preferred mobile texture target for modern iOS/Android GPUs.
+                // ASTC targets modern mobile GPUs and DiskSizeLTO minimizes shipping Wasm size.
                 EditorUserBuildSettings.webGLBuildSubtarget = WebGLTextureSubtarget.ASTC;
-
-                // Unity recommends Disk Size with LTO for shipping mobile-web builds.
                 UnityEditor.WebGL.UserBuildSettings.codeOptimization =
                     UnityEditor.WebGL.WasmCodeOptimization.DiskSizeLTO;
 
@@ -104,6 +114,7 @@ namespace Karlolegend.Gradomraz.Editor
 
                 if (report.summary.result == BuildResult.Succeeded)
                 {
+                    WriteMobileHostingFiles();
                     CreateArchive(MobileWebGlOutputPath, MobileWebGlArchivePath);
                 }
 
@@ -111,7 +122,7 @@ namespace Karlolegend.Gradomraz.Editor
             }
             finally
             {
-                // A mobile build must never silently mutate the desktop WebGL configuration.
+                // Mobile automation must never silently mutate the desktop WebGL configuration.
                 PlayerSettings.WebGL.template = previousTemplate;
                 PlayerSettings.WebGL.compressionFormat = previousCompression;
                 PlayerSettings.WebGL.dataCaching = previousDataCaching;
@@ -119,6 +130,12 @@ namespace Karlolegend.Gradomraz.Editor
                 PlayerSettings.WebGL.maximumMemorySize = previousMaximumMemory;
                 PlayerSettings.WebGL.memoryGrowthMode = previousGrowthMode;
                 PlayerSettings.WebGL.powerPreference = previousPowerPreference;
+                PlayerSettings.WebGL.nameFilesAsHashes = previousNameFilesAsHashes;
+                PlayerSettings.WebGL.decompressionFallback = previousDecompressionFallback;
+                PlayerSettings.WebGL.threadsSupport = previousThreadsSupport;
+                PlayerSettings.WebGL.exceptionSupport = previousExceptionSupport;
+                PlayerSettings.WebGL.debugSymbolMode = previousDebugSymbols;
+                PlayerSettings.WebGL.showDiagnostics = previousShowDiagnostics;
                 EditorUserBuildSettings.webGLBuildSubtarget = previousTextureSubtarget;
                 UnityEditor.WebGL.UserBuildSettings.codeOptimization = previousCodeOptimization;
             }
@@ -167,6 +184,43 @@ namespace Karlolegend.Gradomraz.Editor
             }
 
             ZipFile.CreateFromDirectory(sourceDirectory, archivePath, CompressionLevel.Optimal, false);
+        }
+
+        private static void WriteMobileHostingFiles()
+        {
+            var cloudflareHeaders = @"/index.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/Build/*.js.br
+  Content-Encoding: br
+  Content-Type: application/javascript
+  Cache-Control: public, max-age=31536000, immutable
+
+/Build/*.wasm.br
+  Content-Encoding: br
+  Content-Type: application/wasm
+  Cache-Control: public, max-age=31536000, immutable
+
+/Build/*.data.br
+  Content-Encoding: br
+  Content-Type: application/octet-stream
+  Cache-Control: public, max-age=31536000, immutable
+
+/Build/*
+  Cache-Control: public, max-age=31536000, immutable
+";
+
+            File.WriteAllText(Path.Combine(MobileWebGlOutputPath, "_headers"), cloudflareHeaders);
+
+            var deploymentNote =
+                "GRADOMRAZ mobile WebGL\n" +
+                "- Serve over HTTPS.\n" +
+                "- Preserve Content-Encoding: br for .br build assets.\n" +
+                "- Serve .wasm.br as application/wasm.\n" +
+                "- Prefer a top-level page on iOS Safari so IndexedDB caching is available.\n" +
+                "- Build files use content hashes, so immutable cache headers are safe.\n";
+
+            File.WriteAllText(Path.Combine(MobileWebGlOutputPath, "DEPLOYMENT.txt"), deploymentNote);
         }
 
         private static void ReportResult(string platformName, BuildReport report, string output)
