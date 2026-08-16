@@ -1,0 +1,102 @@
+name: Mobile WebGL
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'Assets/**'
+      - 'Packages/**'
+      - 'ProjectSettings/**'
+      - 'Tools/MobileWeb/**'
+      - '.github/workflows/mobile-webgl.yml'
+  push:
+    branches:
+      - master
+    paths:
+      - 'Assets/**'
+      - 'Packages/**'
+      - 'ProjectSettings/**'
+      - 'Tools/MobileWeb/**'
+      - '.github/workflows/mobile-webgl.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile-webgl-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-mobile-webgl:
+    name: Build + analyze mobile WebGL
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Unity Library cache
+        if: env.UNITY_LICENSE != ''
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-WebGL-${{ runner.os }}-${{ hashFiles('Packages/**', 'ProjectSettings/**', 'Assets/**/*.asmdef') }}
+          restore-keys: |
+            Library-WebGL-${{ runner.os }}-
+            Library-WebGL-
+
+      - name: Unity license is not configured
+        if: env.UNITY_LICENSE == ''
+        shell: bash
+        run: |
+          echo '## Mobile WebGL CI' >> "$GITHUB_STEP_SUMMARY"
+          echo '' >> "$GITHUB_STEP_SUMMARY"
+          echo '⚠️ Unity build skipped because repository secret `UNITY_LICENSE` is not configured.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Add the Unity license secret once; subsequent PRs and master pushes will build automatically.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Build production mobile WebGL
+        if: env.UNITY_LICENSE != ''
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          unityVersion: auto
+          targetPlatform: WebGL
+          buildMethod: Karlolegend.Gradomraz.Editor.GradomrazBuild.BuildMobileWebGL
+
+      - name: Analyze mobile payload
+        if: env.UNITY_LICENSE != ''
+        run: node Tools/MobileWeb/analyze-build.mjs --root Builds/WebGL-Mobile --report-dir Builds/Reports
+
+      - name: Verify hosting metadata
+        if: env.UNITY_LICENSE != ''
+        shell: bash
+        run: |
+          test -f Builds/WebGL-Mobile/index.html
+          test -f Builds/WebGL-Mobile/_headers
+          test -f Builds/WebGL-Mobile/DEPLOYMENT.txt
+          grep -q 'Content-Encoding: br' Builds/WebGL-Mobile/_headers
+          grep -q 'application/wasm' Builds/WebGL-Mobile/_headers
+
+      - name: Upload mobile build and reports
+        if: env.UNITY_LICENSE != '' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradomraz-mobile-webgl-${{ github.sha }}
+          path: |
+            Builds/WebGL-Mobile
+            Builds/Reports
+            Builds/Logs
+          if-no-files-found: warn
+          retention-days: 7
