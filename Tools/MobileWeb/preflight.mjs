@@ -26,11 +26,6 @@ function requireText(rel, text, label = text) {
   if (content && !content.includes(text)) failures.push(`${rel}: missing ${label}`);
 }
 
-function requireRegex(rel, regex, label) {
-  const content = read(rel);
-  if (content && !regex.test(content)) failures.push(`${rel}: missing ${label}`);
-}
-
 const version = read('ProjectSettings/ProjectVersion.txt');
 if (version && !/^m_EditorVersion:\s*6000\.4\.0f1\s*$/m.test(version)) {
   failures.push('ProjectVersion.txt must pin Unity 6000.4.0f1 for deterministic mobile validation.');
@@ -82,8 +77,12 @@ for (const [token, label] of [
   ['SetMove', 'touch movement bridge'],
   ['AddLookDelta', 'touch look bridge'],
   ['PressButton', 'touch button bridge'],
+  ['ResetInput', 'input reset bridge'],
+  ['OnApplicationFocus', 'focus-loss input reset'],
+  ['OnApplicationPause', 'pause input reset'],
   ['ConfigureProfile', 'runtime quality profile bridge'],
-  ['SetPageVisibility', 'page visibility bridge']
+  ['SetPageVisibility', 'page visibility bridge'],
+  ['stableAtCap', 'adaptive render-scale recovery hysteresis']
 ]) requireText(bridgeFile, token, label);
 
 const templateFile = 'Assets/WebGLTemplates/Mobile/index.html';
@@ -96,6 +95,8 @@ for (const [token, label] of [
   ['createUnityInstance', 'Unity bootstrap'],
   ['ConfigureProfile', 'profile handoff'],
   ['SetPageVisibility', 'visibility handoff'],
+  ['visibilitychange', 'browser page lifecycle handling'],
+  ['pointercancel', 'touch cancellation handling'],
   ['navigator.maxTouchPoints', 'touch capability detection']
 ]) requireText(templateFile, token, label);
 
@@ -107,6 +108,7 @@ const workflow = read('.github/workflows/mobile-webgl.yml');
 if (workflow) {
   if (!workflow.includes('Tools/MobileWeb/**')) failures.push('Mobile workflow path filters must include Tools/MobileWeb/**.');
   if (/\blfs:\s*true\b/.test(workflow)) warnings.push('Workflow still asks actions/checkout to download Git LFS. This will fail while the repository LFS budget is exceeded.');
+  if (/push:[\s\S]*?branches:[\s\S]*?chatgpt\/mobile-webgl-port/.test(workflow)) warnings.push('PR branch is also configured as a push trigger, which causes duplicate CI runs.');
 }
 
 console.log('=== Mobile WebGL source preflight ===');
