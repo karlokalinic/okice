@@ -70,6 +70,7 @@ namespace Karlolegend.Gradomraz.Editor
             var previousInitialMemory = PlayerSettings.WebGL.initialMemorySize;
             var previousMaximumMemory = PlayerSettings.WebGL.maximumMemorySize;
             var previousGrowthMode = PlayerSettings.WebGL.memoryGrowthMode;
+            var previousPowerPreference = PlayerSettings.WebGL.powerPreference;
             var previousTextureSubtarget = EditorUserBuildSettings.webGLBuildSubtarget;
             var previousCodeOptimization = UnityEditor.WebGL.UserBuildSettings.codeOptimization;
 
@@ -82,6 +83,7 @@ namespace Karlolegend.Gradomraz.Editor
                 PlayerSettings.WebGL.initialMemorySize = 384;
                 PlayerSettings.WebGL.maximumMemorySize = 1024;
                 PlayerSettings.WebGL.memoryGrowthMode = WebGLMemoryGrowthMode.Geometric;
+                PlayerSettings.WebGL.powerPreference = WebGLPowerPreference.LowPower;
 
                 // ASTC is the preferred mobile texture target for modern iOS/Android GPUs.
                 EditorUserBuildSettings.webGLBuildSubtarget = WebGLTextureSubtarget.ASTC;
@@ -116,6 +118,7 @@ namespace Karlolegend.Gradomraz.Editor
                 PlayerSettings.WebGL.initialMemorySize = previousInitialMemory;
                 PlayerSettings.WebGL.maximumMemorySize = previousMaximumMemory;
                 PlayerSettings.WebGL.memoryGrowthMode = previousGrowthMode;
+                PlayerSettings.WebGL.powerPreference = previousPowerPreference;
                 EditorUserBuildSettings.webGLBuildSubtarget = previousTextureSubtarget;
                 UnityEditor.WebGL.UserBuildSettings.codeOptimization = previousCodeOptimization;
             }
