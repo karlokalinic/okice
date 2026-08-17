@@ -1,0 +1,109 @@
+name: GRADOMRAZ Production
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "Assets/**"
+      - "Packages/**"
+      - "ProjectSettings/**"
+      - "scripts/publish-gradomraz-ci.mjs"
+      - ".github/workflows/gradomraz-production.yml"
+  pull_request:
+    branches: [master]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gradomraz-production-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          lfs: true
+
+      - name: Source + Unity activation preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F "6000.4.0f1" ProjectSettings/ProjectVersion.txt
+          test -f Assets/Editor/KARLOLEGEND_GRADOMRAZ/BuildGame.cs
+          test -f Assets/Scenes/Boot.unity
+          if [[ -z "${UNITY_LICENSE:-}" && -z "${UNITY_SERIAL:-}" ]]; then
+            echo "::error::Unity CI activation missing. Configure UNITY_LICENSE or UNITY_SERIAL."
+            exit 2
+          fi
+          test -n "${UNITY_EMAIL:-}" || { echo "::error::UNITY_EMAIL missing"; exit 2; }
+          test -n "${UNITY_PASSWORD:-}" || { echo "::error::UNITY_PASSWORD missing"; exit 2; }
+
+      - name: Cache Unity Library
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-GRADOMRAZ-${{ runner.os }}-6000.4-${{ hashFiles('Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-GRADOMRAZ-${{ runner.os }}-6000.4-
+
+      - name: Build GRADOMRAZ WebGL
+        uses: game-ci/unity-builder@v5
+        env:
+          UNITY_LICENSE: ${{ env.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ env.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ env.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ env.UNITY_SERIAL }}
+        with:
+          unityVersion: 6000.4.0f1
+          targetPlatform: WebGL
+          buildMethod: Karlolegend.Gradomraz.Editor.GradomrazBuild.BuildWebGL
+
+      - name: Build GRADOMRAZ Windows x64
+        uses: game-ci/unity-builder@v5
+        env:
+          UNITY_LICENSE: ${{ env.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ env.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ env.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ env.UNITY_SERIAL }}
+        with:
+          unityVersion: 6000.4.0f1
+          targetPlatform: StandaloneWindows64
+          buildMethod: Karlolegend.Gradomraz.Editor.GradomrazBuild.BuildWindows64
+
+      - name: Preserve build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: GRADOMRAZ-${{ github.sha }}
+          retention-days: 30
+          path: |
+            Builds/WebGL/**
+            Builds/GRADOMRAZ-Windows.zip
+
+      - name: Cloudflare publish preflight
+        if: github.event_name != 'pull_request'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "::error::CLOUDFLARE_API_TOKEN missing in okice"; exit 2; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "::error::CLOUDFLARE_ACCOUNT_ID missing in okice"; exit 2; }
+
+      - name: Verify and publish GRADOMRAZ to R2
+        if: github.event_name != 'pull_request'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          GRADOMRAZ_R2_BUCKET: karlo-webgl-builds
+        run: node scripts/publish-gradomraz-ci.mjs
