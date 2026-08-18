@@ -39,7 +39,7 @@
     #progress-label { color: #939da1; font-size: 12px; }
 
     #controls { position: absolute; inset: 0; z-index: 8; display: none; pointer-events: none; }
-    .touch-capable #controls { display: block; }
+    .touch-capable.mobile-controls #controls { display: block; }
     #stick-base { position: fixed; z-index: 10; width: 92px; height: 92px; margin: -46px 0 0 -46px; border: 1px solid rgba(255,255,255,.25); border-radius: 50%; background: rgba(10,13,15,.45); opacity: 0; pointer-events: none; }
     #stick-knob { position: absolute; left: 50%; top: 50%; width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 50%; background: rgba(239,237,228,.58); }
     #stick-base.is-active { opacity: 1; }
@@ -69,7 +69,7 @@
         <div class="eyebrow">KARLOLEGEND · MOBILE WEB</div>
         <h1 class="brand">{{{ PRODUCT_NAME }}}</h1>
         <p id="orientation-note">Za stabilnu igru okreni uređaj vodoravno prije pokretanja.</p>
-        <p class="copy">Mobilna verzija prioritizira stabilan frame pacing i normalne Unity UI dodire. Geste više ne sjede u transparentnom sloju iznad canvasa.</p>
+        <p class="copy">Mobilna verzija prioritizira stabilan frame pacing, normalan Unity UI touch i kontrole koje se aktiviraju tek kada stvarno uđeš u gameplay.</p>
         <p id="auto-note"></p>
         <div class="profiles" role="radiogroup" aria-label="Kvaliteta">
           <button class="profile" data-profile="eco" data-dpr="1.0" type="button"><strong>Štednja</strong><span>30 FPS · najlakše</span></button>
@@ -77,7 +77,7 @@
           <button class="profile" data-profile="quality" data-dpr="1.25" type="button"><strong>Oštrije</strong><span>30 FPS · veći GPU trošak</span></button>
         </div>
         <button id="start-button" type="button">Pokreni igru</button>
-        <p class="fineprint">Lijeva strana canvasa = kretanje; desna = pogled. Unity i dalje prima svoje pointer događaje za izbornike i dijaloge. JS→WASM input je ograničen na 30 Hz.</p>
+        <p class="fineprint">Main Menu prima samo native Unity dodire. U gameplayu lijeva strana = kretanje, desna = pogled. Tijekom dijaloga gesture input se automatski gasi. JS→WASM input je ograničen na 30 Hz.</p>
       </div>
     </section>
 
@@ -122,6 +122,8 @@
     let unityInstance = null;
     let bootStarted = false;
     let userOverrodeProfile = false;
+    let inputMode = 0; // 0 menu/native UI, 1 gameplay gestures, 2 dialogue/native UI + action buttons
+    let releaseTouchGestures = null;
     let inputTimer = 0;
     let nextInputFlushAt = 0;
     let moveDirty = false;
@@ -205,7 +207,7 @@
     function flushInput() {
       inputTimer = 0;
       nextInputFlushAt = performance.now() + INPUT_INTERVAL_MS;
-      if (!unityInstance || document.hidden) return;
+      if (!unityInstance || document.hidden || inputMode !== 1) return;
 
       if (moveDirty) {
         moveDirty = false;
@@ -222,12 +224,13 @@
     }
 
     function scheduleInputFlush() {
-      if (!unityInstance || inputTimer) return;
+      if (!unityInstance || inputTimer || inputMode !== 1) return;
       const delay = Math.max(0, nextInputFlushAt - performance.now());
       inputTimer = window.setTimeout(flushInput, delay);
     }
 
     function queueMove(x, y) {
+      if (inputMode !== 1) return;
       queuedMoveX = Math.max(-1, Math.min(1, x));
       queuedMoveY = Math.max(-1, Math.min(1, y));
       moveDirty = true;
@@ -235,6 +238,7 @@
     }
 
     function queueLook(dx, dy) {
+      if (inputMode !== 1) return;
       queuedLookX += dx;
       queuedLookY += dy;
       scheduleInputFlush();
@@ -252,6 +256,18 @@
       moveDirty = false;
       send('ResetInput', '');
     }
+
+    window.KARLOLEGEND_SetInputMode = mode => {
+      const nextMode = Math.max(0, Math.min(2, Number(mode) | 0));
+      if (nextMode === inputMode) return;
+      inputMode = nextMode;
+      document.documentElement.classList.toggle('mobile-controls', touchCapable && inputMode > 0);
+
+      if (inputMode !== 1) {
+        if (releaseTouchGestures) releaseTouchGestures();
+        else resetInput();
+      }
+    };
 
     function publishVisibility() {
       if (document.hidden) resetInput();
@@ -326,9 +342,18 @@
       let lookPointer = null;
       let lookLast = { x: 0, y: 0 };
 
-      canvas.addEventListener('pointerdown', event => {
-        const leftSide = event.clientX < window.innerWidth * 0.46;
+      releaseTouchGestures = () => {
+        movePointer = null;
+        lookPointer = null;
+        stickBase.classList.remove('is-active');
+        stickKnob.style.transform = 'translate(0, 0)';
+        resetInput();
+      };
 
+      canvas.addEventListener('pointerdown', event => {
+        if (inputMode !== 1) return;
+
+        const leftSide = event.clientX < window.innerWidth * 0.46;
         if (leftSide && movePointer === null) {
           movePointer = event.pointerId;
           moveOrigin = { x: event.clientX, y: event.clientY };
@@ -344,6 +369,8 @@
       }, { passive: true });
 
       canvas.addEventListener('pointermove', event => {
+        if (inputMode !== 1) return;
+
         if (event.pointerId === movePointer) {
           let dx = event.clientX - moveOrigin.x;
           let dy = event.clientY - moveOrigin.y;
