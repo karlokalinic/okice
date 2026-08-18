@@ -35,8 +35,9 @@ const manifest = read('Packages/manifest.json');
 if (manifest) {
   try {
     const json = JSON.parse(manifest);
-    const urp = json.dependencies?.['com.unity.render-pipelines.universal'];
-    if (!urp) failures.push('URP package is missing from Packages/manifest.json.');
+    if (!json.dependencies?.['com.unity.render-pipelines.universal']) {
+      failures.push('URP package is missing from Packages/manifest.json.');
+    }
   } catch (error) {
     failures.push(`Packages/manifest.json is invalid JSON: ${error.message}`);
   }
@@ -58,8 +59,10 @@ for (const [token, label] of [
   ['PROJECT:Mobile', 'dedicated Mobile WebGL template'],
   ['WebGLCompressionFormat.Brotli', 'Brotli compression'],
   ['dataCaching = true', 'WebGL data caching'],
-  ['initialMemorySize = 384', '384 MB initial heap baseline'],
+  ['initialMemorySize = 512', '512 MB initial heap baseline'],
   ['maximumMemorySize = 1024', '1024 MB maximum heap guardrail'],
+  ['geometricMemoryGrowthStep = 0.10f', 'smaller geometric heap growth step'],
+  ['memoryGeometricGrowthCap = 64', '64 MB heap growth cap'],
   ['WebGLPowerPreference.LowPower', 'low-power GPU preference'],
   ['WebGLTextureSubtarget.ASTC', 'ASTC mobile texture subtarget'],
   ['WasmCodeOptimization.DiskSizeLTO', 'Wasm disk-size LTO'],
@@ -78,11 +81,12 @@ for (const [token, label] of [
   ['AddLookDelta', 'touch look bridge'],
   ['PressButton', 'touch button bridge'],
   ['ResetInput', 'input reset bridge'],
-  ['OnApplicationFocus', 'focus-loss input reset'],
-  ['OnApplicationPause', 'pause input reset'],
   ['ConfigureProfile', 'runtime quality profile bridge'],
   ['SetPageVisibility', 'page visibility bridge'],
-  ['stableAtCap', 'adaptive render-scale recovery hysteresis']
+  ['EnterEmergencyMode', 'automatic emergency degradation'],
+  ['supportsCameraOpaqueTexture = false', 'opaque-texture bandwidth reduction'],
+  ['supportsHDR = false', 'mobile HDR render-target disable'],
+  ['Application.targetFrameRate = activeTargetFps', 'stable frame cap']
 ]) requireText(bridgeFile, token, label);
 
 const templateFile = 'Assets/WebGLTemplates/Mobile/index.html';
@@ -95,7 +99,10 @@ for (const [token, label] of [
   ['createUnityInstance', 'Unity bootstrap'],
   ['ConfigureProfile', 'profile handoff'],
   ['SetPageVisibility', 'visibility handoff'],
-  ['visibilitychange', 'browser page lifecycle handling'],
+  ['INPUT_INTERVAL_MS = 1000 / 30', '30 Hz JS-to-WASM input throttle'],
+  ['queueLook', 'batched touch look input'],
+  ['queueMove', 'batched touch movement input'],
+  ['ResetInput', 'browser-to-Unity input reset'],
   ['pointercancel', 'touch cancellation handling'],
   ['navigator.maxTouchPoints', 'touch capability detection']
 ]) requireText(templateFile, token, label);
@@ -106,9 +113,11 @@ requireText('Assets/WebGLTemplates/Mobile/index.html.meta', 'fileFormatVersion: 
 
 const workflow = read('.github/workflows/mobile-webgl.yml');
 if (workflow) {
-  if (!workflow.includes('Tools/MobileWeb/**')) failures.push('Mobile workflow path filters must include Tools/MobileWeb/**.');
-  if (/\blfs:\s*true\b/.test(workflow)) warnings.push('Workflow still asks actions/checkout to download Git LFS. This will fail while the repository LFS budget is exceeded.');
-  if (/push:[\s\S]*?branches:[\s\S]*?chatgpt\/mobile-webgl-port/.test(workflow)) warnings.push('PR branch is also configured as a push trigger, which causes duplicate CI runs.');
+  if (!/workflow_dispatch:\s*/.test(workflow)) failures.push('Mobile workflow must remain manually dispatchable.');
+  if (/\bpull_request\s*:/.test(workflow) || /\bpush\s*:/.test(workflow)) {
+    failures.push('Mobile workflow must remain manual-only; automatic PR/push runs create notification spam.');
+  }
+  if (/\blfs:\s*true\b/.test(workflow)) warnings.push('Workflow asks actions/checkout to download Git LFS.');
 }
 
 console.log('=== Mobile WebGL source preflight ===');
