@@ -115,7 +115,11 @@ namespace HutongGames.PlayMaker.Actions
 
 		private float GetXRotation()
 		{
-			float input = Input.GetAxis("Mouse X") + MobileWebInputBridge.LookDelta.x * MobileLookScale;
+#if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
+			float input = MobileWebInputBridge.LookDelta.x * MobileLookScale;
+#else
+			float input = Input.GetAxis("Mouse X");
+#endif
 			rotationX += input * sensitivityX.Value;
 			rotationX = ClampAngle(rotationX, minimumX, maximumX) % 360f;
 			return rotationX;
@@ -123,7 +127,11 @@ namespace HutongGames.PlayMaker.Actions
 
 		private float GetYRotation(float invert = 1f)
 		{
-			float input = Input.GetAxis("Mouse Y") + MobileWebInputBridge.LookDelta.y * MobileLookScale;
+#if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
+			float input = MobileWebInputBridge.LookDelta.y * MobileLookScale;
+#else
+			float input = Input.GetAxis("Mouse Y");
+#endif
 			rotationY += input * sensitivityY.Value * invert;
 			rotationY = ClampAngle(rotationY, minimumY, maximumY) % 360f;
 			return rotationY;
