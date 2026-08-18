@@ -158,16 +158,17 @@ Runtime mobile policy:
 
 Expected impact: less light culling/shadow work without deliberately deleting gameplay light cues.
 
-## 10. Particle and skinned-mesh scene budgets
+## 10. Particle scene budget; offscreen animation deliberately preserved
 
 Added `MobileWebSceneBudgetController`.
 
 - Only **looping** ParticleSystems receive a population cap.
 - One-shot gameplay particle effects are not modified.
 - Cap scales from roughly 384 -> 256 -> 128 -> 96 particles per looping system as rendering pressure increases.
-- `SkinnedMeshRenderer.updateWhenOffscreen` is forced off so offscreen skinning does not consume rendering work while scripts/animators/colliders remain alive.
+- Static un-scripted point/spot lights can be distance-disabled outside their effective range and restored on approach.
+- `SkinnedMeshRenderer.updateWhenOffscreen` is **not** automatically changed. Unity documents that disabling it can also stop offscreen animation updates, which is too risky for animation events/timing in a gameplay scene.
 
-Expected impact: reduced transparent overdraw/particle fill-rate and less unnecessary offscreen skinning.
+Expected impact: lower looping-particle fill-rate and lower safe static-light overhead without changing animation semantics.
 
 ## 11. Physics pacing
 
@@ -192,7 +193,7 @@ Runtime profiles use `QualitySettings.globalTextureMipmapLimit`:
 - default drops one mip level where appropriate;
 - Eco drops more.
 
-This reduces texture residency/bandwidth without destructively reimporting the desktop source textures.
+This reduces texture residency/bandwidth without destructively reimporting the desktop source textures. Profile selection occurs before gameplay because changing the global mip limit after many textures are resident can itself cause texture re-upload work.
 
 ## 14. Boot payload stripping and repository/LFS cleanup
 
@@ -280,7 +281,7 @@ Highest likely runtime impact:
 4. punctual shadow removal + strict light budget;
 5. 30 FPS cap / adaptive governor;
 6. 30 Hz JS-to-Wasm input batching;
-7. looping-particle and offscreen-skinning caps;
+7. looping-particle + safe static-light scene budgets;
 8. 30 Hz physics / bounded catch-up;
 9. texture mip and audio voice budgets.
 
