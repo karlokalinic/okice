@@ -27,7 +27,7 @@ function requireAll(rel, entries) {
 
 const version = read('ProjectSettings/ProjectVersion.txt');
 if (version && !/^m_EditorVersion:\s*6000\.4\.0f1\s*$/m.test(version)) {
-  failures.push('ProjectVersion.txt must pin Unity 6000.4.0f1 for deterministic mobile validation.');
+  failures.push('ProjectVersion.txt must pin Unity 6000.4.0f1 for deterministic validation.');
 }
 
 const manifest = read('Packages/manifest.json');
@@ -49,22 +49,27 @@ if (scenes) {
   if (enabled.length && enabled[0] !== 'Assets/Scenes/Boot.unity') failures.push(`Boot.unity must be first; found ${enabled[0]}.`);
 }
 
-requireAll('Assets/Editor/KARLOLEGEND_GRADOMRAZ/BuildGame.cs', [
+const buildFile = 'Assets/Editor/KARLOLEGEND_GRADOMRAZ/BuildGame.cs';
+requireAll(buildFile, [
   ['PROJECT:Mobile', 'dedicated Mobile template'],
   ['MobilePipelineAssetPath', 'dedicated mobile pipeline path'],
-  ['AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>', 'mobile pipeline load'],
-  ['QualitySettings.renderPipeline = mobilePipeline', 'quality pipeline override'],
-  ['GraphicsSettings.defaultRenderPipeline = mobilePipeline', 'default pipeline override'],
+  ['WebCompatibilityPipelineAssetPath', 'ordinary WebGL compatibility pipeline path'],
+  ['Assets/Resources/LowSpec_RPAsset.asset', 'low-spec WebGL pipeline asset'],
+  ['PlayerSettings.WebGL.initialMemorySize = 384', '384 MB ordinary WebGL initial heap'],
+  ['PlayerSettings.WebGL.maximumMemorySize = 1024', '1 GB WebGL heap ceiling'],
+  ['WebGLPowerPreference.HighPerformance', 'desktop WebGL discrete-GPU preference'],
+  ['WebGLTextureSubtarget.DXT', 'desktop WebGL DXT texture target'],
+  ['QualitySettings.renderPipeline = compatibilityPipeline', 'ordinary WebGL compatibility pipeline override'],
+  ['GraphicsSettings.defaultRenderPipeline = compatibilityPipeline', 'ordinary WebGL default pipeline override'],
+  ['QualitySettings.renderPipeline = mobilePipeline', 'mobile pipeline override'],
+  ['GraphicsSettings.defaultRenderPipeline = mobilePipeline', 'mobile default pipeline override'],
   ['QualitySettings.renderPipeline = previousQualityPipeline', 'quality pipeline restoration'],
   ['GraphicsSettings.defaultRenderPipeline = previousDefaultPipeline', 'default pipeline restoration'],
   ['WebGLCompressionFormat.Brotli', 'Brotli'],
   ['dataCaching = true', 'data caching'],
-  ['initialMemorySize = 512', '512 MB initial heap'],
-  ['maximumMemorySize = 1024', '1024 MB maximum heap'],
   ['geometricMemoryGrowthStep = 0.10f', '10% heap growth'],
   ['memoryGeometricGrowthCap = 64', '64 MB growth cap'],
-  ['WebGLPowerPreference.LowPower', 'low-power preference'],
-  ['WebGLTextureSubtarget.ASTC', 'ASTC'],
+  ['WebGLTextureSubtarget.ASTC', 'mobile ASTC'],
   ['WasmCodeOptimization.DiskSizeLTO', 'Wasm LTO'],
   ['nameFilesAsHashes = true', 'hashed output'],
   ['threadsSupport = false', 'single-thread compatibility'],
@@ -96,7 +101,44 @@ requireAll('Assets/MonoBehaviour/Mobile_RPAsset.asset', [
   ['m_SupportsDynamicBatching: 1', 'dynamic batching'],
   ['m_ColorGradingLutSize: 16', 'small LUT']
 ]);
-requireText('Assets/MonoBehaviour/Mobile_RPAsset.asset.meta', 'guid: e446ee0aa5ae41c680427fabbb7ace72', 'stable Mobile_RPAsset GUID');
+
+requireAll('Assets/Resources/LowSpec_RPAsset.asset', [
+  ['m_Name: LowSpec_RPAsset', 'runtime compatibility URP asset'],
+  ['guid: cec103d4d6f94f2c89a8b5c4ef90919d', 'lightweight Forward renderer reference'],
+  ['m_RequireDepthTexture: 0', 'low-spec depth off'],
+  ['m_RequireOpaqueTexture: 0', 'low-spec opaque texture off'],
+  ['m_SupportsHDR: 0', 'low-spec HDR off'],
+  ['m_MSAA: 1', 'low-spec MSAA off'],
+  ['m_RenderScale: 0.72', 'low-spec render scale'],
+  ['m_AdditionalLightsPerObjectLimit: 1', 'low-spec one additional light'],
+  ['m_AdditionalLightShadowsSupported: 0', 'low-spec punctual shadows off'],
+  ['m_ShadowDistance: 8', 'low-spec short shadows'],
+  ['m_SoftShadowsSupported: 0', 'low-spec soft shadows off'],
+  ['m_SupportsDynamicBatching: 1', 'low-spec dynamic batching']
+]);
+requireText('Assets/Resources/LowSpec_RPAsset.asset.meta', 'fileFormatVersion: 2', 'LowSpec_RPAsset metadata');
+
+requireAll('Assets/Scripts/Performance/LowSpecCompatibilityGovernor.cs', [
+  ['KARLOLEGEND_Compatibility', 'compatibility runtime host'],
+  ['SystemInfo.systemMemorySize', 'physical-memory hardware detection'],
+  ['SystemInfo.processorCount', 'CPU thread hardware detection'],
+  ['graphicsDeviceName', 'integrated GPU hardware detection'],
+  ['Resources.Load<UniversalRenderPipelineAsset>("LowSpec_RPAsset")', 'runtime low-spec pipeline load'],
+  ['QualitySettings.renderPipeline = lowSpecPipeline', 'runtime SRP switch'],
+  ['Application.targetFrameRate = TargetFps', '30 FPS compatibility cap'],
+  ['globalTextureMipmapLimit', 'low-spec texture residency budget'],
+  ['renderPostProcessing = false', 'low-spec post-processing disable'],
+  ['ConfigureBrowserHint', 'browser hardware hint input'],
+  ['SetRenderScale', 'adaptive low-spec render-scale governor']
+]);
+requireText('Assets/Scripts/Performance/LowSpecCompatibilityGovernor.cs.meta', 'fileFormatVersion: 2', 'compatibility governor metadata');
+
+requireAll('Assets/Scripts/HladanGradDisplay/HladanGradDisplayBootstrap.cs', [
+  ['IsCompatibilityTarget()', 'early compatibility target detection'],
+  ['Application.targetFrameRate = compatibilityTarget ? 30 : 60', 'early 30 FPS low-spec cap'],
+  ['SystemInfo.systemMemorySize', 'early memory detection'],
+  ['intelIntegrated', 'early integrated-GPU detection']
+]);
 
 requireAll('Assets/Scripts/MobileWeb/MobileWebInputBridge.cs', [
   ['SetMove', 'movement bridge'],
@@ -152,6 +194,15 @@ requireAll('Assets/Plugins/Assembly-CSharp-firstpass/PixelCrushers/MobileWebPixe
   ['originalGetButtonDown(buttonName)', 'original input preservation']
 ]);
 
+requireAll('Assets/WebGLTemplates/Itch/index.html', [
+  ['devicePixelRatio: 1', 'desktop WebGL DPR cap'],
+  ['compatibilityHint()', 'desktop browser compatibility detection'],
+  ['navigator.deviceMemory', 'browser memory hint'],
+  ['navigator.hardwareConcurrency', 'browser CPU hint'],
+  ['KARLOLEGEND_Compatibility', 'compatibility runtime handoff'],
+  ['ConfigureBrowserHint', 'compatibility profile handoff']
+]);
+
 requireAll('Assets/WebGLTemplates/Mobile/index.html', [
   ['viewport-fit=cover', 'safe area viewport'],
   ['createUnityInstance', 'Unity bootstrap'],
@@ -180,9 +231,6 @@ for (const meta of [
 
 const workflow = read('.github/workflows/mobile-webgl.yml');
 if (workflow) {
-  // Only inspect the top-level YAML `on:` trigger block. Comments and shell/echo text
-  // are not workflow triggers and must not cause false positives (e.g. a comment that
-  // literally says "do not run on pull_request/push").
   const triggerMatch = workflow.match(/^on:\s*\r?\n([\s\S]*?)(?=^[A-Za-z_][A-Za-z0-9_-]*:\s*(?:\r?\n|$))/m);
   const triggerBlock = triggerMatch ? triggerMatch[1] : '';
 
@@ -195,7 +243,7 @@ if (workflow) {
   if (/\blfs:\s*true\b/.test(workflow)) warnings.push('Workflow asks checkout to download Git LFS.');
 }
 
-console.log('=== Mobile WebGL source preflight ===');
+console.log('=== OKICE performance source preflight ===');
 console.log(`Root: ${root}`);
 console.log(`Failures: ${failures.length}`);
 console.log(`Warnings: ${warnings.length}`);
@@ -203,7 +251,7 @@ for (const warning of warnings) console.warn(`WARN: ${warning}`);
 for (const failure of failures) console.error(`FAIL: ${failure}`);
 
 if (process.env.GITHUB_STEP_SUMMARY) {
-  const lines = ['## Mobile WebGL source preflight', '', `- Failures: **${failures.length}**`, `- Warnings: **${warnings.length}**`];
+  const lines = ['## OKICE performance source preflight', '', `- Failures: **${failures.length}**`, `- Warnings: **${warnings.length}**`];
   if (failures.length) {
     lines.push('', '### Failures');
     for (const failure of failures) lines.push(`- ${failure}`);
