@@ -134,6 +134,29 @@ for (const [token, label] of [
   ['lightBaselines', 'reversible authored light-range policy']
 ]) requireText(bridgeFile, token, label);
 
+const sceneBudgetFile = 'Assets/Scripts/MobileWeb/MobileWebSceneBudgetController.cs';
+for (const [token, label] of [
+  ['ReauditIntervalSeconds = 2f', 'low-frequency scene budget cadence'],
+  ['main.loop', 'looping-particle-only policy'],
+  ['main.maxParticles = capped', 'particle population cap'],
+  ['renderer.updateWhenOffscreen = false', 'offscreen skinned-mesh rendering disable'],
+  ['Application.targetFrameRate <= 24', 'emergency particle budget'],
+  ['Resources.FindObjectsOfTypeAll<ParticleSystem>()', 'runtime particle discovery']
+]) requireText(sceneBudgetFile, token, label);
+requireText(`${sceneBudgetFile}.meta`, 'fileFormatVersion: 2', 'Unity .meta for scene budget controller');
+
+const telemetryFile = 'Assets/Scripts/MobileWeb/MobileWebTelemetry.cs';
+for (const [token, label] of [
+  ['ReportIntervalSeconds = 10f', '10 second telemetry reporting cadence'],
+  ['SampleCapacity = 300', 'bounded frame-time ring buffer'],
+  ['Profiler.GetTotalAllocatedMemoryLong()', 'allocated-memory telemetry'],
+  ['Profiler.GetTotalReservedMemoryLong()', 'reserved-memory telemetry'],
+  ['p95Ms=', 'p95 frame-time telemetry'],
+  ['renderScale=', 'render-scale telemetry'],
+  ['[MobileWebTelemetry]', 'browser-console telemetry prefix']
+]) requireText(telemetryFile, token, label);
+requireText(`${telemetryFile}.meta`, 'fileFormatVersion: 2', 'Unity .meta for mobile telemetry');
+
 const pixelBridgeFile = 'Assets/Plugins/Assembly-CSharp-firstpass/PixelCrushers/MobileWebPixelCrushersInput.cs';
 for (const [token, label] of [
   ['InputDeviceManager.GetButtonDelegate', 'PixelCrushers button delegate hook'],
