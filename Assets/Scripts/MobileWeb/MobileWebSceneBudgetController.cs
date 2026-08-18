@@ -10,6 +10,8 @@ namespace Karlolegend.Gradomraz.MobileWeb
     /// <summary>
     /// Applies conservative, reversible scene-level budgets without changing
     /// gameplay objects, colliders, animator update semantics, or one-shot VFX.
+    /// Scene component discovery happens on scene load; the recurring budget pass
+    /// iterates cached components and performs no scene-wide object search.
     /// </summary>
     [DefaultExecutionOrder(-9980)]
     public sealed class MobileWebSceneBudgetController : MonoBehaviour
@@ -23,6 +25,8 @@ namespace Karlolegend.Gradomraz.MobileWeb
             public bool managedDisabled;
         }
 
+        private readonly List<ParticleSystem> loopingParticles = new List<ParticleSystem>();
+        private readonly List<Light> distanceCullLights = new List<Light>();
         private readonly Dictionary<ParticleSystem, int> particleMaxBaselines = new Dictionary<ParticleSystem, int>();
         private readonly Dictionary<Light, LightActivityState> lightActivity = new Dictionary<Light, LightActivityState>();
 
@@ -64,6 +68,7 @@ namespace Karlolegend.Gradomraz.MobileWeb
         private void Start()
         {
 #if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
+            CacheSceneComponents();
             ApplyBudgets();
 #endif
         }
@@ -82,9 +87,50 @@ namespace Karlolegend.Gradomraz.MobileWeb
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            RestoreManagedLights();
+            CacheSceneComponents();
             nextAuditTime = 0f;
-            RemoveDestroyedReferences();
             ApplyBudgets();
+        }
+
+        private void CacheSceneComponents()
+        {
+            loopingParticles.Clear();
+            distanceCullLights.Clear();
+            particleMaxBaselines.Clear();
+            lightActivity.Clear();
+
+            foreach (var particleSystem in Resources.FindObjectsOfTypeAll<ParticleSystem>())
+            {
+                if (particleSystem == null || !particleSystem.gameObject.scene.IsValid())
+                {
+                    continue;
+                }
+
+                var main = particleSystem.main;
+                if (!main.loop)
+                {
+                    continue;
+                }
+
+                loopingParticles.Add(particleSystem);
+                particleMaxBaselines[particleSystem] = main.maxParticles;
+            }
+
+            foreach (var light in Resources.FindObjectsOfTypeAll<Light>())
+            {
+                if (!CanDistanceCull(light))
+                {
+                    continue;
+                }
+
+                distanceCullLights.Add(light);
+                lightActivity[light] = new LightActivityState
+                {
+                    authoredEnabled = light.enabled,
+                    managedDisabled = false
+                };
+            }
         }
 
         private void ApplyBudgets()
@@ -115,29 +161,15 @@ namespace Karlolegend.Gradomraz.MobileWeb
 
         private void ApplyParticleBudget(int maxParticles)
         {
-            foreach (var particleSystem in Resources.FindObjectsOfTypeAll<ParticleSystem>())
+            for (var index = 0; index < loopingParticles.Count; index++)
             {
-                if (particleSystem == null || !particleSystem.gameObject.scene.IsValid())
+                var particleSystem = loopingParticles[index];
+                if (particleSystem == null || !particleMaxBaselines.TryGetValue(particleSystem, out var baseline))
                 {
                     continue;
                 }
 
                 var main = particleSystem.main;
-
-                // One-shot gameplay effects are left untouched. Only looping systems
-                // receive a population ceiling, primarily targeting ambient weather,
-                // smoke and dust fill-rate without changing trigger-driven VFX.
-                if (!main.loop)
-                {
-                    continue;
-                }
-
-                if (!particleMaxBaselines.TryGetValue(particleSystem, out var baseline))
-                {
-                    baseline = main.maxParticles;
-                    particleMaxBaselines[particleSystem] = baseline;
-                }
-
                 var capped = Mathf.Min(baseline, maxParticles);
                 if (main.maxParticles != capped)
                 {
@@ -156,22 +188,16 @@ namespace Karlolegend.Gradomraz.MobileWeb
             }
 
             var cameraPosition = camera.transform.position;
-            foreach (var light in Resources.FindObjectsOfTypeAll<Light>())
+            for (var index = 0; index < distanceCullLights.Count; index++)
             {
-                if (!CanDistanceCull(light))
+                var light = distanceCullLights[index];
+                if (light == null || !lightActivity.TryGetValue(light, out var state))
                 {
                     continue;
                 }
 
-                if (!lightActivity.TryGetValue(light, out var state))
-                {
-                    state = new LightActivityState
-                    {
-                        authoredEnabled = light.enabled,
-                        managedDisabled = false
-                    };
-                }
-
+                // When we are not overriding the light, preserve an authored change.
+                // Script-bearing light objects are excluded from this list entirely.
                 if (!state.managedDisabled)
                 {
                     state.authoredEnabled = light.enabled;
@@ -214,8 +240,8 @@ namespace Karlolegend.Gradomraz.MobileWeb
                 return false;
             }
 
-            // A MonoBehaviour on the light GameObject suggests gameplay/flicker/puzzle
-            // semantics. Such lights remain entirely under game control.
+            // Gameplay/flicker/puzzle light objects usually carry a script. Leave all
+            // such enable/disable semantics entirely under the game's control.
             return !light.TryGetComponent<MonoBehaviour>(out _);
         }
 
@@ -229,53 +255,6 @@ namespace Karlolegend.Gradomraz.MobileWeb
                 {
                     light.enabled = state.authoredEnabled;
                 }
-            }
-        }
-
-        private void RemoveDestroyedReferences()
-        {
-            RemoveDestroyedKeys(particleMaxBaselines);
-            RemoveDestroyedKeys(lightActivity);
-        }
-
-        private static void RemoveDestroyedKeys<TComponent, TValue>(Dictionary<TComponent, TValue> dictionary)
-            where TComponent : UnityEngine.Object
-        {
-            var remove = ListPool<TComponent>.Get();
-            try
-            {
-                foreach (var pair in dictionary)
-                {
-                    if (pair.Key == null)
-                    {
-                        remove.Add(pair.Key);
-                    }
-                }
-
-                foreach (var key in remove)
-                {
-                    dictionary.Remove(key);
-                }
-            }
-            finally
-            {
-                ListPool<TComponent>.Release(remove);
-            }
-        }
-
-        private static class ListPool<T>
-        {
-            private static readonly Stack<List<T>> Pool = new Stack<List<T>>();
-
-            public static List<T> Get()
-            {
-                return Pool.Count > 0 ? Pool.Pop() : new List<T>();
-            }
-
-            public static void Release(List<T> list)
-            {
-                list.Clear();
-                Pool.Push(list);
             }
         }
     }
