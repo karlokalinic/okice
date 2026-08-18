@@ -1,26 +1,26 @@
 using System;
-using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace PixelCrushers
 {
     /// <summary>
     /// Mobile-Web-only adapter for Dialogue System / PixelCrushers input.
-    /// HTML action buttons otherwise bypass PlayMaker and would never reach
-    /// InputDeviceManager.IsButtonDown (used by Dialogue System QTEs/back input).
+    /// PixelCrushers lives in the first-pass assembly, while the gameplay mobile
+    /// bridge lives in Assembly-CSharp. Reflection is resolved once and converted
+    /// to a typed delegate so there is no per-frame reflection cost.
     /// </summary>
     [DefaultExecutionOrder(-9990)]
     public sealed class MobileWebPixelCrushersInput : MonoBehaviour
     {
         public const string GameObjectName = "KARLOLEGEND_PixelCrushersMobileInput";
-
-        private static readonly HashSet<string> PendingButtons =
-            new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        private static readonly HashSet<string> FrameButtons =
-            new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private const string BridgeTypeName =
+            "Karlolegend.Gradomraz.MobileWeb.MobileWebInputBridge, Assembly-CSharp";
 
         private InputDeviceManager hookedManager;
         private InputDeviceManager.GetButtonDelegate originalGetButtonDown;
+        private Func<string, bool> mobileGetButtonDown;
+        private bool bridgeResolutionAttempted;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Install()
@@ -43,21 +43,13 @@ namespace PixelCrushers
         private void Update()
         {
 #if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
-            FrameButtons.Clear();
-            foreach (var button in PendingButtons)
-            {
-                FrameButtons.Add(button);
-            }
-            PendingButtons.Clear();
-
+            ResolveMobileBridge();
             EnsureHook();
 #endif
         }
 
         private void OnDisable()
         {
-            PendingButtons.Clear();
-            FrameButtons.Clear();
             RestoreHook();
         }
 
@@ -66,20 +58,37 @@ namespace PixelCrushers
             RestoreHook();
         }
 
-        public void PressButton(string buttonName)
+        private void ResolveMobileBridge()
         {
-#if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
-            if (!string.IsNullOrWhiteSpace(buttonName))
+            if (mobileGetButtonDown != null || bridgeResolutionAttempted)
             {
-                PendingButtons.Add(buttonName.Trim());
+                return;
             }
-#endif
-        }
 
-        public void ResetInput(string unused)
-        {
-            PendingButtons.Clear();
-            FrameButtons.Clear();
+            bridgeResolutionAttempted = true;
+            var bridgeType = Type.GetType(BridgeTypeName, throwOnError: false);
+            var method = bridgeType?.GetMethod(
+                "GetButtonDown",
+                BindingFlags.Public | BindingFlags.Static,
+                binder: null,
+                types: new[] { typeof(string) },
+                modifiers: null);
+
+            if (method == null)
+            {
+                Debug.LogWarning("Mobile WebGL: could not resolve MobileWebInputBridge.GetButtonDown for PixelCrushers.");
+                return;
+            }
+
+            try
+            {
+                mobileGetButtonDown =
+                    (Func<string, bool>)Delegate.CreateDelegate(typeof(Func<string, bool>), method);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning("Mobile WebGL: failed to bind PixelCrushers mobile button delegate: " + exception.Message);
+            }
         }
 
         private void EnsureHook()
@@ -98,7 +107,7 @@ namespace PixelCrushers
 
         private bool GetButtonDownProxy(string buttonName)
         {
-            if (!string.IsNullOrWhiteSpace(buttonName) && FrameButtons.Contains(buttonName))
+            if (mobileGetButtonDown != null && mobileGetButtonDown(buttonName))
             {
                 return true;
             }
