@@ -8,8 +8,7 @@ namespace Karlolegend.Gradomraz.Performance
 {
     /// <summary>
     /// Compatibility path for low-end family/parent hardware and ordinary desktop WebGL.
-    /// A machine such as a 4 GB, 2C/4T Intel UHD laptop should never receive the same
-    /// render workload as a modern gaming desktop just because both run Windows.
+    /// The dedicated mobile WebGL target has its own governor and is explicitly excluded.
     /// </summary>
     [DefaultExecutionOrder(-12000)]
     public sealed class LowSpecCompatibilityGovernor : MonoBehaviour
@@ -43,7 +42,10 @@ namespace Karlolegend.Gradomraz.Performance
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Install()
         {
-#if !UNITY_EDITOR
+#if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
+            // Dedicated mobile WebGL uses MobileWebInputBridge + Mobile_RPAsset.
+            return;
+#elif !UNITY_EDITOR
             if (!ShouldUseCompatibilityMode(out var initialSevere))
             {
                 return;
@@ -70,8 +72,8 @@ namespace Karlolegend.Gradomraz.Performance
         {
             initialSevere = false;
 
-            // Ordinary browser WebGL is a compatibility target by default. JavaScript
-            // sends a stronger Eco hint after startup when deviceMemory/CPU indicates it.
+            // Ordinary desktop browser WebGL is a compatibility target by default.
+            // JavaScript sends a stronger Eco hint after startup where APIs allow it.
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
                 return true;
@@ -174,10 +176,6 @@ namespace Karlolegend.Gradomraz.Performance
 #endif
         }
 
-        /// <summary>
-        /// Browser shell hardware hint. "eco" is used for <=4 GB browser memory signal,
-        /// <=4 logical processors, Data Saver, or similarly constrained devices.
-        /// </summary>
         public void ConfigureBrowserHint(string hint)
         {
 #if !UNITY_EDITOR
@@ -203,10 +201,7 @@ namespace Karlolegend.Gradomraz.Performance
             }
             else
             {
-                // Unity supports switching the active SRP asset at runtime. This avoids
-                // carrying the PC Forward+ workload onto low-end integrated graphics.
                 QualitySettings.renderPipeline = lowSpecPipeline;
-
                 lowSpecPipeline.renderScale = severe ? SevereScale : NormalScale;
                 lowSpecPipeline.msaaSampleCount = 1;
                 lowSpecPipeline.shadowDistance = severe ? 0f : 8f;
@@ -277,8 +272,6 @@ namespace Karlolegend.Gradomraz.Performance
                     continue;
                 }
 
-                // Keep authored illumination but remove the expensive part that hurts
-                // integrated GPUs: punctual shadow maps and very long influence ranges.
                 light.shadows = LightShadows.None;
                 light.range = Mathf.Min(light.range, severe ? 8f : 12f);
             }
@@ -320,12 +313,7 @@ namespace Karlolegend.Gradomraz.Performance
                 }
 
                 var main = particleSystem.main;
-                if (!main.loop)
-                {
-                    continue;
-                }
-
-                if (main.maxParticles > cap)
+                if (main.loop && main.maxParticles > cap)
                 {
                     main.maxParticles = cap;
                 }
