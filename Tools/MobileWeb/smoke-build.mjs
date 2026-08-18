@@ -3,8 +3,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const rootArg = process.argv.find((value, index, list) => list[index - 1] === '--root') || 'Builds/WebGL-Mobile';
-const root = path.resolve(rootArg);
+const argAfter = name => {
+  const index = process.argv.indexOf(name);
+  return index >= 0 ? process.argv[index + 1] : null;
+};
+
+const root = path.resolve(argAfter('--root') || 'Builds/WebGL-Mobile');
+const hostingMode = String(argAfter('--hosting') || 'strict').toLowerCase();
+const strictHosting = hostingMode === 'strict';
 const failures = [];
 const warnings = [];
 
@@ -32,8 +38,10 @@ if (!fs.existsSync(root)) {
   process.exit(2);
 }
 
-for (const rel of ['index.html', '_headers', 'DEPLOYMENT.txt']) {
-  if (!exists(rel)) failures.push(`Missing ${rel}`);
+if (!exists('index.html')) failures.push('Missing index.html');
+if (strictHosting) {
+  if (!exists('_headers')) failures.push('Missing _headers');
+  if (!exists('DEPLOYMENT.txt')) failures.push('Missing DEPLOYMENT.txt');
 }
 
 const buildDir = path.join(root, 'Build');
@@ -73,7 +81,9 @@ if (exists('_headers')) {
   const headers = read('_headers');
   if (!headers.includes('Content-Encoding: br')) failures.push('_headers does not declare Brotli Content-Encoding.');
   if (!headers.includes('Content-Type: application/wasm')) failures.push('_headers does not declare application/wasm.');
-  if (!headers.includes('immutable')) failures.push('_headers does not declare immutable caching for hashed build files.');
+  if (strictHosting && !headers.includes('immutable')) failures.push('_headers does not declare immutable caching for hashed build files.');
+} else if (!strictHosting) {
+  warnings.push('No repository-specific _headers file. Generic/Itch hosting must provide Brotli Content-Encoding and Wasm MIME correctly.');
 }
 
 const compressedExpected = [...wasm, ...data, ...framework];
@@ -84,7 +94,8 @@ const allFiles = walk(root);
 const totalBytes = allFiles.reduce((sum, file) => sum + fs.statSync(file).size, 0);
 const coreBytes = buildFiles.reduce((sum, file) => sum + fs.statSync(file).size, 0);
 
-console.log('=== Mobile WebGL build smoke test ===');
+console.log('=== WebGL build smoke test ===');
+console.log(`Hosting mode: ${strictHosting ? 'strict/mobile' : 'generic/parent-web'}`);
 console.log(`Files: ${allFiles.length}`);
 console.log(`Total build directory: ${formatBytes(totalBytes)}`);
 console.log(`Build/ payload: ${formatBytes(coreBytes)}`);
@@ -97,8 +108,9 @@ for (const failure of failures) console.error(`FAIL: ${failure}`);
 
 if (process.env.GITHUB_STEP_SUMMARY) {
   const lines = [
-    '## Mobile WebGL build smoke test',
+    '## WebGL build smoke test',
     '',
+    `- Hosting mode: **${strictHosting ? 'strict/mobile' : 'generic/parent-web'}**`,
     `- Total output: **${formatBytes(totalBytes)}**`,
     `- Build payload: **${formatBytes(coreBytes)}**`,
     `- Failures: **${failures.length}**`,
