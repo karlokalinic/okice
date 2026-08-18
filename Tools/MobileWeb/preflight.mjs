@@ -84,11 +84,21 @@ for (const [token, label] of [
   ['ConfigureProfile', 'runtime quality profile bridge'],
   ['SetPageVisibility', 'page visibility bridge'],
   ['EnterEmergencyMode', 'automatic emergency degradation'],
+  ['EmergencyFallbackFps = 24', '24 FPS final safety fallback'],
+  ['Time.fixedDeltaTime = 1f / MobilePhysicsHz', '30 Hz mobile physics cadence'],
+  ['Time.maximumDeltaTime = 1f / 15f', 'physics catch-up guardrail'],
+  ['AudioSettings.GetConfiguration()', 'mobile audio configuration read'],
+  ['MobileRealVoices = 24', 'mobile real audio voice budget'],
+  ['MobileVirtualVoices = 96', 'mobile virtual audio voice budget'],
+  ['AudioSettings.Reset(config)', 'mobile audio voice configuration apply'],
+  ['QualitySettings.globalTextureMipmapLimit', 'profile-based texture memory budget'],
+  ['RenderingMode.Forward', 'classic Forward renderer policy'],
   ['supportsCameraOpaqueTexture = false', 'opaque-texture bandwidth reduction'],
   ['supportsHDR = false', 'mobile HDR render-target disable'],
   ['allowPostProcessing = false', 'lightweight default profile'],
   ['allowDepthTexture = false', 'depth-free default profile'],
-  ['Application.targetFrameRate = activeTargetFps', 'stable frame cap']
+  ['Application.targetFrameRate = activeTargetFps', 'stable frame cap'],
+  ['lightBaselines', 'reversible authored light-range policy']
 ]) requireText(bridgeFile, token, label);
 
 const pixelBridgeFile = 'Assets/Plugins/Assembly-CSharp-firstpass/PixelCrushers/MobileWebPixelCrushersInput.cs';
@@ -100,6 +110,15 @@ for (const [token, label] of [
   ['originalGetButtonDown(buttonName)', 'desktop/original input preservation']
 ]) requireText(pixelBridgeFile, token, label);
 requireText(`${pixelBridgeFile}.meta`, 'fileFormatVersion: 2', 'Unity .meta for PixelCrushers mobile bridge');
+
+const mouseLookFile = 'Assets/Scripts/Assembly-CSharp/HutongGames/PlayMaker/Actions/MouseLook.cs';
+for (const [token, label] of [
+  ['#if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR', 'mobile-only look branch'],
+  ['float input = MobileWebInputBridge.LookDelta.x * MobileLookScale;', 'touch-only mobile horizontal look'],
+  ['float input = MobileWebInputBridge.LookDelta.y * MobileLookScale;', 'touch-only mobile vertical look'],
+  ['float input = Input.GetAxis("Mouse X");', 'desktop horizontal mouse preservation'],
+  ['float input = Input.GetAxis("Mouse Y");', 'desktop vertical mouse preservation']
+]) requireText(mouseLookFile, token, label);
 
 const templateFile = 'Assets/WebGLTemplates/Mobile/index.html';
 for (const [token, label] of [
