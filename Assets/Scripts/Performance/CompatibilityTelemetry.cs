@@ -8,8 +8,8 @@ using UnityEngine.SceneManagement;
 namespace Karlolegend.Gradomraz.Performance
 {
     /// <summary>
-    /// Low-overhead telemetry for ordinary WebGL and low-spec native Windows testing.
-    /// Browser builds write to DevTools; native players write to Unity Player.log.
+    /// Low-overhead telemetry for ordinary desktop WebGL and low-spec native Windows.
+    /// Dedicated mobile WebGL uses MobileWebTelemetry instead.
     /// </summary>
     [DefaultExecutionOrder(10000)]
     public sealed class CompatibilityTelemetry : MonoBehaviour
@@ -28,7 +28,9 @@ namespace Karlolegend.Gradomraz.Performance
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Install()
         {
-#if !UNITY_EDITOR
+#if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
+            return;
+#elif !UNITY_EDITOR
             if (!ShouldInstall())
             {
                 return;
