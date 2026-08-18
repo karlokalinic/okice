@@ -222,7 +222,6 @@ namespace Karlolegend.Gradomraz.Performance
             QualitySettings.vSyncCount = 0;
             QualitySettings.antiAliasing = 0;
             QualitySettings.pixelLightCount = 1;
-            QualitySettings.shadowCascades = 1;
             QualitySettings.shadowDistance = severe ? 0f : Mathf.Min(QualitySettings.shadowDistance, 8f);
             QualitySettings.realtimeReflectionProbes = false;
             QualitySettings.lodBias = Mathf.Min(QualitySettings.lodBias, severe ? 0.85f : 1.0f);
@@ -235,8 +234,9 @@ namespace Karlolegend.Gradomraz.Performance
             ApplyScenePolicy();
             ResetSamples();
 
+            var memoryLabel = Application.platform == RuntimePlatform.WebGLPlayer ? "wasmHeapSignal" : "RAM";
             Debug.Log(
-                $"[Compatibility] active severe={severe} RAM={SystemInfo.systemMemorySize}MB " +
+                $"[Compatibility] active severe={severe} {memoryLabel}={SystemInfo.systemMemorySize}MB " +
                 $"CPUThreads={SystemInfo.processorCount} GPU='{SystemInfo.graphicsDeviceName}' " +
                 $"renderScale={(lowSpecPipeline != null ? lowSpecPipeline.renderScale : -1f):0.00}");
         }
