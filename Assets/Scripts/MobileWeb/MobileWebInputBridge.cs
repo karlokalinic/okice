@@ -4,6 +4,7 @@ using System.Globalization;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 
 namespace Karlolegend.Gradomraz.MobileWeb
 {
@@ -12,7 +13,7 @@ namespace Karlolegend.Gradomraz.MobileWeb
     {
         public const string GameObjectName = "KARLOLEGEND_MobileWebInput";
 
-        private const float GovernorWindowSeconds = 5f;
+        private const float GovernorWindowSeconds = 2f;
         private const float ScaleStep = 0.05f;
 
         private static readonly HashSet<string> PendingButtons = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -25,9 +26,14 @@ namespace Karlolegend.Gradomraz.MobileWeb
         private UniversalRenderPipelineAsset activeUrp;
         private string activeProfile = "balanced";
         private int activeTargetFps = 30;
-        private float minRenderScale = 0.72f;
-        private float maxRenderScale = 0.90f;
-        private float currentRenderScale = 0.90f;
+        private float minRenderScale = 0.55f;
+        private float maxRenderScale = 0.78f;
+        private float currentRenderScale = 0.72f;
+        private float baseShadowDistance = 12f;
+        private int baseAdditionalLights = 1;
+        private bool allowPostProcessing = true;
+        private bool allowDepthTexture = true;
+        private bool emergencyMode;
         private float sampleElapsed;
         private float sampleFrameSeconds;
         private int sampleFrames;
@@ -57,7 +63,15 @@ namespace Karlolegend.Gradomraz.MobileWeb
         {
 #if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
             Application.runInBackground = false;
+            SceneManager.sceneLoaded += OnSceneLoaded;
             ApplyProfile("balanced");
+#endif
+        }
+
+        private void OnDestroy()
+        {
+#if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
+            SceneManager.sceneLoaded -= OnSceneLoaded;
 #endif
         }
 
@@ -104,7 +118,6 @@ namespace Karlolegend.Gradomraz.MobileWeb
             return !string.IsNullOrWhiteSpace(buttonName) && FrameButtons.Contains(buttonName);
         }
 
-        // Called from the custom WebGL template through unityInstance.SendMessage.
         public void SetMove(string value)
         {
             if (TryParsePair(value, out var parsed))
@@ -113,7 +126,6 @@ namespace Karlolegend.Gradomraz.MobileWeb
             }
         }
 
-        // Pointer deltas are accumulated between Unity frames, then exposed once per frame.
         public void AddLookDelta(string value)
         {
             if (!TryParsePair(value, out var parsed))
@@ -166,6 +178,11 @@ namespace Karlolegend.Gradomraz.MobileWeb
 #endif
         }
 
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            ApplyCameraPolicy();
+        }
+
         private void ApplyProfile(string profileName)
         {
             activeProfile = (profileName ?? string.Empty).Trim().ToLowerInvariant();
@@ -174,41 +191,44 @@ namespace Karlolegend.Gradomraz.MobileWeb
                 activeProfile = "balanced";
             }
 
-            var renderScale = 0.90f;
-            var msaa = 2;
-            var shadowDistance = 24f;
-            var shadowCascades = 1;
-            var maxAdditionalLights = 2;
-            var lodBias = 1.6f;
-            var hdr = true;
-            var ssao = false;
-
             activeTargetFps = 30;
-            minRenderScale = 0.72f;
-            maxRenderScale = 0.90f;
+            emergencyMode = false;
+
+            var renderScale = 0.72f;
+            var msaa = 1;
+            var shadowCascades = 1;
+            var lodBias = 1.10f;
+
+            minRenderScale = 0.55f;
+            maxRenderScale = 0.78f;
+            baseShadowDistance = 12f;
+            baseAdditionalLights = 1;
+            allowPostProcessing = true;
+            allowDepthTexture = true;
 
             switch (activeProfile)
             {
                 case "eco":
-                    renderScale = 0.75f;
-                    msaa = 1;
-                    shadowDistance = 16f;
-                    maxAdditionalLights = 1;
-                    lodBias = 1.25f;
-                    hdr = false;
-                    minRenderScale = 0.65f;
-                    maxRenderScale = 0.75f;
+                    renderScale = 0.60f;
+                    minRenderScale = 0.50f;
+                    maxRenderScale = 0.65f;
+                    baseShadowDistance = 0f;
+                    baseAdditionalLights = 0;
+                    lodBias = 0.90f;
+                    allowPostProcessing = false;
+                    allowDepthTexture = false;
                     break;
 
                 case "quality":
-                    activeTargetFps = 60;
-                    renderScale = 1.0f;
-                    shadowDistance = 32f;
-                    shadowCascades = 2;
-                    lodBias = 2.0f;
-                    ssao = true;
-                    minRenderScale = 0.78f;
-                    maxRenderScale = 1.0f;
+                    renderScale = 0.85f;
+                    msaa = 2;
+                    minRenderScale = 0.65f;
+                    maxRenderScale = 0.90f;
+                    baseShadowDistance = 18f;
+                    baseAdditionalLights = 1;
+                    lodBias = 1.35f;
+                    allowPostProcessing = true;
+                    allowDepthTexture = true;
                     break;
 
                 default:
@@ -218,6 +238,7 @@ namespace Karlolegend.Gradomraz.MobileWeb
 
             QualitySettings.vSyncCount = 0;
             QualitySettings.lodBias = lodBias;
+            QualitySettings.pixelLightCount = 1;
             QualitySettings.realtimeReflectionProbes = false;
             Application.targetFrameRate = activeTargetFps;
             Application.backgroundLoadingPriority = ThreadPriority.Low;
@@ -232,16 +253,39 @@ namespace Karlolegend.Gradomraz.MobileWeb
             {
                 activeUrp.renderScale = renderScale;
                 activeUrp.msaaSampleCount = msaa;
-                activeUrp.shadowDistance = shadowDistance;
+                activeUrp.shadowDistance = baseShadowDistance;
                 activeUrp.shadowCascadeCount = shadowCascades;
-                activeUrp.maxAdditionalLightsCount = maxAdditionalLights;
-                activeUrp.supportsHDR = hdr;
+                activeUrp.maxAdditionalLightsCount = baseAdditionalLights;
+                activeUrp.supportsHDR = false;
+                activeUrp.supportsCameraOpaqueTexture = false;
+                activeUrp.supportsCameraDepthTexture = allowDepthTexture;
+                activeUrp.supportsDynamicBatching = true;
                 currentRenderScale = renderScale;
             }
 
-            SetSsao(ssao);
+            SetSsao(false);
+            ApplyCameraPolicy();
             consecutiveStableWindows = 0;
             ResetGovernorWindow();
+        }
+
+        private void ApplyCameraPolicy()
+        {
+            foreach (var camera in Camera.allCameras)
+            {
+                if (camera == null)
+                {
+                    continue;
+                }
+
+                var data = camera.GetUniversalAdditionalCameraData();
+                data.requiresColorTexture = false;
+                data.requiresDepthTexture = allowDepthTexture && !emergencyMode;
+                data.renderPostProcessing = allowPostProcessing && !emergencyMode;
+                data.renderShadows = !emergencyMode && baseShadowDistance > 0.01f;
+                data.stopNaN = false;
+                data.dithering = false;
+            }
         }
 
         private void TickGovernor()
@@ -258,7 +302,7 @@ namespace Karlolegend.Gradomraz.MobileWeb
             sampleFrameSeconds += delta;
             sampleFrames++;
 
-            if (delta > targetFrameSeconds * 1.25f)
+            if (delta > targetFrameSeconds * 1.20f)
             {
                 sampleSlowFrames++;
             }
@@ -270,12 +314,8 @@ namespace Karlolegend.Gradomraz.MobileWeb
 
             var averageFrameSeconds = sampleFrameSeconds / Mathf.Max(1, sampleFrames);
             var slowRatio = (float)sampleSlowFrames / Mathf.Max(1, sampleFrames);
-            var underPressure = averageFrameSeconds > targetFrameSeconds * 1.08f || slowRatio > 0.18f;
-
-            // targetFrameRate intentionally caps the loop at 30/60 FPS, so a healthy
-            // window normally measures close to the target interval, not 20% faster.
-            // Recovery therefore uses a small hysteresis band around the cap.
-            var stableAtCap = averageFrameSeconds <= targetFrameSeconds * 1.03f && slowRatio < 0.02f;
+            var underPressure = averageFrameSeconds > targetFrameSeconds * 1.05f || slowRatio > 0.10f;
+            var stableAtCap = averageFrameSeconds <= targetFrameSeconds * 1.02f && slowRatio < 0.02f;
 
             if (underPressure)
             {
@@ -285,19 +325,20 @@ namespace Karlolegend.Gradomraz.MobileWeb
                 {
                     SetRenderScale(currentRenderScale - ScaleStep);
                 }
-                else if (activeTargetFps > 30)
+                else if (!emergencyMode)
                 {
-                    // Thermal safety: if Quality cannot sustain 60 FPS even at its
-                    // minimum resolution, preserve frame pacing and settle at 30.
-                    activeTargetFps = 30;
-                    Application.targetFrameRate = 30;
-                    SetSsao(false);
+                    EnterEmergencyMode();
+                }
+                else if (currentRenderScale > 0.50f + 0.01f)
+                {
+                    minRenderScale = 0.50f;
+                    SetRenderScale(currentRenderScale - ScaleStep);
                 }
             }
-            else if (stableAtCap && activeProfile != "eco")
+            else if (stableAtCap && !emergencyMode && activeProfile != "eco")
             {
                 consecutiveStableWindows++;
-                if (consecutiveStableWindows >= 3 && currentRenderScale < maxRenderScale - 0.01f)
+                if (consecutiveStableWindows >= 5 && currentRenderScale < maxRenderScale - 0.01f)
                 {
                     SetRenderScale(currentRenderScale + ScaleStep);
                     consecutiveStableWindows = 0;
@@ -309,6 +350,24 @@ namespace Karlolegend.Gradomraz.MobileWeb
             }
 
             ResetGovernorWindow();
+        }
+
+        private void EnterEmergencyMode()
+        {
+            emergencyMode = true;
+            minRenderScale = Mathf.Min(minRenderScale, 0.50f);
+
+            if (activeUrp != null)
+            {
+                activeUrp.shadowDistance = 0f;
+                activeUrp.maxAdditionalLightsCount = 0;
+                activeUrp.supportsCameraOpaqueTexture = false;
+                activeUrp.supportsCameraDepthTexture = false;
+            }
+
+            SetSsao(false);
+            ApplyCameraPolicy();
+            SetRenderScale(Mathf.Max(0.50f, currentRenderScale - ScaleStep));
         }
 
         private void SetRenderScale(float value)
@@ -358,14 +417,14 @@ namespace Karlolegend.Gradomraz.MobileWeb
                 return false;
             }
 
-            var parts = value.Split(',');
-            if (parts.Length != 2)
+            var comma = value.IndexOf(',');
+            if (comma <= 0 || comma >= value.Length - 1)
             {
                 return false;
             }
 
-            if (!float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var x) ||
-                !float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var y))
+            if (!float.TryParse(value.Substring(0, comma), NumberStyles.Float, CultureInfo.InvariantCulture, out var x) ||
+                !float.TryParse(value.Substring(comma + 1), NumberStyles.Float, CultureInfo.InvariantCulture, out var y))
             {
                 return false;
             }
