@@ -13,10 +13,10 @@
     html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; overscroll-behavior: none; background: #080b0e; touch-action: none; }
     body { min-height: 100dvh; color: #eef0ed; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; user-select: none; -webkit-user-select: none; }
     button { font: inherit; color: inherit; }
-    #unity-container { position: fixed; inset: 0; background: #080b0e; overflow: hidden; }
-    #unity-canvas { display: block; width: 100%; height: 100%; background: #080b0e; outline: none; }
+    #unity-container { position: fixed; inset: 0; overflow: hidden; background: #080b0e; }
+    #unity-canvas { display: block; width: 100%; height: 100%; outline: none; background: #080b0e; }
 
-    #preflight, #loading-screen { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; padding: calc(24px + var(--safe-t)) calc(20px + var(--safe-r)) calc(24px + var(--safe-b)) calc(20px + var(--safe-l)); background: radial-gradient(circle at 50% 42%, #151b20 0%, #090c0f 55%, #050608 100%); }
+    #preflight, #loading-screen { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; padding: calc(24px + var(--safe-t)) calc(20px + var(--safe-r)) calc(24px + var(--safe-b)) calc(20px + var(--safe-l)); background: #080b0e; }
     #loading-screen { display: none; }
     .panel { width: min(92vw, 430px); }
     .eyebrow { margin-bottom: 10px; color: #8d979c; font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
@@ -35,19 +35,19 @@
     #orientation-note { display: none; margin: 0 0 16px; padding: 10px 12px; border: 1px solid #6e5728; border-radius: 10px; color: #d6c49e; background: #201b12; font-size: 12px; }
 
     #progress-track { height: 3px; margin: 24px 0 10px; overflow: hidden; background: #293036; }
-    #progress-fill { width: 0; height: 100%; background: #e9e7df; transition: width 120ms linear; }
+    #progress-fill { width: 0; height: 100%; background: #e9e7df; }
     #progress-label { color: #939da1; font-size: 12px; }
 
-    #controls { position: absolute; inset: 0; z-index: 8; display: none; pointer-events: none; padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l); }
+    #controls { position: absolute; inset: 0; z-index: 8; display: none; pointer-events: none; }
     .touch-capable #controls { display: block; }
-    #move-zone { position: absolute; left: var(--safe-l); bottom: var(--safe-b); width: 44vw; height: 54vh; pointer-events: auto; touch-action: none; }
-    #look-zone { position: absolute; top: var(--safe-t); right: var(--safe-r); width: 56vw; height: calc(100% - var(--safe-t) - var(--safe-b)); pointer-events: auto; touch-action: none; }
-    #stick-base { position: fixed; width: 92px; height: 92px; margin: -46px 0 0 -46px; border: 1px solid rgba(255,255,255,.22); border-radius: 50%; background: rgba(10,13,15,.20); opacity: 0; transition: opacity 100ms; pointer-events: none; }
-    #stick-knob { position: absolute; left: 50%; top: 50%; width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 50%; background: rgba(239,237,228,.45); }
+    #move-zone { position: absolute; left: var(--safe-l); bottom: var(--safe-b); width: 46vw; height: 58vh; pointer-events: auto; touch-action: none; }
+    #look-zone { position: absolute; top: var(--safe-t); right: var(--safe-r); width: 54vw; height: calc(100% - var(--safe-t) - var(--safe-b)); pointer-events: auto; touch-action: none; }
+    #stick-base { position: fixed; width: 92px; height: 92px; margin: -46px 0 0 -46px; border: 1px solid rgba(255,255,255,.25); border-radius: 50%; background: rgba(10,13,15,.45); opacity: 0; pointer-events: none; }
+    #stick-knob { position: absolute; left: 50%; top: 50%; width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 50%; background: rgba(239,237,228,.58); }
     #stick-base.is-active { opacity: 1; }
     #action-cluster { position: absolute; right: calc(14px + var(--safe-r)); bottom: calc(18px + var(--safe-b)); z-index: 12; display: grid; grid-template-columns: 48px 58px 68px; align-items: end; gap: 10px; pointer-events: auto; }
-    .action { display: grid; place-items: center; border: 1px solid rgba(255,255,255,.26); border-radius: 50%; background: rgba(8,11,14,.38); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); touch-action: none; }
-    .action:active { background: rgba(235,233,224,.62); color: #090b0d; }
+    .action { display: grid; place-items: center; border: 1px solid rgba(255,255,255,.30); border-radius: 50%; background: rgba(8,11,14,.68); touch-action: none; }
+    .action:active { background: rgba(235,233,224,.76); color: #090b0d; }
     #alt-button { width: 48px; height: 48px; font-size: 10px; }
     #jump-button { width: 58px; height: 58px; font-size: 11px; }
     #use-button { width: 68px; height: 68px; font-size: 12px; font-weight: 800; }
@@ -70,16 +70,16 @@
       <div class="panel">
         <div class="eyebrow">KARLOLEGEND · MOBILE WEB</div>
         <h1 class="brand">{{{ PRODUCT_NAME }}}</h1>
-        <p id="orientation-note">Za igru je preporučen vodoravni položaj uređaja. Okreni mobitel prije pokretanja za bolji prikaz i manji GPU teret.</p>
-        <p class="copy">Igra se ne preuzima dok ne pritisneš Pokreni. Profil se automatski bira prema uređaju i mreži, a tijekom igre render se sam prilagođava opterećenju.</p>
+        <p id="orientation-note">Za stabilnu igru okreni uređaj vodoravno prije pokretanja.</p>
+        <p class="copy">Mobilna verzija sada prioritizira stabilan frame pacing. Kvaliteta više ne pokušava gurati 60 FPS na telefonu.</p>
         <p id="auto-note"></p>
         <div class="profiles" role="radiogroup" aria-label="Kvaliteta">
-          <button class="profile" data-profile="eco" data-dpr="1.0" type="button"><strong>Štednja</strong><span>30 FPS · lakši GPU</span></button>
-          <button class="profile" data-profile="balanced" data-dpr="1.5" type="button"><strong>Uravnoteženo</strong><span>30 FPS · preporučeno</span></button>
-          <button class="profile" data-profile="quality" data-dpr="1.75" type="button"><strong>Kvaliteta</strong><span>60 FPS · više topline</span></button>
+          <button class="profile" data-profile="eco" data-dpr="1.0" type="button"><strong>Štednja</strong><span>30 FPS · najlakše</span></button>
+          <button class="profile" data-profile="balanced" data-dpr="1.0" type="button"><strong>Stabilno</strong><span>30 FPS · zadano</span></button>
+          <button class="profile" data-profile="quality" data-dpr="1.25" type="button"><strong>Oštrije</strong><span>30 FPS · veći GPU trošak</span></button>
         </div>
         <button id="start-button" type="button">Pokreni igru</button>
-        <p class="fineprint">Automatika nikada sama ne bira Kvaliteta. Taj profil je ručni opt-in. Na iOS-u koristi samostalnu stranicu umjesto iframea za pouzdan cache spremanja.</p>
+        <p class="fineprint">Na iOS-u koristi samostalnu stranicu, ne iframe. Touch input se prema Unityju šalje ograničeno na 30 Hz kako ne bi gušio WebGL main thread.</p>
       </div>
     </section>
 
@@ -119,11 +119,19 @@
     const touchCapable = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
     if (touchCapable) document.documentElement.classList.add('touch-capable');
 
+    const INPUT_INTERVAL_MS = 1000 / 30;
     let selectedProfile = 'balanced';
-    let selectedDpr = 1.5;
+    let selectedDpr = 1.0;
     let unityInstance = null;
     let bootStarted = false;
     let userOverrodeProfile = false;
+    let inputTimer = 0;
+    let nextInputFlushAt = 0;
+    let moveDirty = false;
+    let queuedMoveX = 0;
+    let queuedMoveY = 0;
+    let queuedLookX = 0;
+    let queuedLookY = 0;
 
     function detectAutomaticProfile() {
       const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
@@ -131,35 +139,31 @@
       const saveData = connection?.saveData === true;
       const memory = Number(navigator.deviceMemory || 0);
       const cores = Number(navigator.hardwareConcurrency || 0);
-
       const slowNetwork = saveData || effectiveType === 'slow-2g' || effectiveType === '2g' || effectiveType === '3g';
       const constrainedMemory = memory > 0 && memory <= 4;
       const constrainedCpu = cores > 0 && cores <= 4;
       const profile = (slowNetwork || constrainedMemory || constrainedCpu) ? 'eco' : 'balanced';
-
       const reasons = [];
       if (saveData) reasons.push('Data Saver');
       else if (slowNetwork) reasons.push(effectiveType.toUpperCase() + ' mreža');
       if (constrainedMemory) reasons.push(`${memory} GB RAM signal`);
       if (constrainedCpu) reasons.push(`${cores} CPU dretve`);
-
       return { profile, reasons };
+    }
+
+    function profileLabel(profile) {
+      return profile === 'eco' ? 'Štednja' : profile === 'quality' ? 'Oštrije' : 'Stabilno';
     }
 
     function selectProfile(profile, automatic = false) {
       const button = profileButtons.find(item => item.dataset.profile === profile) || profileButtons.find(item => item.dataset.profile === 'balanced');
       profileButtons.forEach(item => item.classList.toggle('is-selected', item === button));
       selectedProfile = button.dataset.profile;
-      selectedDpr = Number(button.dataset.dpr || 1.5);
-
-      if (automatic) {
-        const detected = detectAutomaticProfile();
-        autoNote.textContent = detected.reasons.length
-          ? `Automatski profil: ${selectedProfile === 'eco' ? 'Štednja' : 'Uravnoteženo'} · ${detected.reasons.join(' · ')}`
-          : `Automatski profil: ${selectedProfile === 'eco' ? 'Štednja' : 'Uravnoteženo'}`;
-      } else {
-        autoNote.textContent = `Ručno odabrano: ${selectedProfile === 'eco' ? 'Štednja' : selectedProfile === 'quality' ? 'Kvaliteta' : 'Uravnoteženo'}`;
-      }
+      selectedDpr = Number(button.dataset.dpr || 1.0);
+      const detected = detectAutomaticProfile();
+      autoNote.textContent = automatic && detected.reasons.length
+        ? `Automatski profil: ${profileLabel(selectedProfile)} · ${detected.reasons.join(' · ')}`
+        : `${automatic ? 'Automatski profil' : 'Ručno odabrano'}: ${profileLabel(selectedProfile)}`;
     }
 
     const automaticSelection = detectAutomaticProfile();
@@ -185,25 +189,82 @@
     function unityShowBanner(message, type) {
       const item = document.createElement('div');
       item.className = `unity-message ${type || ''}`;
-      item.textContent = message;
+      item.textContent = String(message);
       warningArea.appendChild(item);
       if (type !== 'error') setTimeout(() => item.remove(), 7000);
     }
 
     function send(method, value) {
-      if (unityInstance) unityInstance.SendMessage('KARLOLEGEND_MobileWebInput', method, String(value ?? ''));
+      if (!unityInstance) return;
+      try {
+        unityInstance.SendMessage('KARLOLEGEND_MobileWebInput', method, String(value ?? ''));
+      } catch (error) {
+        console.warn('Mobile input bridge call failed:', method, error);
+      }
     }
 
     function press(name) { send('PressButton', name); }
 
+    function flushInput() {
+      inputTimer = 0;
+      nextInputFlushAt = performance.now() + INPUT_INTERVAL_MS;
+      if (!unityInstance || document.hidden) return;
+
+      if (moveDirty) {
+        moveDirty = false;
+        send('SetMove', `${queuedMoveX.toFixed(3)},${queuedMoveY.toFixed(3)}`);
+      }
+
+      if (queuedLookX !== 0 || queuedLookY !== 0) {
+        const x = Math.max(-120, Math.min(120, queuedLookX));
+        const y = Math.max(-120, Math.min(120, queuedLookY));
+        queuedLookX = 0;
+        queuedLookY = 0;
+        send('AddLookDelta', `${x.toFixed(2)},${y.toFixed(2)}`);
+      }
+    }
+
+    function scheduleInputFlush() {
+      if (!unityInstance || inputTimer) return;
+      const delay = Math.max(0, nextInputFlushAt - performance.now());
+      inputTimer = window.setTimeout(flushInput, delay);
+    }
+
+    function queueMove(x, y) {
+      queuedMoveX = Math.max(-1, Math.min(1, x));
+      queuedMoveY = Math.max(-1, Math.min(1, y));
+      moveDirty = true;
+      scheduleInputFlush();
+    }
+
+    function queueLook(dx, dy) {
+      queuedLookX += dx;
+      queuedLookY += dy;
+      scheduleInputFlush();
+    }
+
+    function resetInput() {
+      if (inputTimer) {
+        clearTimeout(inputTimer);
+        inputTimer = 0;
+      }
+      queuedMoveX = 0;
+      queuedMoveY = 0;
+      queuedLookX = 0;
+      queuedLookY = 0;
+      moveDirty = false;
+      send('ResetInput', '');
+    }
+
     function publishVisibility() {
+      if (document.hidden) resetInput();
       send('SetPageVisibility', document.hidden ? 'hidden' : 'visible');
     }
 
     document.addEventListener('visibilitychange', publishVisibility);
-    window.addEventListener('pagehide', () => send('SetPageVisibility', 'hidden'));
+    window.addEventListener('pagehide', () => { resetInput(); send('SetPageVisibility', 'hidden'); });
     window.addEventListener('pageshow', () => send('SetPageVisibility', document.hidden ? 'hidden' : 'visible'));
-    window.addEventListener('blur', () => send('SetMove', '0,0'));
+    window.addEventListener('blur', resetInput);
 
     function startGame() {
       if (bootStarted) return;
@@ -243,6 +304,7 @@
           progressLabel.textContent = `${percent}%`;
         }).then(instance => {
           unityInstance = instance;
+          nextInputFlushAt = performance.now();
           send('ConfigureProfile', selectedProfile);
           publishVisibility();
           loadingScreen.remove();
@@ -270,55 +332,64 @@
       let lookLast = { x: 0, y: 0 };
 
       moveZone.addEventListener('pointerdown', event => {
+        event.preventDefault();
         if (movePointer !== null) return;
         movePointer = event.pointerId;
         moveOrigin = { x: event.clientX, y: event.clientY };
         stickBase.style.left = `${event.clientX}px`;
         stickBase.style.top = `${event.clientY}px`;
         stickBase.classList.add('is-active');
-        moveZone.setPointerCapture(event.pointerId);
+        try { moveZone.setPointerCapture(event.pointerId); } catch { }
       });
 
       moveZone.addEventListener('pointermove', event => {
         if (event.pointerId !== movePointer) return;
+        event.preventDefault();
         let dx = event.clientX - moveOrigin.x;
         let dy = event.clientY - moveOrigin.y;
         const length = Math.hypot(dx, dy);
-        if (length > radius) { dx = dx / length * radius; dy = dy / length * radius; }
+        if (length > radius && length > 0) { dx = dx / length * radius; dy = dy / length * radius; }
         stickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
-        send('SetMove', `${(dx / radius).toFixed(4)},${(-dy / radius).toFixed(4)}`);
+        queueMove(dx / radius, -dy / radius);
       });
 
       function endMove(event) {
-        if (event.pointerId !== movePointer) return;
+        if (event && event.pointerId !== movePointer) return;
         movePointer = null;
         stickBase.classList.remove('is-active');
         stickKnob.style.transform = 'translate(0, 0)';
-        send('SetMove', '0,0');
+        queueMove(0, 0);
       }
       moveZone.addEventListener('pointerup', endMove);
       moveZone.addEventListener('pointercancel', endMove);
+      moveZone.addEventListener('lostpointercapture', () => { if (movePointer !== null) endMove(null); });
 
       lookZone.addEventListener('pointerdown', event => {
+        event.preventDefault();
         if (lookPointer !== null) return;
         lookPointer = event.pointerId;
         lookLast = { x: event.clientX, y: event.clientY };
-        lookZone.setPointerCapture(event.pointerId);
+        try { lookZone.setPointerCapture(event.pointerId); } catch { }
       });
 
       lookZone.addEventListener('pointermove', event => {
         if (event.pointerId !== lookPointer) return;
+        event.preventDefault();
         const dx = event.clientX - lookLast.x;
         const dy = event.clientY - lookLast.y;
         lookLast = { x: event.clientX, y: event.clientY };
-        send('AddLookDelta', `${dx.toFixed(3)},${(-dy).toFixed(3)}`);
+        queueLook(dx, -dy);
       });
 
-      function endLook(event) { if (event.pointerId === lookPointer) lookPointer = null; }
+      function endLook(event) {
+        if (event && event.pointerId !== lookPointer) return;
+        lookPointer = null;
+      }
       lookZone.addEventListener('pointerup', endLook);
       lookZone.addEventListener('pointercancel', endLook);
+      lookZone.addEventListener('lostpointercapture', () => { if (lookPointer !== null) endLook(null); });
 
-      document.querySelector('#use-button').addEventListener('pointerdown', event => { event.preventDefault(); press('Use'); press('Fire1'); });
+      document.querySelector('#use-button').addEventListener('pointerdown', event => { event.preventDefault(); press('Use'); });
       document.querySelector('#alt-button').addEventListener('pointerdown', event => { event.preventDefault(); press('Fire2'); });
       document.querySelector('#jump-button').addEventListener('pointerdown', event => { event.preventDefault(); press('Jump'); });
       document.querySelector('#menu-button').addEventListener('pointerdown', event => { event.preventDefault(); press('Cancel'); });
