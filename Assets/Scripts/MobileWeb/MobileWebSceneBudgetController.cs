@@ -242,7 +242,7 @@ namespace Karlolegend.Gradomraz.MobileWeb
 
             // If a script lives on the light GameObject, assume it may be gameplay,
             // flicker, alarm, puzzle, etc. and leave enable/disable semantics alone.
-            return light.GetComponents<MonoBehaviour>().Length == 0;
+            return !light.TryGetComponent<MonoBehaviour>(out _);
         }
 
         private void RestoreManagedLights()
