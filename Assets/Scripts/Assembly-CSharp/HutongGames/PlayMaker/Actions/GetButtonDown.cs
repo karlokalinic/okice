@@ -1,3 +1,4 @@
+using Karlolegend.Gradomraz.MobileWeb;
 using UnityEngine;
 
 namespace HutongGames.PlayMaker.Actions
@@ -26,7 +27,7 @@ namespace HutongGames.PlayMaker.Actions
 
 		public override void OnUpdate()
 		{
-			bool buttonDown = Input.GetButtonDown(buttonName.Value);
+			bool buttonDown = Input.GetButtonDown(buttonName.Value) || MobileWebInputBridge.GetButtonDown(buttonName.Value);
 			storeResult.Value = buttonDown;
 			if (buttonDown)
 			{

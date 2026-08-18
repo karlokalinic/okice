@@ -1,0 +1,97 @@
+name: Mobile WebGL
+
+# MANUAL ONLY.
+# Do not run on pull_request/push: this branch is being tuned interactively and
+# repeated failed Unity-license jobs are noise, not useful validation.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile-webgl-manual
+  cancel-in-progress: true
+
+jobs:
+  validate-mobile-webgl:
+    name: Manual mobile WebGL validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      GIT_LFS_SKIP_SMUDGE: '1'
+      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
+    steps:
+      - name: Checkout source without LFS download
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          lfs: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate mobile source contract
+        run: node Tools/MobileWeb/preflight.mjs --root .
+
+      - name: Inventory unresolved Git LFS objects
+        run: node Tools/MobileWeb/audit-lfs.mjs --root .
+
+      - name: Prepare quota-safe mobile CI workspace
+        run: node Tools/MobileWeb/prepare-ci-lfs.mjs --root .
+
+      - name: Prove no required LFS pointer remains
+        run: node Tools/MobileWeb/audit-lfs.mjs --root . --strict
+
+      - name: Unity license not configured
+        if: env.UNITY_LICENSE == ''
+        shell: bash
+        run: |
+          echo '## Unity build skipped' >> "$GITHUB_STEP_SUMMARY"
+          echo '' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Static validation passed. `UNITY_LICENSE` is not configured, so the Unity build was intentionally skipped.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'No failure is emitted for a missing optional CI license.'
+
+      - name: Unity Library cache
+        if: env.UNITY_LICENSE != ''
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-WebGL-${{ runner.os }}-${{ hashFiles('Packages/**', 'ProjectSettings/**', 'Assets/**/*.asmdef') }}
+          restore-keys: |
+            Library-WebGL-${{ runner.os }}-
+            Library-WebGL-
+
+      - name: Build production mobile WebGL
+        if: env.UNITY_LICENSE != ''
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          unityVersion: auto
+          targetPlatform: WebGL
+          buildMethod: Karlolegend.Gradomraz.Editor.GradomrazBuild.BuildMobileWebGL
+          allowDirtyBuild: true
+
+      - name: Smoke-test generated WebGL
+        if: env.UNITY_LICENSE != ''
+        run: node Tools/MobileWeb/smoke-build.mjs --root Builds/WebGL-Mobile
+
+      - name: Analyze mobile payload
+        if: env.UNITY_LICENSE != ''
+        run: node Tools/MobileWeb/analyze-build.mjs --root Builds/WebGL-Mobile --report-dir Builds/Reports
+
+      - name: Upload mobile build and reports
+        if: env.UNITY_LICENSE != '' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradomraz-mobile-webgl-${{ github.sha }}
+          path: |
+            Builds/WebGL-Mobile
+            Builds/Reports
+            Builds/Logs
+          if-no-files-found: warn
+          retention-days: 7

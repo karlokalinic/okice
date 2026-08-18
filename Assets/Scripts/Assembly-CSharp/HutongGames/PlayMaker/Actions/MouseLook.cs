@@ -1,3 +1,4 @@
+using Karlolegend.Gradomraz.MobileWeb;
 using UnityEngine;
 
 namespace HutongGames.PlayMaker.Actions
@@ -6,6 +7,8 @@ namespace HutongGames.PlayMaker.Actions
 	[Tooltip("Rotates a GameObject based on mouse movement. Minimum and Maximum values can be used to constrain the rotation.")]
 	public class MouseLook : ComponentAction<Transform>
 	{
+		private const float MobileLookScale = 0.02f;
+
 		public enum RotationAxes
 		{
 			MouseXAndY = 0,
@@ -48,7 +51,6 @@ namespace HutongGames.PlayMaker.Actions
 		public bool everyFrame;
 
 		private float rotationX;
-
 		private float rotationY;
 
 		public override void Reset()
@@ -57,14 +59,8 @@ namespace HutongGames.PlayMaker.Actions
 			axes = RotationAxes.MouseXAndY;
 			sensitivityX = 15f;
 			sensitivityY = 15f;
-			minimumX = new FsmFloat
-			{
-				UseVariable = true
-			};
-			maximumX = new FsmFloat
-			{
-				UseVariable = true
-			};
+			minimumX = new FsmFloat { UseVariable = true };
+			maximumX = new FsmFloat { UseVariable = true };
 			minimumY = -60f;
 			maximumY = 60f;
 			everyFrame = true;
@@ -119,14 +115,24 @@ namespace HutongGames.PlayMaker.Actions
 
 		private float GetXRotation()
 		{
-			rotationX += Input.GetAxis("Mouse X") * sensitivityX.Value;
+#if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
+			float input = MobileWebInputBridge.LookDelta.x * MobileLookScale;
+#else
+			float input = Input.GetAxis("Mouse X");
+#endif
+			rotationX += input * sensitivityX.Value;
 			rotationX = ClampAngle(rotationX, minimumX, maximumX) % 360f;
 			return rotationX;
 		}
 
 		private float GetYRotation(float invert = 1f)
 		{
-			rotationY += Input.GetAxis("Mouse Y") * sensitivityY.Value * invert;
+#if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
+			float input = MobileWebInputBridge.LookDelta.y * MobileLookScale;
+#else
+			float input = Input.GetAxis("Mouse Y");
+#endif
+			rotationY += input * sensitivityY.Value * invert;
 			rotationY = ClampAngle(rotationY, minimumY, maximumY) % 360f;
 			return rotationY;
 		}

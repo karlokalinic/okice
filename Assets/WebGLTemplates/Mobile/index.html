@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#080b0e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>{{{ PRODUCT_NAME }}}</title>
+  <style>
+    :root { color-scheme: dark; --safe-t: env(safe-area-inset-top, 0px); --safe-r: env(safe-area-inset-right, 0px); --safe-b: env(safe-area-inset-bottom, 0px); --safe-l: env(safe-area-inset-left, 0px); }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; overscroll-behavior: none; background: #080b0e; touch-action: none; }
+    body { min-height: 100dvh; color: #eef0ed; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; user-select: none; -webkit-user-select: none; }
+    button { font: inherit; color: inherit; }
+    #unity-container { position: fixed; inset: 0; overflow: hidden; background: #080b0e; }
+    #unity-canvas { display: block; width: 100%; height: 100%; outline: none; background: #080b0e; touch-action: none; }
+
+    #preflight, #loading-screen { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; padding: calc(24px + var(--safe-t)) calc(20px + var(--safe-r)) calc(24px + var(--safe-b)) calc(20px + var(--safe-l)); background: #080b0e; }
+    #loading-screen { display: none; }
+    .panel { width: min(92vw, 430px); }
+    .eyebrow { margin-bottom: 10px; color: #8d979c; font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+    .brand { margin: 0 0 10px; font: 700 clamp(38px, 12vw, 66px)/.9 Georgia, "Times New Roman", serif; letter-spacing: -.035em; }
+    .copy { margin: 0 0 20px; color: #aeb6b8; font-size: 14px; line-height: 1.5; }
+    #auto-note { margin: -8px 0 18px; color: #7d888d; font-size: 11px; line-height: 1.4; }
+    .profiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+    .profile { min-height: 64px; padding: 10px 8px; border: 1px solid #30383d; border-radius: 12px; background: #101519; text-align: left; cursor: pointer; }
+    .profile strong, .profile span { display: block; }
+    .profile strong { font-size: 12px; }
+    .profile span { margin-top: 4px; color: #7f8a8e; font-size: 10px; }
+    .profile.is-selected { border-color: #d9d7cf; background: #e7e5de; color: #0a0c0e; }
+    .profile.is-selected span { color: #555b5e; }
+    #start-button { width: 100%; min-height: 52px; border: 0; border-radius: 14px; background: #eceae2; color: #090b0d; font-weight: 800; cursor: pointer; }
+    .fineprint { margin: 12px 2px 0; color: #687277; font-size: 10px; line-height: 1.4; }
+    #orientation-note { display: none; margin: 0 0 16px; padding: 10px 12px; border: 1px solid #6e5728; border-radius: 10px; color: #d6c49e; background: #201b12; font-size: 12px; }
+
+    #progress-track { height: 3px; margin: 24px 0 10px; overflow: hidden; background: #293036; }
+    #progress-fill { width: 0; height: 100%; background: #e9e7df; }
+    #progress-label { color: #939da1; font-size: 12px; }
+
+    #controls { position: absolute; inset: 0; z-index: 8; display: none; pointer-events: none; }
+    .touch-capable.mobile-controls #controls { display: block; }
+    #stick-base { position: fixed; z-index: 10; width: 92px; height: 92px; margin: -46px 0 0 -46px; border: 1px solid rgba(255,255,255,.25); border-radius: 50%; background: rgba(10,13,15,.45); opacity: 0; pointer-events: none; }
+    #stick-knob { position: absolute; left: 50%; top: 50%; width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 50%; background: rgba(239,237,228,.58); }
+    #stick-base.is-active { opacity: 1; }
+    #action-cluster { position: absolute; right: calc(14px + var(--safe-r)); bottom: calc(18px + var(--safe-b)); z-index: 12; display: grid; grid-template-columns: 50px 60px 70px; align-items: end; gap: 10px; pointer-events: auto; }
+    .action { display: grid; place-items: center; border: 1px solid rgba(255,255,255,.30); border-radius: 50%; background: rgba(8,11,14,.68); touch-action: none; }
+    .action:active { background: rgba(235,233,224,.76); color: #090b0d; }
+    #alt-button { width: 50px; height: 50px; font-size: 10px; }
+    #primary-button { width: 60px; height: 60px; font-size: 10px; }
+    #use-button { width: 70px; height: 70px; font-size: 11px; font-weight: 800; }
+    #menu-button { position: absolute; z-index: 12; top: calc(12px + var(--safe-t)); left: calc(12px + var(--safe-l)); width: 42px; height: 42px; pointer-events: auto; font-size: 17px; }
+    #fullscreen-button { position: absolute; z-index: 12; top: calc(12px + var(--safe-t)); right: calc(12px + var(--safe-r)); width: 42px; height: 42px; pointer-events: auto; font-size: 18px; }
+
+    #unity-warning { position: absolute; z-index: 30; left: calc(12px + var(--safe-l)); right: calc(12px + var(--safe-r)); top: calc(64px + var(--safe-t)); pointer-events: none; }
+    .unity-message { margin: 0 auto 8px; max-width: 680px; padding: 10px 12px; border: 1px solid #6c3434; border-radius: 10px; background: rgba(32,14,14,.94); font-size: 12px; }
+    .unity-message.warning { border-color: #6e5728; background: rgba(32,27,18,.94); }
+
+    @media (orientation: portrait) and (pointer: coarse) { #orientation-note { display: block; } }
+    @media (pointer: fine) { #controls { display: none !important; } }
+  </style>
+</head>
+<body>
+  <main id="unity-container">
+    <canvas id="unity-canvas" width="{{{ WIDTH }}}" height="{{{ HEIGHT }}}" tabindex="-1"></canvas>
+
+    <section id="preflight">
+      <div class="panel">
+        <div class="eyebrow">KARLOLEGEND · MOBILE WEB</div>
+        <h1 class="brand">{{{ PRODUCT_NAME }}}</h1>
+        <p id="orientation-note">Za stabilnu igru okreni uređaj vodoravno prije pokretanja.</p>
+        <p class="copy">Mobilna verzija prioritizira stabilan frame pacing, normalan Unity UI touch i kontrole koje se aktiviraju tek kada stvarno uđeš u gameplay.</p>
+        <p id="auto-note"></p>
+        <div class="profiles" role="radiogroup" aria-label="Kvaliteta">
+          <button class="profile" data-profile="eco" data-dpr="1.0" type="button"><strong>Štednja</strong><span>30 FPS · najlakše</span></button>
+          <button class="profile" data-profile="balanced" data-dpr="1.0" type="button"><strong>Stabilno</strong><span>30 FPS · zadano</span></button>
+          <button class="profile" data-profile="quality" data-dpr="1.25" type="button"><strong>Oštrije</strong><span>30 FPS · veći GPU trošak</span></button>
+        </div>
+        <button id="start-button" type="button">Pokreni igru</button>
+        <p class="fineprint">Main Menu prima samo native Unity dodire. U gameplayu lijeva strana = kretanje, desna = pogled. Tijekom dijaloga gesture input se automatski gasi. JS→WASM input je ograničen na 30 Hz.</p>
+      </div>
+    </section>
+
+    <section id="loading-screen" aria-live="polite">
+      <div class="panel">
+        <div class="eyebrow">Učitavanje</div>
+        <h2 class="brand">{{{ PRODUCT_NAME }}}</h2>
+        <div id="progress-track"><div id="progress-fill"></div></div>
+        <div id="progress-label">0%</div>
+      </div>
+    </section>
+
+    <div id="controls" aria-hidden="true">
+      <div id="stick-base"><div id="stick-knob"></div></div>
+      <button id="menu-button" class="action" type="button" aria-label="Izbornik">II</button>
+      <button id="fullscreen-button" class="action" type="button" aria-label="Cijeli zaslon">⛶</button>
+      <div id="action-cluster">
+        <button id="alt-button" class="action" type="button">ALT</button>
+        <button id="primary-button" class="action" type="button">AKCIJA</button>
+        <button id="use-button" class="action" type="button">KORISTI</button>
+      </div>
+    </div>
+
+    <div id="unity-warning"></div>
+  </main>
+
+  <script>
+    const canvas = document.querySelector('#unity-canvas');
+    const preflight = document.querySelector('#preflight');
+    const loadingScreen = document.querySelector('#loading-screen');
+    const progressFill = document.querySelector('#progress-fill');
+    const progressLabel = document.querySelector('#progress-label');
+    const warningArea = document.querySelector('#unity-warning');
+    const autoNote = document.querySelector('#auto-note');
+    const profileButtons = [...document.querySelectorAll('.profile')];
+    const touchCapable = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+    if (touchCapable) document.documentElement.classList.add('touch-capable');
+
+    const INPUT_INTERVAL_MS = 1000 / 30;
+    let selectedProfile = 'balanced';
+    let selectedDpr = 1.0;
+    let unityInstance = null;
+    let bootStarted = false;
+    let userOverrodeProfile = false;
+    let inputMode = 0; // 0 menu/native UI, 1 gameplay gestures, 2 dialogue/native UI + action buttons
+    let releaseTouchGestures = null;
+    let inputTimer = 0;
+    let nextInputFlushAt = 0;
+    let moveDirty = false;
+    let queuedMoveX = 0;
+    let queuedMoveY = 0;
+    let queuedLookX = 0;
+    let queuedLookY = 0;
+
+    function detectAutomaticProfile() {
+      const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      const effectiveType = String(connection?.effectiveType || '').toLowerCase();
+      const saveData = connection?.saveData === true;
+      const memory = Number(navigator.deviceMemory || 0);
+      const cores = Number(navigator.hardwareConcurrency || 0);
+      const slowNetwork = saveData || effectiveType === 'slow-2g' || effectiveType === '2g' || effectiveType === '3g';
+      const constrainedMemory = memory > 0 && memory <= 4;
+      const constrainedCpu = cores > 0 && cores <= 4;
+      const profile = (slowNetwork || constrainedMemory || constrainedCpu) ? 'eco' : 'balanced';
+      const reasons = [];
+      if (saveData) reasons.push('Data Saver');
+      else if (slowNetwork) reasons.push(effectiveType.toUpperCase() + ' mreža');
+      if (constrainedMemory) reasons.push(`${memory} GB RAM signal`);
+      if (constrainedCpu) reasons.push(`${cores} CPU dretve`);
+      return { profile, reasons };
+    }
+
+    function profileLabel(profile) {
+      return profile === 'eco' ? 'Štednja' : profile === 'quality' ? 'Oštrije' : 'Stabilno';
+    }
+
+    function selectProfile(profile, automatic = false) {
+      const button = profileButtons.find(item => item.dataset.profile === profile) || profileButtons.find(item => item.dataset.profile === 'balanced');
+      profileButtons.forEach(item => item.classList.toggle('is-selected', item === button));
+      selectedProfile = button.dataset.profile;
+      selectedDpr = Number(button.dataset.dpr || 1.0);
+      const detected = detectAutomaticProfile();
+      autoNote.textContent = automatic && detected.reasons.length
+        ? `Automatski profil: ${profileLabel(selectedProfile)} · ${detected.reasons.join(' · ')}`
+        : `${automatic ? 'Automatski profil' : 'Ručno odabrano'}: ${profileLabel(selectedProfile)}`;
+    }
+
+    const automaticSelection = detectAutomaticProfile();
+    selectProfile(automaticSelection.profile, true);
+
+    profileButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        userOverrodeProfile = true;
+        selectProfile(button.dataset.profile, false);
+      });
+    });
+
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (connection?.addEventListener) {
+      connection.addEventListener('change', () => {
+        if (!bootStarted && !userOverrodeProfile) {
+          const next = detectAutomaticProfile();
+          selectProfile(next.profile, true);
+        }
+      });
+    }
+
+    function unityShowBanner(message, type) {
+      const item = document.createElement('div');
+      item.className = `unity-message ${type || ''}`;
+      item.textContent = String(message);
+      warningArea.appendChild(item);
+      if (type !== 'error') setTimeout(() => item.remove(), 7000);
+    }
+
+    function send(method, value) {
+      if (!unityInstance) return;
+      try {
+        unityInstance.SendMessage('KARLOLEGEND_MobileWebInput', method, String(value ?? ''));
+      } catch (error) {
+        console.warn('Mobile input bridge call failed:', method, error);
+      }
+    }
+
+    function press(name) { send('PressButton', name); }
+
+    function flushInput() {
+      inputTimer = 0;
+      nextInputFlushAt = performance.now() + INPUT_INTERVAL_MS;
+      if (!unityInstance || document.hidden || inputMode !== 1) return;
+
+      if (moveDirty) {
+        moveDirty = false;
+        send('SetMove', `${queuedMoveX.toFixed(3)},${queuedMoveY.toFixed(3)}`);
+      }
+
+      if (queuedLookX !== 0 || queuedLookY !== 0) {
+        const x = Math.max(-120, Math.min(120, queuedLookX));
+        const y = Math.max(-120, Math.min(120, queuedLookY));
+        queuedLookX = 0;
+        queuedLookY = 0;
+        send('AddLookDelta', `${x.toFixed(2)},${y.toFixed(2)}`);
+      }
+    }
+
+    function scheduleInputFlush() {
+      if (!unityInstance || inputTimer || inputMode !== 1) return;
+      const delay = Math.max(0, nextInputFlushAt - performance.now());
+      inputTimer = window.setTimeout(flushInput, delay);
+    }
+
+    function queueMove(x, y) {
+      if (inputMode !== 1) return;
+      queuedMoveX = Math.max(-1, Math.min(1, x));
+      queuedMoveY = Math.max(-1, Math.min(1, y));
+      moveDirty = true;
+      scheduleInputFlush();
+    }
+
+    function queueLook(dx, dy) {
+      if (inputMode !== 1) return;
+      queuedLookX += dx;
+      queuedLookY += dy;
+      scheduleInputFlush();
+    }
+
+    function resetInput() {
+      if (inputTimer) {
+        clearTimeout(inputTimer);
+        inputTimer = 0;
+      }
+      queuedMoveX = 0;
+      queuedMoveY = 0;
+      queuedLookX = 0;
+      queuedLookY = 0;
+      moveDirty = false;
+      send('ResetInput', '');
+    }
+
+    window.KARLOLEGEND_SetInputMode = mode => {
+      const nextMode = Math.max(0, Math.min(2, Number(mode) | 0));
+      if (nextMode === inputMode) return;
+      inputMode = nextMode;
+      document.documentElement.classList.toggle('mobile-controls', touchCapable && inputMode > 0);
+
+      if (inputMode !== 1) {
+        if (releaseTouchGestures) releaseTouchGestures();
+        else resetInput();
+      }
+    };
+
+    function publishVisibility() {
+      if (document.hidden) resetInput();
+      send('SetPageVisibility', document.hidden ? 'hidden' : 'visible');
+    }
+
+    document.addEventListener('visibilitychange', publishVisibility);
+    window.addEventListener('pagehide', () => { resetInput(); send('SetPageVisibility', 'hidden'); });
+    window.addEventListener('pageshow', () => send('SetPageVisibility', document.hidden ? 'hidden' : 'visible'));
+    window.addEventListener('blur', resetInput);
+
+    function startGame() {
+      if (bootStarted) return;
+      bootStarted = true;
+      preflight.style.display = 'none';
+      loadingScreen.style.display = 'grid';
+
+      const buildUrl = 'Build';
+      const config = {
+        arguments: [],
+        dataUrl: `${buildUrl}/{{{ DATA_FILENAME }}}`,
+        frameworkUrl: `${buildUrl}/{{{ FRAMEWORK_FILENAME }}}`,
+#if USE_THREADS
+        workerUrl: `${buildUrl}/{{{ WORKER_FILENAME }}}`,
+#endif
+#if USE_WASM
+        codeUrl: `${buildUrl}/{{{ CODE_FILENAME }}}`,
+#endif
+#if SYMBOLS_FILENAME
+        symbolsUrl: `${buildUrl}/{{{ SYMBOLS_FILENAME }}}`,
+#endif
+        streamingAssetsUrl: 'StreamingAssets',
+        companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+        productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+        productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+        showBanner: unityShowBanner,
+        autoSyncPersistentDataPath: true,
+        devicePixelRatio: Math.min(window.devicePixelRatio || 1, selectedDpr)
+      };
+
+      const script = document.createElement('script');
+      script.src = `${buildUrl}/{{{ LOADER_FILENAME }}}`;
+      script.onload = () => {
+        createUnityInstance(canvas, config, progress => {
+          const percent = Math.round(progress * 100);
+          progressFill.style.width = `${percent}%`;
+          progressLabel.textContent = `${percent}%`;
+        }).then(instance => {
+          unityInstance = instance;
+          nextInputFlushAt = performance.now();
+          send('ConfigureProfile', selectedProfile);
+          publishVisibility();
+          loadingScreen.remove();
+          installTouchControls();
+        }).catch(error => unityShowBanner(error, 'error'));
+      };
+      script.onerror = () => unityShowBanner('WebGL runtime se nije mogao učitati.', 'error');
+      document.body.appendChild(script);
+    }
+
+    document.querySelector('#start-button').addEventListener('click', startGame, { once: true });
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    function installTouchControls() {
+      if (!touchCapable) return;
+
+      const stickBase = document.querySelector('#stick-base');
+      const stickKnob = document.querySelector('#stick-knob');
+      const radius = 46;
+      let movePointer = null;
+      let moveOrigin = { x: 0, y: 0 };
+      let lookPointer = null;
+      let lookLast = { x: 0, y: 0 };
+
+      releaseTouchGestures = () => {
+        movePointer = null;
+        lookPointer = null;
+        stickBase.classList.remove('is-active');
+        stickKnob.style.transform = 'translate(0, 0)';
+        resetInput();
+      };
+
+      canvas.addEventListener('pointerdown', event => {
+        if (inputMode !== 1) return;
+
+        const leftSide = event.clientX < window.innerWidth * 0.46;
+        if (leftSide && movePointer === null) {
+          movePointer = event.pointerId;
+          moveOrigin = { x: event.clientX, y: event.clientY };
+          stickBase.style.left = `${event.clientX}px`;
+          stickBase.style.top = `${event.clientY}px`;
+          stickBase.classList.add('is-active');
+        } else if (lookPointer === null) {
+          lookPointer = event.pointerId;
+          lookLast = { x: event.clientX, y: event.clientY };
+        }
+
+        try { canvas.setPointerCapture(event.pointerId); } catch { }
+      }, { passive: true });
+
+      canvas.addEventListener('pointermove', event => {
+        if (inputMode !== 1) return;
+
+        if (event.pointerId === movePointer) {
+          let dx = event.clientX - moveOrigin.x;
+          let dy = event.clientY - moveOrigin.y;
+          const length = Math.hypot(dx, dy);
+          if (length > radius && length > 0) { dx = dx / length * radius; dy = dy / length * radius; }
+          stickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
+          queueMove(dx / radius, -dy / radius);
+          return;
+        }
+
+        if (event.pointerId === lookPointer) {
+          const dx = event.clientX - lookLast.x;
+          const dy = event.clientY - lookLast.y;
+          lookLast = { x: event.clientX, y: event.clientY };
+          queueLook(dx, -dy);
+        }
+      }, { passive: true });
+
+      function endCanvasPointer(event) {
+        if (event.pointerId === movePointer) {
+          movePointer = null;
+          stickBase.classList.remove('is-active');
+          stickKnob.style.transform = 'translate(0, 0)';
+          queueMove(0, 0);
+        }
+        if (event.pointerId === lookPointer) {
+          lookPointer = null;
+        }
+      }
+
+      canvas.addEventListener('pointerup', endCanvasPointer, { passive: true });
+      canvas.addEventListener('pointercancel', endCanvasPointer, { passive: true });
+      canvas.addEventListener('lostpointercapture', endCanvasPointer, { passive: true });
+
+      document.querySelector('#use-button').addEventListener('pointerdown', event => { event.preventDefault(); press('Use'); });
+      document.querySelector('#primary-button').addEventListener('pointerdown', event => { event.preventDefault(); press('Fire1'); });
+      document.querySelector('#alt-button').addEventListener('pointerdown', event => { event.preventDefault(); press('Fire2'); });
+      document.querySelector('#menu-button').addEventListener('pointerdown', event => { event.preventDefault(); press('Cancel'); });
+      document.querySelector('#fullscreen-button').addEventListener('pointerdown', event => {
+        event.preventDefault();
+        if (unityInstance && document.fullscreenEnabled) unityInstance.SetFullscreen(1);
+      });
+    }
+  </script>
+</body>
+</html>

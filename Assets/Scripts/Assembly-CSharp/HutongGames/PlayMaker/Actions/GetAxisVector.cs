@@ -1,3 +1,4 @@
+using Karlolegend.Gradomraz.MobileWeb;
 using UnityEngine;
 
 namespace HutongGames.PlayMaker.Actions
@@ -92,8 +93,17 @@ namespace HutongGames.PlayMaker.Actions
 					break;
 				}
 			}
+
 			float num = ((horizontalAxis.IsNone || string.IsNullOrEmpty(horizontalAxis.Value)) ? 0f : Input.GetAxis(horizontalAxis.Value));
 			float num2 = ((verticalAxis.IsNone || string.IsNullOrEmpty(verticalAxis.Value)) ? 0f : Input.GetAxis(verticalAxis.Value));
+
+			var mobileMove = MobileWebInputBridge.Move;
+			if (mobileMove.sqrMagnitude > 0.0001f)
+			{
+				num = mobileMove.x;
+				num2 = mobileMove.y;
+			}
+
 			Vector3 value = num * vector2 + num2 * vector;
 			value *= multiplier.Value;
 			storeVector.Value = value;
