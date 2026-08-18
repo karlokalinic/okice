@@ -48,14 +48,17 @@ namespace Karlolegend.Gradomraz.MobileWeb
         private static void Install()
         {
 #if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
-            if (GameObject.Find(GameObjectName) != null)
+            var host = GameObject.Find(GameObjectName);
+            if (host == null)
             {
-                return;
+                host = new GameObject(GameObjectName);
+                DontDestroyOnLoad(host);
             }
 
-            var host = new GameObject(GameObjectName);
-            DontDestroyOnLoad(host);
-            host.AddComponent<MobileWebInputBridge>();
+            if (host.GetComponent<MobileWebInputBridge>() == null)
+            {
+                host.AddComponent<MobileWebInputBridge>();
+            }
 #endif
         }
 
@@ -181,6 +184,7 @@ namespace Karlolegend.Gradomraz.MobileWeb
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             ApplyCameraPolicy();
+            ApplyLightPolicy();
         }
 
         private void ApplyProfile(string profileName)
@@ -194,8 +198,6 @@ namespace Karlolegend.Gradomraz.MobileWeb
             activeTargetFps = 30;
             emergencyMode = false;
 
-            // Balanced is the shipping default: preserve core lighting/shadows but
-            // remove desktop full-screen passes and depth/color copies.
             var renderScale = 0.75f;
             var msaa = 1;
             var shadowCascades = 1;
@@ -243,6 +245,12 @@ namespace Karlolegend.Gradomraz.MobileWeb
             Application.targetFrameRate = activeTargetFps;
             Application.backgroundLoadingPriority = ThreadPriority.Low;
 
+            // The PC renderer is authored as Forward+. In Forward+ Unity ignores
+            // maxAdditionalLightsCount, which is disastrous for this scene's very
+            // large light population. Mobile forces classic Forward so the 0/1
+            // per-object additional-light budget is an actual budget.
+            ConfigureRendererDataForMobile();
+
             activeUrp = GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset;
             if (activeUrp == null)
             {
@@ -265,8 +273,75 @@ namespace Karlolegend.Gradomraz.MobileWeb
 
             SetSsao(false);
             ApplyCameraPolicy();
+            ApplyLightPolicy();
             consecutiveStableWindows = 0;
             ResetGovernorWindow();
+        }
+
+        private static void ConfigureRendererDataForMobile()
+        {
+            foreach (var rendererData in Resources.FindObjectsOfTypeAll<UniversalRendererData>())
+            {
+                if (rendererData == null)
+                {
+                    continue;
+                }
+
+                var changed = false;
+                if (rendererData.renderingMode != RenderingMode.Forward)
+                {
+                    rendererData.renderingMode = RenderingMode.Forward;
+                    changed = true;
+                }
+
+                if (rendererData.shadowTransparentReceive)
+                {
+                    rendererData.shadowTransparentReceive = false;
+                    changed = true;
+                }
+
+                if (rendererData.depthPrimingMode != DepthPrimingMode.Disabled)
+                {
+                    rendererData.depthPrimingMode = DepthPrimingMode.Disabled;
+                    changed = true;
+                }
+
+                if (changed)
+                {
+                    rendererData.SetDirty();
+                }
+            }
+        }
+
+        private void ApplyLightPolicy()
+        {
+            var maxRange = activeProfile == "eco" ? 8f : activeProfile == "quality" ? 20f : 12f;
+
+            foreach (var light in Resources.FindObjectsOfTypeAll<Light>())
+            {
+                if (light == null || !light.gameObject.scene.IsValid())
+                {
+                    continue;
+                }
+
+                if (light.type == LightType.Directional)
+                {
+                    if (activeProfile == "eco" || emergencyMode)
+                    {
+                        light.shadows = LightShadows.None;
+                    }
+                    continue;
+                }
+
+                // Hundreds of punctual lights with authored realtime shadows are
+                // a desktop setup. Mobile keeps the light contribution but never
+                // renders an additional-light shadow map.
+                light.shadows = LightShadows.None;
+                if (light.range > maxRange)
+                {
+                    light.range = maxRange;
+                }
+            }
         }
 
         private void ApplyCameraPolicy()
@@ -367,6 +442,7 @@ namespace Karlolegend.Gradomraz.MobileWeb
 
             SetSsao(false);
             ApplyCameraPolicy();
+            ApplyLightPolicy();
             SetRenderScale(Mathf.Max(0.50f, currentRenderScale - ScaleStep));
         }
 
