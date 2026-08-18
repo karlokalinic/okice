@@ -20,6 +20,31 @@ function Write-Step([string]$Text) {
     Write-Host "`n==> $Text" -ForegroundColor Cyan
 }
 
+function Require-Node {
+    $node = Get-Command node -ErrorAction SilentlyContinue
+    if (-not $node) {
+        throw 'Node.js is required for mobile validation, build analysis and local serving and was not found in PATH.'
+    }
+    return $node.Source
+}
+
+function Invoke-SourceValidation {
+    $node = Require-Node
+    New-Item -ItemType Directory -Force -Path $reportDir | Out-Null
+
+    Write-Step 'Validating mobile source contract'
+    & $node (Join-Path $PSScriptRoot 'preflight.mjs') --root $repoRoot
+    if ($LASTEXITCODE -ne 0) {
+        throw "Mobile source preflight failed with exit code $LASTEXITCODE."
+    }
+
+    Write-Step 'Auditing SampleScene mobile complexity'
+    & $node (Join-Path $PSScriptRoot 'audit-scene.mjs') --root $repoRoot --report-dir $reportDir
+    if ($LASTEXITCODE -ne 0) {
+        throw "Mobile scene audit failed with exit code $LASTEXITCODE."
+    }
+}
+
 function Get-UnityVersion {
     if (-not (Test-Path $projectVersionFile)) {
         throw "Missing $projectVersionFile"
@@ -105,7 +130,7 @@ function Invoke-MobileBuild {
     if ($exitCode -ne 0) {
         Write-Host "`nLast Unity log lines:" -ForegroundColor Yellow
         if (Test-Path $logFile) {
-            Get-Content $logFile -Tail 120
+            Get-Content $logFile -Tail 160
         }
         throw "Unity Mobile WebGL build failed with exit code $exitCode."
     }
@@ -114,15 +139,16 @@ function Invoke-MobileBuild {
         throw "Unity exited successfully but $buildDir\index.html does not exist."
     }
 
-    Write-Host 'Mobile WebGL build completed.' -ForegroundColor Green
+    Write-Host 'Unity produced the mobile WebGL output.' -ForegroundColor Green
 }
 
-function Require-Node {
-    $node = Get-Command node -ErrorAction SilentlyContinue
-    if (-not $node) {
-        throw 'Node.js is required for build analysis/local serving and was not found in PATH.'
+function Invoke-SmokeTest {
+    $node = Require-Node
+    Write-Step 'Smoke-testing generated Mobile WebGL package'
+    & $node (Join-Path $PSScriptRoot 'smoke-build.mjs') --root $buildDir
+    if ($LASTEXITCODE -ne 0) {
+        throw "Generated WebGL smoke test failed with exit code $LASTEXITCODE."
     }
-    return $node.Source
 }
 
 function Invoke-Analysis {
@@ -132,6 +158,14 @@ function Invoke-Analysis {
     if ($LASTEXITCODE -ne 0) {
         throw "Build analyzer failed with exit code $LASTEXITCODE."
     }
+}
+
+function Invoke-VerifiedBuild {
+    Invoke-SourceValidation
+    Invoke-MobileBuild
+    Invoke-SmokeTest
+    Invoke-Analysis
+    Write-Host "`nMobile build passed source validation, Unity build, package smoke test and payload analysis." -ForegroundColor Green
 }
 
 function Invoke-Server {
@@ -155,12 +189,11 @@ function Invoke-Server {
 Push-Location $repoRoot
 try {
     switch ($Mode) {
-        'Build'   { Invoke-MobileBuild }
+        'Build'   { Invoke-VerifiedBuild }
         'Analyze' { Invoke-Analysis }
         'Serve'   { Invoke-Server }
         'All' {
-            Invoke-MobileBuild
-            Invoke-Analysis
+            Invoke-VerifiedBuild
             Invoke-Server
         }
     }
