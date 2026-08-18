@@ -57,6 +57,12 @@ if (scenes) {
 const buildFile = 'Assets/Editor/KARLOLEGEND_GRADOMRAZ/BuildGame.cs';
 for (const [token, label] of [
   ['PROJECT:Mobile', 'dedicated Mobile WebGL template'],
+  ['MobilePipelineAssetPath', 'dedicated mobile render-pipeline path'],
+  ['AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>', 'mobile pipeline asset load'],
+  ['QualitySettings.renderPipeline = mobilePipeline', 'quality-level mobile pipeline override'],
+  ['GraphicsSettings.defaultRenderPipeline = mobilePipeline', 'default mobile pipeline override'],
+  ['QualitySettings.renderPipeline = previousQualityPipeline', 'quality pipeline restoration'],
+  ['GraphicsSettings.defaultRenderPipeline = previousDefaultPipeline', 'default pipeline restoration'],
   ['WebGLCompressionFormat.Brotli', 'Brotli compression'],
   ['dataCaching = true', 'WebGL data caching'],
   ['initialMemorySize = 512', '512 MB initial heap baseline'],
@@ -73,6 +79,33 @@ for (const [token, label] of [
   ['WriteMobileHostingFiles()', 'hosting metadata generation'],
   ['finally', 'settings restoration guard']
 ]) requireText(buildFile, token, label);
+
+const mobileRenderer = 'Assets/MonoBehaviour/Mobile_Renderer.asset';
+for (const [token, label] of [
+  ['m_RendererFeatures: []', 'renderer-feature-free mobile renderer'],
+  ['m_ShadowTransparentReceive: 0', 'transparent shadow receiving disabled'],
+  ['m_RenderingMode: 0', 'classic Forward rendering path'],
+  ['m_DepthPrimingMode: 0', 'depth priming disabled']
+]) requireText(mobileRenderer, token, label);
+requireText(`${mobileRenderer}.meta`, 'guid: cec103d4d6f94f2c89a8b5c4ef90919d', 'stable Mobile_Renderer GUID');
+
+const mobilePipeline = 'Assets/MonoBehaviour/Mobile_RPAsset.asset';
+for (const [token, label] of [
+  ['guid: cec103d4d6f94f2c89a8b5c4ef90919d', 'Mobile_Renderer reference'],
+  ['m_RequireDepthTexture: 0', 'depth texture disabled by default'],
+  ['m_RequireOpaqueTexture: 0', 'opaque texture disabled'],
+  ['m_SupportsHDR: 0', 'HDR disabled'],
+  ['m_RenderScale: 0.75', 'mobile render-scale baseline'],
+  ['m_MainLightShadowmapResolution: 512', 'small main-light shadow atlas'],
+  ['m_AdditionalLightsPerObjectLimit: 1', 'single additional light per object'],
+  ['m_AdditionalLightShadowsSupported: 0', 'additional-light shadows disabled'],
+  ['m_ShadowDistance: 8', 'short mobile shadow distance'],
+  ['m_ShadowCascadeCount: 1', 'single shadow cascade'],
+  ['m_SoftShadowsSupported: 0', 'soft shadows disabled'],
+  ['m_SupportsDynamicBatching: 1', 'dynamic batching enabled'],
+  ['m_ColorGradingLutSize: 16', 'smaller color grading LUT']
+]) requireText(mobilePipeline, token, label);
+requireText(`${mobilePipeline}.meta`, 'guid: e446ee0aa5ae41c680427fabbb7ace72', 'stable Mobile_RPAsset GUID');
 
 const bridgeFile = 'Assets/Scripts/MobileWeb/MobileWebInputBridge.cs';
 for (const [token, label] of [
