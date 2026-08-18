@@ -70,6 +70,8 @@ namespace Karlolegend.Gradomraz.Editor
             var previousInitialMemory = PlayerSettings.WebGL.initialMemorySize;
             var previousMaximumMemory = PlayerSettings.WebGL.maximumMemorySize;
             var previousGrowthMode = PlayerSettings.WebGL.memoryGrowthMode;
+            var previousGeometricGrowthStep = PlayerSettings.WebGL.geometricMemoryGrowthStep;
+            var previousGeometricGrowthCap = PlayerSettings.WebGL.memoryGeometricGrowthCap;
             var previousPowerPreference = PlayerSettings.WebGL.powerPreference;
             var previousNameFilesAsHashes = PlayerSettings.WebGL.nameFilesAsHashes;
             var previousDecompressionFallback = PlayerSettings.WebGL.decompressionFallback;
@@ -82,13 +84,19 @@ namespace Karlolegend.Gradomraz.Editor
 
             try
             {
-                // Shipping mobile-web policy. All changes are temporary and are restored in finally.
                 PlayerSettings.WebGL.template = "PROJECT:Mobile";
                 PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli;
                 PlayerSettings.WebGL.dataCaching = true;
-                PlayerSettings.WebGL.initialMemorySize = 384;
+
+                // The old 384 MB starting heap was too aggressive for a content-heavy Unity scene:
+                // repeated WASM heap growth can become visible as stalls. Start at 512 MB, keep a
+                // strict 1 GB ceiling, and use smaller geometric increments for smoother growth.
+                PlayerSettings.WebGL.initialMemorySize = 512;
                 PlayerSettings.WebGL.maximumMemorySize = 1024;
                 PlayerSettings.WebGL.memoryGrowthMode = WebGLMemoryGrowthMode.Geometric;
+                PlayerSettings.WebGL.geometricMemoryGrowthStep = 0.10f;
+                PlayerSettings.WebGL.memoryGeometricGrowthCap = 64;
+
                 PlayerSettings.WebGL.powerPreference = WebGLPowerPreference.LowPower;
                 PlayerSettings.WebGL.nameFilesAsHashes = true;
                 PlayerSettings.WebGL.decompressionFallback = false;
@@ -97,7 +105,6 @@ namespace Karlolegend.Gradomraz.Editor
                 PlayerSettings.WebGL.debugSymbolMode = WebGLDebugSymbolMode.Off;
                 PlayerSettings.WebGL.showDiagnostics = false;
 
-                // ASTC targets modern mobile GPUs and DiskSizeLTO minimizes shipping Wasm size.
                 EditorUserBuildSettings.webGLBuildSubtarget = WebGLTextureSubtarget.ASTC;
                 UnityEditor.WebGL.UserBuildSettings.codeOptimization =
                     UnityEditor.WebGL.WasmCodeOptimization.DiskSizeLTO;
@@ -122,13 +129,14 @@ namespace Karlolegend.Gradomraz.Editor
             }
             finally
             {
-                // Mobile automation must never silently mutate the desktop WebGL configuration.
                 PlayerSettings.WebGL.template = previousTemplate;
                 PlayerSettings.WebGL.compressionFormat = previousCompression;
                 PlayerSettings.WebGL.dataCaching = previousDataCaching;
                 PlayerSettings.WebGL.initialMemorySize = previousInitialMemory;
                 PlayerSettings.WebGL.maximumMemorySize = previousMaximumMemory;
                 PlayerSettings.WebGL.memoryGrowthMode = previousGrowthMode;
+                PlayerSettings.WebGL.geometricMemoryGrowthStep = previousGeometricGrowthStep;
+                PlayerSettings.WebGL.memoryGeometricGrowthCap = previousGeometricGrowthCap;
                 PlayerSettings.WebGL.powerPreference = previousPowerPreference;
                 PlayerSettings.WebGL.nameFilesAsHashes = previousNameFilesAsHashes;
                 PlayerSettings.WebGL.decompressionFallback = previousDecompressionFallback;
