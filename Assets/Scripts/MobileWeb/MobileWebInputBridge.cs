@@ -27,12 +27,12 @@ namespace Karlolegend.Gradomraz.MobileWeb
         private string activeProfile = "balanced";
         private int activeTargetFps = 30;
         private float minRenderScale = 0.55f;
-        private float maxRenderScale = 0.78f;
-        private float currentRenderScale = 0.72f;
-        private float baseShadowDistance = 12f;
+        private float maxRenderScale = 0.80f;
+        private float currentRenderScale = 0.75f;
+        private float baseShadowDistance = 8f;
         private int baseAdditionalLights = 1;
-        private bool allowPostProcessing = true;
-        private bool allowDepthTexture = true;
+        private bool allowPostProcessing;
+        private bool allowDepthTexture;
         private bool emergencyMode;
         private float sampleElapsed;
         private float sampleFrameSeconds;
@@ -194,17 +194,19 @@ namespace Karlolegend.Gradomraz.MobileWeb
             activeTargetFps = 30;
             emergencyMode = false;
 
-            var renderScale = 0.72f;
+            // Balanced is the shipping default: preserve core lighting/shadows but
+            // remove desktop full-screen passes and depth/color copies.
+            var renderScale = 0.75f;
             var msaa = 1;
             var shadowCascades = 1;
-            var lodBias = 1.10f;
+            var lodBias = 1.05f;
 
             minRenderScale = 0.55f;
-            maxRenderScale = 0.78f;
-            baseShadowDistance = 12f;
+            maxRenderScale = 0.80f;
+            baseShadowDistance = 8f;
             baseAdditionalLights = 1;
-            allowPostProcessing = true;
-            allowDepthTexture = true;
+            allowPostProcessing = false;
+            allowDepthTexture = false;
 
             switch (activeProfile)
             {
@@ -214,9 +216,7 @@ namespace Karlolegend.Gradomraz.MobileWeb
                     maxRenderScale = 0.65f;
                     baseShadowDistance = 0f;
                     baseAdditionalLights = 0;
-                    lodBias = 0.90f;
-                    allowPostProcessing = false;
-                    allowDepthTexture = false;
+                    lodBias = 0.85f;
                     break;
 
                 case "quality":
@@ -224,9 +224,9 @@ namespace Karlolegend.Gradomraz.MobileWeb
                     msaa = 2;
                     minRenderScale = 0.65f;
                     maxRenderScale = 0.90f;
-                    baseShadowDistance = 18f;
+                    baseShadowDistance = 16f;
                     baseAdditionalLights = 1;
-                    lodBias = 1.35f;
+                    lodBias = 1.30f;
                     allowPostProcessing = true;
                     allowDepthTexture = true;
                     break;
