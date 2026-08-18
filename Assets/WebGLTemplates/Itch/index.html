@@ -59,6 +59,17 @@
         }
       }
 
+      function compatibilityHint() {
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        const memory = Number(navigator.deviceMemory || 0);
+        const cores = Number(navigator.hardwareConcurrency || 0);
+        const effectiveType = String(connection?.effectiveType || "").toLowerCase();
+        const constrainedNetwork = connection?.saveData === true || effectiveType === "slow-2g" || effectiveType === "2g";
+        const constrainedMemory = memory > 0 && memory <= 4;
+        const constrainedCpu = cores > 0 && cores <= 4;
+        return constrainedNetwork || constrainedMemory || constrainedCpu ? "eco" : "balanced";
+      }
+
       const buildUrl = "Build";
       const config = {
         arguments: [],
@@ -90,6 +101,12 @@
           progressFill.style.width = `${percent}%`;
           progressLabel.textContent = `Loading ${percent}%`;
         }).then(instance => {
+          try {
+            instance.SendMessage("KARLOLEGEND_Compatibility", "ConfigureBrowserHint", compatibilityHint());
+          } catch (error) {
+            console.warn("Compatibility hardware hint was not accepted:", error);
+          }
+
           loaderScreen.classList.add("is-hidden");
           setTimeout(() => loaderScreen.remove(), 350);
           document.querySelector("#fullscreen-button").onclick = () => instance.SetFullscreen(1);
