@@ -180,8 +180,18 @@ for (const meta of [
 
 const workflow = read('.github/workflows/mobile-webgl.yml');
 if (workflow) {
-  if (!/workflow_dispatch:\s*/.test(workflow)) failures.push('Mobile workflow must remain manually dispatchable.');
-  if (/\bpull_request\s*:/.test(workflow) || /\bpush\s*:/.test(workflow)) failures.push('Mobile workflow must remain manual-only to prevent notification spam.');
+  // Only inspect the top-level YAML `on:` trigger block. Comments and shell/echo text
+  // are not workflow triggers and must not cause false positives (e.g. a comment that
+  // literally says "do not run on pull_request/push").
+  const triggerMatch = workflow.match(/^on:\s*\r?\n([\s\S]*?)(?=^[A-Za-z_][A-Za-z0-9_-]*:\s*(?:\r?\n|$))/m);
+  const triggerBlock = triggerMatch ? triggerMatch[1] : '';
+
+  if (!/^\s+workflow_dispatch\s*:\s*$/m.test(triggerBlock)) {
+    failures.push('Mobile workflow must remain manually dispatchable.');
+  }
+  if (/^\s+(?:pull_request|push)\s*:/m.test(triggerBlock)) {
+    failures.push('Mobile workflow must remain manual-only to prevent notification spam.');
+  }
   if (/\blfs:\s*true\b/.test(workflow)) warnings.push('Workflow asks checkout to download Git LFS.');
 }
 
