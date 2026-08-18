@@ -14,7 +14,7 @@
     body { min-height: 100dvh; color: #eef0ed; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; user-select: none; -webkit-user-select: none; }
     button { font: inherit; color: inherit; }
     #unity-container { position: fixed; inset: 0; overflow: hidden; background: #080b0e; }
-    #unity-canvas { display: block; width: 100%; height: 100%; outline: none; background: #080b0e; }
+    #unity-canvas { display: block; width: 100%; height: 100%; outline: none; background: #080b0e; touch-action: none; }
 
     #preflight, #loading-screen { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; padding: calc(24px + var(--safe-t)) calc(20px + var(--safe-r)) calc(24px + var(--safe-b)) calc(20px + var(--safe-l)); background: #080b0e; }
     #loading-screen { display: none; }
@@ -40,17 +40,15 @@
 
     #controls { position: absolute; inset: 0; z-index: 8; display: none; pointer-events: none; }
     .touch-capable #controls { display: block; }
-    #move-zone { position: absolute; left: var(--safe-l); bottom: var(--safe-b); width: 46vw; height: 58vh; pointer-events: auto; touch-action: none; }
-    #look-zone { position: absolute; top: var(--safe-t); right: var(--safe-r); width: 54vw; height: calc(100% - var(--safe-t) - var(--safe-b)); pointer-events: auto; touch-action: none; }
-    #stick-base { position: fixed; width: 92px; height: 92px; margin: -46px 0 0 -46px; border: 1px solid rgba(255,255,255,.25); border-radius: 50%; background: rgba(10,13,15,.45); opacity: 0; pointer-events: none; }
+    #stick-base { position: fixed; z-index: 10; width: 92px; height: 92px; margin: -46px 0 0 -46px; border: 1px solid rgba(255,255,255,.25); border-radius: 50%; background: rgba(10,13,15,.45); opacity: 0; pointer-events: none; }
     #stick-knob { position: absolute; left: 50%; top: 50%; width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 50%; background: rgba(239,237,228,.58); }
     #stick-base.is-active { opacity: 1; }
-    #action-cluster { position: absolute; right: calc(14px + var(--safe-r)); bottom: calc(18px + var(--safe-b)); z-index: 12; display: grid; grid-template-columns: 48px 58px 68px; align-items: end; gap: 10px; pointer-events: auto; }
+    #action-cluster { position: absolute; right: calc(14px + var(--safe-r)); bottom: calc(18px + var(--safe-b)); z-index: 12; display: grid; grid-template-columns: 50px 60px 70px; align-items: end; gap: 10px; pointer-events: auto; }
     .action { display: grid; place-items: center; border: 1px solid rgba(255,255,255,.30); border-radius: 50%; background: rgba(8,11,14,.68); touch-action: none; }
     .action:active { background: rgba(235,233,224,.76); color: #090b0d; }
-    #alt-button { width: 48px; height: 48px; font-size: 10px; }
-    #jump-button { width: 58px; height: 58px; font-size: 11px; }
-    #use-button { width: 68px; height: 68px; font-size: 12px; font-weight: 800; }
+    #alt-button { width: 50px; height: 50px; font-size: 10px; }
+    #primary-button { width: 60px; height: 60px; font-size: 10px; }
+    #use-button { width: 70px; height: 70px; font-size: 11px; font-weight: 800; }
     #menu-button { position: absolute; z-index: 12; top: calc(12px + var(--safe-t)); left: calc(12px + var(--safe-l)); width: 42px; height: 42px; pointer-events: auto; font-size: 17px; }
     #fullscreen-button { position: absolute; z-index: 12; top: calc(12px + var(--safe-t)); right: calc(12px + var(--safe-r)); width: 42px; height: 42px; pointer-events: auto; font-size: 18px; }
 
@@ -71,7 +69,7 @@
         <div class="eyebrow">KARLOLEGEND · MOBILE WEB</div>
         <h1 class="brand">{{{ PRODUCT_NAME }}}</h1>
         <p id="orientation-note">Za stabilnu igru okreni uređaj vodoravno prije pokretanja.</p>
-        <p class="copy">Mobilna verzija sada prioritizira stabilan frame pacing. Kvaliteta više ne pokušava gurati 60 FPS na telefonu.</p>
+        <p class="copy">Mobilna verzija prioritizira stabilan frame pacing i normalne Unity UI dodire. Geste više ne sjede u transparentnom sloju iznad canvasa.</p>
         <p id="auto-note"></p>
         <div class="profiles" role="radiogroup" aria-label="Kvaliteta">
           <button class="profile" data-profile="eco" data-dpr="1.0" type="button"><strong>Štednja</strong><span>30 FPS · najlakše</span></button>
@@ -79,7 +77,7 @@
           <button class="profile" data-profile="quality" data-dpr="1.25" type="button"><strong>Oštrije</strong><span>30 FPS · veći GPU trošak</span></button>
         </div>
         <button id="start-button" type="button">Pokreni igru</button>
-        <p class="fineprint">Na iOS-u koristi samostalnu stranicu, ne iframe. Touch input se prema Unityju šalje ograničeno na 30 Hz kako ne bi gušio WebGL main thread.</p>
+        <p class="fineprint">Lijeva strana canvasa = kretanje; desna = pogled. Unity i dalje prima svoje pointer događaje za izbornike i dijaloge. JS→WASM input je ograničen na 30 Hz.</p>
       </div>
     </section>
 
@@ -93,13 +91,12 @@
     </section>
 
     <div id="controls" aria-hidden="true">
-      <div id="move-zone"><div id="stick-base"><div id="stick-knob"></div></div></div>
-      <div id="look-zone"></div>
+      <div id="stick-base"><div id="stick-knob"></div></div>
       <button id="menu-button" class="action" type="button" aria-label="Izbornik">II</button>
       <button id="fullscreen-button" class="action" type="button" aria-label="Cijeli zaslon">⛶</button>
       <div id="action-cluster">
         <button id="alt-button" class="action" type="button">ALT</button>
-        <button id="jump-button" class="action" type="button">SKOK</button>
+        <button id="primary-button" class="action" type="button">AKCIJA</button>
         <button id="use-button" class="action" type="button">KORISTI</button>
       </div>
     </div>
@@ -321,8 +318,6 @@
     function installTouchControls() {
       if (!touchCapable) return;
 
-      const moveZone = document.querySelector('#move-zone');
-      const lookZone = document.querySelector('#look-zone');
       const stickBase = document.querySelector('#stick-base');
       const stickKnob = document.querySelector('#stick-knob');
       const radius = 46;
@@ -331,67 +326,61 @@
       let lookPointer = null;
       let lookLast = { x: 0, y: 0 };
 
-      moveZone.addEventListener('pointerdown', event => {
-        event.preventDefault();
-        if (movePointer !== null) return;
-        movePointer = event.pointerId;
-        moveOrigin = { x: event.clientX, y: event.clientY };
-        stickBase.style.left = `${event.clientX}px`;
-        stickBase.style.top = `${event.clientY}px`;
-        stickBase.classList.add('is-active');
-        try { moveZone.setPointerCapture(event.pointerId); } catch { }
-      });
+      canvas.addEventListener('pointerdown', event => {
+        const leftSide = event.clientX < window.innerWidth * 0.46;
 
-      moveZone.addEventListener('pointermove', event => {
-        if (event.pointerId !== movePointer) return;
-        event.preventDefault();
-        let dx = event.clientX - moveOrigin.x;
-        let dy = event.clientY - moveOrigin.y;
-        const length = Math.hypot(dx, dy);
-        if (length > radius && length > 0) { dx = dx / length * radius; dy = dy / length * radius; }
-        stickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
-        queueMove(dx / radius, -dy / radius);
-      });
+        if (leftSide && movePointer === null) {
+          movePointer = event.pointerId;
+          moveOrigin = { x: event.clientX, y: event.clientY };
+          stickBase.style.left = `${event.clientX}px`;
+          stickBase.style.top = `${event.clientY}px`;
+          stickBase.classList.add('is-active');
+        } else if (lookPointer === null) {
+          lookPointer = event.pointerId;
+          lookLast = { x: event.clientX, y: event.clientY };
+        }
 
-      function endMove(event) {
-        if (event && event.pointerId !== movePointer) return;
-        movePointer = null;
-        stickBase.classList.remove('is-active');
-        stickKnob.style.transform = 'translate(0, 0)';
-        queueMove(0, 0);
+        try { canvas.setPointerCapture(event.pointerId); } catch { }
+      }, { passive: true });
+
+      canvas.addEventListener('pointermove', event => {
+        if (event.pointerId === movePointer) {
+          let dx = event.clientX - moveOrigin.x;
+          let dy = event.clientY - moveOrigin.y;
+          const length = Math.hypot(dx, dy);
+          if (length > radius && length > 0) { dx = dx / length * radius; dy = dy / length * radius; }
+          stickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
+          queueMove(dx / radius, -dy / radius);
+          return;
+        }
+
+        if (event.pointerId === lookPointer) {
+          const dx = event.clientX - lookLast.x;
+          const dy = event.clientY - lookLast.y;
+          lookLast = { x: event.clientX, y: event.clientY };
+          queueLook(dx, -dy);
+        }
+      }, { passive: true });
+
+      function endCanvasPointer(event) {
+        if (event.pointerId === movePointer) {
+          movePointer = null;
+          stickBase.classList.remove('is-active');
+          stickKnob.style.transform = 'translate(0, 0)';
+          queueMove(0, 0);
+        }
+        if (event.pointerId === lookPointer) {
+          lookPointer = null;
+        }
       }
-      moveZone.addEventListener('pointerup', endMove);
-      moveZone.addEventListener('pointercancel', endMove);
-      moveZone.addEventListener('lostpointercapture', () => { if (movePointer !== null) endMove(null); });
 
-      lookZone.addEventListener('pointerdown', event => {
-        event.preventDefault();
-        if (lookPointer !== null) return;
-        lookPointer = event.pointerId;
-        lookLast = { x: event.clientX, y: event.clientY };
-        try { lookZone.setPointerCapture(event.pointerId); } catch { }
-      });
-
-      lookZone.addEventListener('pointermove', event => {
-        if (event.pointerId !== lookPointer) return;
-        event.preventDefault();
-        const dx = event.clientX - lookLast.x;
-        const dy = event.clientY - lookLast.y;
-        lookLast = { x: event.clientX, y: event.clientY };
-        queueLook(dx, -dy);
-      });
-
-      function endLook(event) {
-        if (event && event.pointerId !== lookPointer) return;
-        lookPointer = null;
-      }
-      lookZone.addEventListener('pointerup', endLook);
-      lookZone.addEventListener('pointercancel', endLook);
-      lookZone.addEventListener('lostpointercapture', () => { if (lookPointer !== null) endLook(null); });
+      canvas.addEventListener('pointerup', endCanvasPointer, { passive: true });
+      canvas.addEventListener('pointercancel', endCanvasPointer, { passive: true });
+      canvas.addEventListener('lostpointercapture', endCanvasPointer, { passive: true });
 
       document.querySelector('#use-button').addEventListener('pointerdown', event => { event.preventDefault(); press('Use'); });
+      document.querySelector('#primary-button').addEventListener('pointerdown', event => { event.preventDefault(); press('Fire1'); });
       document.querySelector('#alt-button').addEventListener('pointerdown', event => { event.preventDefault(); press('Fire2'); });
-      document.querySelector('#jump-button').addEventListener('pointerdown', event => { event.preventDefault(); press('Jump'); });
       document.querySelector('#menu-button').addEventListener('pointerdown', event => { event.preventDefault(); press('Cancel'); });
       document.querySelector('#fullscreen-button').addEventListener('pointerdown', event => {
         event.preventDefault();
