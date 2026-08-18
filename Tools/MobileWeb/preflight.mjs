@@ -86,8 +86,20 @@ for (const [token, label] of [
   ['EnterEmergencyMode', 'automatic emergency degradation'],
   ['supportsCameraOpaqueTexture = false', 'opaque-texture bandwidth reduction'],
   ['supportsHDR = false', 'mobile HDR render-target disable'],
+  ['allowPostProcessing = false', 'lightweight default profile'],
+  ['allowDepthTexture = false', 'depth-free default profile'],
   ['Application.targetFrameRate = activeTargetFps', 'stable frame cap']
 ]) requireText(bridgeFile, token, label);
+
+const pixelBridgeFile = 'Assets/Plugins/Assembly-CSharp-firstpass/PixelCrushers/MobileWebPixelCrushersInput.cs';
+for (const [token, label] of [
+  ['InputDeviceManager.GetButtonDelegate', 'PixelCrushers button delegate hook'],
+  ['MobileWebInputBridge, Assembly-CSharp', 'late-bound gameplay bridge type'],
+  ['Delegate.CreateDelegate', 'cached cross-assembly button delegate'],
+  ['manager.GetButtonDown = GetButtonDownProxy', 'PixelCrushers mobile button injection'],
+  ['originalGetButtonDown(buttonName)', 'desktop/original input preservation']
+]) requireText(pixelBridgeFile, token, label);
+requireText(`${pixelBridgeFile}.meta`, 'fileFormatVersion: 2', 'Unity .meta for PixelCrushers mobile bridge');
 
 const templateFile = 'Assets/WebGLTemplates/Mobile/index.html';
 for (const [token, label] of [
@@ -103,9 +115,22 @@ for (const [token, label] of [
   ['queueLook', 'batched touch look input'],
   ['queueMove', 'batched touch movement input'],
   ['ResetInput', 'browser-to-Unity input reset'],
+  ["canvas.addEventListener('pointerdown'", 'canvas-level gesture input'],
+  ['primary-button', 'Fire1 action control'],
   ['pointercancel', 'touch cancellation handling'],
   ['navigator.maxTouchPoints', 'touch capability detection']
 ]) requireText(templateFile, token, label);
+
+const template = read(templateFile);
+if (template.includes('id="move-zone"') || template.includes('id="look-zone"')) {
+  failures.push('Mobile template must not restore full-screen pointer-intercepting move/look overlay zones.');
+}
+if (template.includes('backdrop-filter')) {
+  failures.push('Mobile template must not add backdrop-filter compositing over the WebGL canvas.');
+}
+if (template.includes('60 FPS')) {
+  failures.push('Mobile template must not advertise a 60 FPS phone profile while stable 30 FPS is the release target.');
+}
 
 requireText('Assets/Scripts/MobileWeb/MobileWebInputBridge.cs.meta', 'fileFormatVersion: 2', 'Unity .meta for mobile bridge');
 requireText('Assets/WebGLTemplates/Mobile.meta', 'fileFormatVersion: 2', 'Unity .meta for mobile template folder');
