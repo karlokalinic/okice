@@ -23,6 +23,8 @@ namespace Karlolegend.Gradomraz.Performance
         private const float NormalFloor = 0.58f;
         private const float SevereFloor = 0.50f;
         private const int TargetFps = 30;
+        private const int NormalLoopingParticleCap = 192;
+        private const int SevereLoopingParticleCap = 96;
 
         private UniversalRenderPipelineAsset lowSpecPipeline;
         private bool severe;
@@ -279,6 +281,54 @@ namespace Karlolegend.Gradomraz.Performance
                 // integrated GPUs: punctual shadow maps and very long influence ranges.
                 light.shadows = LightShadows.None;
                 light.range = Mathf.Min(light.range, severe ? 8f : 12f);
+            }
+
+            ApplyTerrainPolicy();
+            ApplyLoopingParticlePolicy();
+        }
+
+        private void ApplyTerrainPolicy()
+        {
+            var treeDistance = severe ? 150f : 300f;
+            var detailDistance = severe ? 30f : 50f;
+            var basemapDistance = severe ? 150f : 250f;
+            var pixelError = severe ? 10f : 6f;
+
+            foreach (var terrain in Terrain.activeTerrains)
+            {
+                if (terrain == null)
+                {
+                    continue;
+                }
+
+                terrain.treeDistance = Mathf.Min(terrain.treeDistance, treeDistance);
+                terrain.detailObjectDistance = Mathf.Min(terrain.detailObjectDistance, detailDistance);
+                terrain.basemapDistance = Mathf.Min(terrain.basemapDistance, basemapDistance);
+                terrain.heightmapPixelError = Mathf.Max(terrain.heightmapPixelError, pixelError);
+                terrain.castShadows = !severe && !shadowsDisabledByGovernor;
+            }
+        }
+
+        private void ApplyLoopingParticlePolicy()
+        {
+            var cap = severe ? SevereLoopingParticleCap : NormalLoopingParticleCap;
+            foreach (var particleSystem in Resources.FindObjectsOfTypeAll<ParticleSystem>())
+            {
+                if (particleSystem == null || !particleSystem.gameObject.scene.IsValid())
+                {
+                    continue;
+                }
+
+                var main = particleSystem.main;
+                if (!main.loop)
+                {
+                    continue;
+                }
+
+                if (main.maxParticles > cap)
+                {
+                    main.maxParticles = cap;
+                }
             }
         }
 
