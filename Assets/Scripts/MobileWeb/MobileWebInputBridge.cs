@@ -15,6 +15,17 @@ namespace Karlolegend.Gradomraz.MobileWeb
 
         private const float GovernorWindowSeconds = 2f;
         private const float ScaleStep = 0.05f;
+        private const int NormalTargetFps = 30;
+        private const int EmergencyFallbackFps = 24;
+        private const int MobilePhysicsHz = 30;
+        private const int MobileRealVoices = 24;
+        private const int MobileVirtualVoices = 96;
+
+        private struct LightBaseline
+        {
+            public float range;
+            public LightShadows shadows;
+        }
 
         private static readonly HashSet<string> PendingButtons = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private static readonly HashSet<string> FrameButtons = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -22,10 +33,14 @@ namespace Karlolegend.Gradomraz.MobileWeb
         private static Vector2 pendingLookDelta;
         private static Vector2 frameLookDelta;
         private static Vector2 move;
+        private static bool audioConfigured;
+        private static bool physicsConfigured;
+
+        private readonly Dictionary<Light, LightBaseline> lightBaselines = new Dictionary<Light, LightBaseline>();
 
         private UniversalRenderPipelineAsset activeUrp;
         private string activeProfile = "balanced";
-        private int activeTargetFps = 30;
+        private int activeTargetFps = NormalTargetFps;
         private float minRenderScale = 0.55f;
         private float maxRenderScale = 0.80f;
         private float currentRenderScale = 0.75f;
@@ -34,11 +49,13 @@ namespace Karlolegend.Gradomraz.MobileWeb
         private bool allowPostProcessing;
         private bool allowDepthTexture;
         private bool emergencyMode;
+        private bool frameRateFallbackEngaged;
         private float sampleElapsed;
         private float sampleFrameSeconds;
         private int sampleFrames;
         private int sampleSlowFrames;
         private int consecutiveStableWindows;
+        private int consecutiveCriticalWindows;
         private bool pageHidden;
 
         public static Vector2 Move => move;
@@ -66,6 +83,8 @@ namespace Karlolegend.Gradomraz.MobileWeb
         {
 #if KARLOLEGEND_MOBILE_WEB && UNITY_WEBGL && !UNITY_EDITOR
             Application.runInBackground = false;
+            ConfigurePhysicsForMobile();
+            ConfigureAudioForMobile();
             SceneManager.sceneLoaded += OnSceneLoaded;
             ApplyProfile("balanced");
 #endif
@@ -177,8 +196,53 @@ namespace Karlolegend.Gradomraz.MobileWeb
             AudioListener.pause = false;
             Application.targetFrameRate = activeTargetFps;
             consecutiveStableWindows = 0;
+            consecutiveCriticalWindows = 0;
             ResetGovernorWindow();
 #endif
+        }
+
+        private static void ConfigurePhysicsForMobile()
+        {
+            if (physicsConfigured)
+            {
+                return;
+            }
+
+            physicsConfigured = true;
+            Time.fixedDeltaTime = 1f / MobilePhysicsHz;
+            // At 30 Hz physics this permits at most roughly two catch-up steps after
+            // a hitch instead of allowing a long FixedUpdate spiral to dominate WebGL.
+            Time.maximumDeltaTime = 1f / 15f;
+        }
+
+        private static void ConfigureAudioForMobile()
+        {
+            if (audioConfigured)
+            {
+                return;
+            }
+
+            audioConfigured = true;
+            try
+            {
+                var config = AudioSettings.GetConfiguration();
+                var realVoices = Mathf.Min(config.numRealVoices, MobileRealVoices);
+                var virtualVoices = Mathf.Min(config.numVirtualVoices, MobileVirtualVoices);
+                virtualVoices = Mathf.Max(virtualVoices, realVoices);
+
+                if (realVoices != config.numRealVoices || virtualVoices != config.numVirtualVoices)
+                {
+                    config.numRealVoices = realVoices;
+                    config.numVirtualVoices = virtualVoices;
+                    AudioSettings.Reset(config);
+                }
+            }
+            catch (Exception exception)
+            {
+                // Audio optimization is optional; a device-specific audio backend
+                // failure must never prevent the game from starting.
+                Debug.LogWarning("Mobile WebGL audio budget could not be applied: " + exception.Message);
+            }
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -195,13 +259,16 @@ namespace Karlolegend.Gradomraz.MobileWeb
                 activeProfile = "balanced";
             }
 
-            activeTargetFps = 30;
+            activeTargetFps = NormalTargetFps;
             emergencyMode = false;
+            frameRateFallbackEngaged = false;
+            consecutiveCriticalWindows = 0;
 
             var renderScale = 0.75f;
             var msaa = 1;
             var shadowCascades = 1;
             var lodBias = 1.05f;
+            var mipLimit = 1;
 
             minRenderScale = 0.55f;
             maxRenderScale = 0.80f;
@@ -219,6 +286,7 @@ namespace Karlolegend.Gradomraz.MobileWeb
                     baseShadowDistance = 0f;
                     baseAdditionalLights = 0;
                     lodBias = 0.85f;
+                    mipLimit = 2;
                     break;
 
                 case "quality":
@@ -229,6 +297,7 @@ namespace Karlolegend.Gradomraz.MobileWeb
                     baseShadowDistance = 16f;
                     baseAdditionalLights = 1;
                     lodBias = 1.30f;
+                    mipLimit = 0;
                     allowPostProcessing = true;
                     allowDepthTexture = true;
                     break;
@@ -242,13 +311,16 @@ namespace Karlolegend.Gradomraz.MobileWeb
             QualitySettings.lodBias = lodBias;
             QualitySettings.pixelLightCount = 1;
             QualitySettings.realtimeReflectionProbes = false;
+            if (QualitySettings.globalTextureMipmapLimit != mipLimit)
+            {
+                QualitySettings.globalTextureMipmapLimit = mipLimit;
+            }
             Application.targetFrameRate = activeTargetFps;
             Application.backgroundLoadingPriority = ThreadPriority.Low;
 
             // The PC renderer is authored as Forward+. In Forward+ Unity ignores
-            // maxAdditionalLightsCount, which is disastrous for this scene's very
-            // large light population. Mobile forces classic Forward so the 0/1
-            // per-object additional-light budget is an actual budget.
+            // the classic per-object additional-light budget. Mobile forces classic
+            // Forward so the 0/1 additional-light limit is real and predictable.
             ConfigureRendererDataForMobile();
 
             activeUrp = GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset;
@@ -324,23 +396,29 @@ namespace Karlolegend.Gradomraz.MobileWeb
                     continue;
                 }
 
+                if (!lightBaselines.TryGetValue(light, out var baseline))
+                {
+                    baseline = new LightBaseline
+                    {
+                        range = light.range,
+                        shadows = light.shadows
+                    };
+                    lightBaselines[light] = baseline;
+                }
+
                 if (light.type == LightType.Directional)
                 {
-                    if (activeProfile == "eco" || emergencyMode)
-                    {
-                        light.shadows = LightShadows.None;
-                    }
+                    light.shadows = (activeProfile == "eco" || emergencyMode)
+                        ? LightShadows.None
+                        : baseline.shadows;
                     continue;
                 }
 
-                // Hundreds of punctual lights with authored realtime shadows are
-                // a desktop setup. Mobile keeps the light contribution but never
-                // renders an additional-light shadow map.
+                // Punctual realtime shadow maps are too expensive for this scene's
+                // very large light population. Keep authored contribution/range
+                // semantics within a mobile cap, but never render their shadow maps.
                 light.shadows = LightShadows.None;
-                if (light.range > maxRange)
-                {
-                    light.range = maxRange;
-                }
+                light.range = Mathf.Min(baseline.range, maxRange);
             }
         }
 
@@ -398,20 +476,29 @@ namespace Karlolegend.Gradomraz.MobileWeb
 
                 if (currentRenderScale > minRenderScale + 0.01f)
                 {
+                    consecutiveCriticalWindows = 0;
                     SetRenderScale(currentRenderScale - ScaleStep);
                 }
                 else if (!emergencyMode)
                 {
+                    consecutiveCriticalWindows = 0;
                     EnterEmergencyMode();
                 }
-                else if (currentRenderScale > 0.50f + 0.01f)
+                else
                 {
-                    minRenderScale = 0.50f;
-                    SetRenderScale(currentRenderScale - ScaleStep);
+                    consecutiveCriticalWindows++;
+                    if (!frameRateFallbackEngaged && consecutiveCriticalWindows >= 2)
+                    {
+                        frameRateFallbackEngaged = true;
+                        activeTargetFps = EmergencyFallbackFps;
+                        Application.targetFrameRate = activeTargetFps;
+                        consecutiveCriticalWindows = 0;
+                    }
                 }
             }
             else if (stableAtCap && !emergencyMode && activeProfile != "eco")
             {
+                consecutiveCriticalWindows = 0;
                 consecutiveStableWindows++;
                 if (consecutiveStableWindows >= 5 && currentRenderScale < maxRenderScale - 0.01f)
                 {
@@ -422,8 +509,13 @@ namespace Karlolegend.Gradomraz.MobileWeb
             else
             {
                 consecutiveStableWindows = 0;
+                consecutiveCriticalWindows = 0;
             }
 
+            // Scene logic can enable cameras/lights after load. Re-assert the mobile
+            // policy at the same low-frequency governor cadence instead of per frame.
+            ApplyCameraPolicy();
+            ApplyLightPolicy();
             ResetGovernorWindow();
         }
 
