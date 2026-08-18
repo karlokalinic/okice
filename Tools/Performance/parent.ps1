@@ -93,7 +93,7 @@ function Invoke-WebBuild {
 
     $node = Require-Node
     Write-Step 'Smoke-testing parent-compatible WebGL'
-    & $node (Join-Path $repoRoot 'Tools\MobileWeb\smoke-build.mjs') --root $webDir
+    & $node (Join-Path $repoRoot 'Tools\MobileWeb\smoke-build.mjs') --root $webDir --hosting generic
     if ($LASTEXITCODE -ne 0) { throw "WebGL smoke test failed with exit code $LASTEXITCODE." }
 
     Write-Step 'Analyzing parent-compatible WebGL payload'
