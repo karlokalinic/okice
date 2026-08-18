@@ -85,7 +85,21 @@ namespace Karlolegend.Gradomraz.MobileWeb
 
             if (scene.IsValid() && string.Equals(scene.name, "SampleScene", StringComparison.OrdinalIgnoreCase))
             {
-                nextMode = DialogueManager.isConversationActive ? DialogueMode : GameplayMode;
+                if (DialogueManager.isConversationActive)
+                {
+                    nextMode = DialogueMode;
+                }
+                else if (Time.timeScale <= 0.001f)
+                {
+                    // Pause screens, notes and other modal UI commonly stop game time.
+                    // Treat them as UI mode so canvas taps cannot simultaneously move
+                    // the player or rotate the camera behind the modal.
+                    nextMode = MenuMode;
+                }
+                else
+                {
+                    nextMode = GameplayMode;
+                }
             }
 
             if (!force && nextMode == publishedMode)
