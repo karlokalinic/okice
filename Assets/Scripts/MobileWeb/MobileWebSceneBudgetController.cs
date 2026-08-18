@@ -8,9 +8,8 @@ using UnityEngine.SceneManagement;
 namespace Karlolegend.Gradomraz.MobileWeb
 {
     /// <summary>
-    /// Applies conservative, reversible scene-level budgets that are safe to enforce
-    /// without knowing game-specific object semantics. It intentionally avoids
-    /// disabling gameplay GameObjects, colliders, animators, or one-shot VFX.
+    /// Applies conservative, reversible scene-level budgets without changing
+    /// gameplay objects, colliders, animator update semantics, or one-shot VFX.
     /// </summary>
     [DefaultExecutionOrder(-9980)]
     public sealed class MobileWebSceneBudgetController : MonoBehaviour
@@ -25,7 +24,6 @@ namespace Karlolegend.Gradomraz.MobileWeb
         }
 
         private readonly Dictionary<ParticleSystem, int> particleMaxBaselines = new Dictionary<ParticleSystem, int>();
-        private readonly Dictionary<SkinnedMeshRenderer, bool> skinnedOffscreenBaselines = new Dictionary<SkinnedMeshRenderer, bool>();
         private readonly Dictionary<Light, LightActivityState> lightActivity = new Dictionary<Light, LightActivityState>();
 
         private float nextAuditTime;
@@ -101,7 +99,6 @@ namespace Karlolegend.Gradomraz.MobileWeb
                 : 128;
 
             ApplyParticleBudget(particleCap);
-            ApplySkinnedMeshBudget();
             ApplySafeStaticLightCulling();
         }
 
@@ -128,8 +125,8 @@ namespace Karlolegend.Gradomraz.MobileWeb
                 var main = particleSystem.main;
 
                 // One-shot gameplay effects are left untouched. Only looping systems
-                // receive a population ceiling, which primarily targets weather,
-                // ambience, smoke, dust, etc. that can accumulate fill-rate cost.
+                // receive a population ceiling, primarily targeting ambient weather,
+                // smoke and dust fill-rate without changing trigger-driven VFX.
                 if (!main.loop)
                 {
                     continue;
@@ -146,26 +143,6 @@ namespace Karlolegend.Gradomraz.MobileWeb
                 {
                     main.maxParticles = capped;
                 }
-            }
-        }
-
-        private void ApplySkinnedMeshBudget()
-        {
-            foreach (var renderer in Resources.FindObjectsOfTypeAll<SkinnedMeshRenderer>())
-            {
-                if (renderer == null || !renderer.gameObject.scene.IsValid())
-                {
-                    continue;
-                }
-
-                if (!skinnedOffscreenBaselines.ContainsKey(renderer))
-                {
-                    skinnedOffscreenBaselines[renderer] = renderer.updateWhenOffscreen;
-                }
-
-                // Rendering an offscreen skinned mesh has no visual result. This does
-                // not disable its GameObject, Animator, scripts, colliders, or events.
-                renderer.updateWhenOffscreen = false;
             }
         }
 
@@ -195,9 +172,6 @@ namespace Karlolegend.Gradomraz.MobileWeb
                     };
                 }
 
-                // When we are not currently overriding this light, any authored/script
-                // change becomes the new baseline. This prevents the budgeter from
-                // resurrecting a light that gameplay deliberately switched off.
                 if (!state.managedDisabled)
                 {
                     state.authoredEnabled = light.enabled;
@@ -240,8 +214,8 @@ namespace Karlolegend.Gradomraz.MobileWeb
                 return false;
             }
 
-            // If a script lives on the light GameObject, assume it may be gameplay,
-            // flicker, alarm, puzzle, etc. and leave enable/disable semantics alone.
+            // A MonoBehaviour on the light GameObject suggests gameplay/flicker/puzzle
+            // semantics. Such lights remain entirely under game control.
             return !light.TryGetComponent<MonoBehaviour>(out _);
         }
 
@@ -261,7 +235,6 @@ namespace Karlolegend.Gradomraz.MobileWeb
         private void RemoveDestroyedReferences()
         {
             RemoveDestroyedKeys(particleMaxBaselines);
-            RemoveDestroyedKeys(skinnedOffscreenBaselines);
             RemoveDestroyedKeys(lightActivity);
         }
 
@@ -290,7 +263,6 @@ namespace Karlolegend.Gradomraz.MobileWeb
             }
         }
 
-        // Tiny local pool avoids allocating temporary key lists on scene transitions.
         private static class ListPool<T>
         {
             private static readonly Stack<List<T>> Pool = new Stack<List<T>>();
