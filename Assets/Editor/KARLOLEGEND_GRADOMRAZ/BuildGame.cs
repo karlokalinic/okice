@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Karlolegend.Gradomraz.Editor
 {
@@ -16,6 +17,7 @@ namespace Karlolegend.Gradomraz.Editor
         private const string ItchWebGlArchivePath = "Builds/GRADOMRAZ-by-KARLOLEGEND-WebGL-itch.zip";
         private const string MobileWebGlArchivePath = "Builds/GRADOMRAZ-by-KARLOLEGEND-WebGL-mobile.zip";
         private const string BootScenePath = "Assets/Scenes/Boot.unity";
+        private const string MobilePipelineAssetPath = "Assets/MonoBehaviour/Mobile_RPAsset.asset";
 
         [MenuItem("KARLOLEGEND/GRADOMRAZ/Build Windows 64")]
         public static void BuildWindows64()
@@ -81,16 +83,29 @@ namespace Karlolegend.Gradomraz.Editor
             var previousShowDiagnostics = PlayerSettings.WebGL.showDiagnostics;
             var previousTextureSubtarget = EditorUserBuildSettings.webGLBuildSubtarget;
             var previousCodeOptimization = UnityEditor.WebGL.UserBuildSettings.codeOptimization;
+            var previousQualityPipeline = QualitySettings.renderPipeline;
+            var previousDefaultPipeline = GraphicsSettings.defaultRenderPipeline;
 
             try
             {
+                var mobilePipeline = AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>(MobilePipelineAssetPath);
+                if (mobilePipeline == null)
+                {
+                    throw new InvalidOperationException($"Mobile WebGL build requires {MobilePipelineAssetPath}.");
+                }
+
+                // Use an actual lightweight mobile pipeline during the build instead of
+                // booting the PC Forward+ renderer and trying to dismantle it after launch.
+                // Restored in finally so Windows/desktop assets remain untouched.
+                QualitySettings.renderPipeline = mobilePipeline;
+                GraphicsSettings.defaultRenderPipeline = mobilePipeline;
+
                 PlayerSettings.WebGL.template = "PROJECT:Mobile";
                 PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli;
                 PlayerSettings.WebGL.dataCaching = true;
 
-                // The old 384 MB starting heap was too aggressive for a content-heavy Unity scene:
-                // repeated WASM heap growth can become visible as stalls. Start at 512 MB, keep a
-                // strict 1 GB ceiling, and use smaller geometric increments for smoother growth.
+                // Content-heavy scene: avoid repeated visible WASM heap growth while still
+                // keeping a strict 1 GB ceiling and modest geometric increments.
                 PlayerSettings.WebGL.initialMemorySize = 512;
                 PlayerSettings.WebGL.maximumMemorySize = 1024;
                 PlayerSettings.WebGL.memoryGrowthMode = WebGLMemoryGrowthMode.Geometric;
@@ -146,6 +161,8 @@ namespace Karlolegend.Gradomraz.Editor
                 PlayerSettings.WebGL.showDiagnostics = previousShowDiagnostics;
                 EditorUserBuildSettings.webGLBuildSubtarget = previousTextureSubtarget;
                 UnityEditor.WebGL.UserBuildSettings.codeOptimization = previousCodeOptimization;
+                QualitySettings.renderPipeline = previousQualityPipeline;
+                GraphicsSettings.defaultRenderPipeline = previousDefaultPipeline;
             }
         }
 
