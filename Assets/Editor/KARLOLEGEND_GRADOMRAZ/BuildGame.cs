@@ -18,6 +18,7 @@ namespace Karlolegend.Gradomraz.Editor
         private const string MobileWebGlArchivePath = "Builds/GRADOMRAZ-by-KARLOLEGEND-WebGL-mobile.zip";
         private const string BootScenePath = "Assets/Scenes/Boot.unity";
         private const string MobilePipelineAssetPath = "Assets/MonoBehaviour/Mobile_RPAsset.asset";
+        private const string WebCompatibilityPipelineAssetPath = "Assets/Resources/LowSpec_RPAsset.asset";
 
         [MenuItem("KARLOLEGEND/GRADOMRAZ/Build Windows 64")]
         public static void BuildWindows64()
@@ -39,28 +40,99 @@ namespace Karlolegend.Gradomraz.Editor
         [MenuItem("KARLOLEGEND/GRADOMRAZ/Build WebGL for itch.io")]
         public static void BuildWebGL()
         {
-            PlayerSettings.WebGL.template = "PROJECT:Itch";
-            PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli;
-            PlayerSettings.WebGL.dataCaching = true;
-            PlayerSettings.WebGL.initialMemorySize = 512;
-            PlayerSettings.WebGL.maximumMemorySize = 2048;
-            PlayerSettings.WebGL.memoryGrowthMode = WebGLMemoryGrowthMode.Geometric;
+            var previousTemplate = PlayerSettings.WebGL.template;
+            var previousCompression = PlayerSettings.WebGL.compressionFormat;
+            var previousDataCaching = PlayerSettings.WebGL.dataCaching;
+            var previousInitialMemory = PlayerSettings.WebGL.initialMemorySize;
+            var previousMaximumMemory = PlayerSettings.WebGL.maximumMemorySize;
+            var previousGrowthMode = PlayerSettings.WebGL.memoryGrowthMode;
+            var previousGeometricGrowthStep = PlayerSettings.WebGL.geometricMemoryGrowthStep;
+            var previousGeometricGrowthCap = PlayerSettings.WebGL.memoryGeometricGrowthCap;
+            var previousPowerPreference = PlayerSettings.WebGL.powerPreference;
+            var previousNameFilesAsHashes = PlayerSettings.WebGL.nameFilesAsHashes;
+            var previousDecompressionFallback = PlayerSettings.WebGL.decompressionFallback;
+            var previousThreadsSupport = PlayerSettings.WebGL.threadsSupport;
+            var previousExceptionSupport = PlayerSettings.WebGL.exceptionSupport;
+            var previousDebugSymbols = PlayerSettings.WebGL.debugSymbolMode;
+            var previousShowDiagnostics = PlayerSettings.WebGL.showDiagnostics;
+            var previousTextureSubtarget = EditorUserBuildSettings.webGLBuildSubtarget;
+            var previousCodeOptimization = UnityEditor.WebGL.UserBuildSettings.codeOptimization;
+            var previousQualityPipeline = QualitySettings.renderPipeline;
+            var previousDefaultPipeline = GraphicsSettings.defaultRenderPipeline;
 
-            RecreateDirectory(WebGlOutputPath);
-            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+            try
             {
-                scenes = GetPlayableScenes(),
-                locationPathName = WebGlOutputPath,
-                target = BuildTarget.WebGL,
-                options = BuildOptions.None
-            });
+                var compatibilityPipeline = AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>(WebCompatibilityPipelineAssetPath);
+                if (compatibilityPipeline == null)
+                {
+                    throw new InvalidOperationException($"Desktop WebGL build requires {WebCompatibilityPipelineAssetPath}.");
+                }
 
-            if (report.summary.result == BuildResult.Succeeded)
-            {
-                CreateArchive(WebGlOutputPath, ItchWebGlArchivePath);
+                // Browser builds are compatibility builds first. A low-end Windows laptop
+                // must not receive the same Forward+/HDR/shadow workload as the native PC build.
+                QualitySettings.renderPipeline = compatibilityPipeline;
+                GraphicsSettings.defaultRenderPipeline = compatibilityPipeline;
+
+                PlayerSettings.WebGL.template = "PROJECT:Itch";
+                PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli;
+                PlayerSettings.WebGL.dataCaching = true;
+                PlayerSettings.WebGL.initialMemorySize = 384;
+                PlayerSettings.WebGL.maximumMemorySize = 1024;
+                PlayerSettings.WebGL.memoryGrowthMode = WebGLMemoryGrowthMode.Geometric;
+                PlayerSettings.WebGL.geometricMemoryGrowthStep = 0.10f;
+                PlayerSettings.WebGL.memoryGeometricGrowthCap = 64;
+                PlayerSettings.WebGL.powerPreference = WebGLPowerPreference.HighPerformance;
+                PlayerSettings.WebGL.nameFilesAsHashes = true;
+                PlayerSettings.WebGL.decompressionFallback = false;
+                PlayerSettings.WebGL.threadsSupport = false;
+                PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.None;
+                PlayerSettings.WebGL.debugSymbolMode = WebGLDebugSymbolMode.Off;
+                PlayerSettings.WebGL.showDiagnostics = false;
+
+                // Unity recommends DXT for desktop Web and explicitly lists Intel GPUs
+                // among the supported hardware for this subtarget.
+                EditorUserBuildSettings.webGLBuildSubtarget = WebGLTextureSubtarget.DXT;
+                UnityEditor.WebGL.UserBuildSettings.codeOptimization =
+                    UnityEditor.WebGL.WasmCodeOptimization.DiskSizeLTO;
+
+                RecreateDirectory(WebGlOutputPath);
+                var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+                {
+                    scenes = GetPlayableScenes(),
+                    locationPathName = WebGlOutputPath,
+                    target = BuildTarget.WebGL,
+                    options = BuildOptions.None
+                });
+
+                if (report.summary.result == BuildResult.Succeeded)
+                {
+                    CreateArchive(WebGlOutputPath, ItchWebGlArchivePath);
+                }
+
+                ReportResult("WebGL", report, WebGlOutputPath);
             }
-
-            ReportResult("WebGL", report, WebGlOutputPath);
+            finally
+            {
+                PlayerSettings.WebGL.template = previousTemplate;
+                PlayerSettings.WebGL.compressionFormat = previousCompression;
+                PlayerSettings.WebGL.dataCaching = previousDataCaching;
+                PlayerSettings.WebGL.initialMemorySize = previousInitialMemory;
+                PlayerSettings.WebGL.maximumMemorySize = previousMaximumMemory;
+                PlayerSettings.WebGL.memoryGrowthMode = previousGrowthMode;
+                PlayerSettings.WebGL.geometricMemoryGrowthStep = previousGeometricGrowthStep;
+                PlayerSettings.WebGL.memoryGeometricGrowthCap = previousGeometricGrowthCap;
+                PlayerSettings.WebGL.powerPreference = previousPowerPreference;
+                PlayerSettings.WebGL.nameFilesAsHashes = previousNameFilesAsHashes;
+                PlayerSettings.WebGL.decompressionFallback = previousDecompressionFallback;
+                PlayerSettings.WebGL.threadsSupport = previousThreadsSupport;
+                PlayerSettings.WebGL.exceptionSupport = previousExceptionSupport;
+                PlayerSettings.WebGL.debugSymbolMode = previousDebugSymbols;
+                PlayerSettings.WebGL.showDiagnostics = previousShowDiagnostics;
+                EditorUserBuildSettings.webGLBuildSubtarget = previousTextureSubtarget;
+                UnityEditor.WebGL.UserBuildSettings.codeOptimization = previousCodeOptimization;
+                QualitySettings.renderPipeline = previousQualityPipeline;
+                GraphicsSettings.defaultRenderPipeline = previousDefaultPipeline;
+            }
         }
 
         [MenuItem("KARLOLEGEND/GRADOMRAZ/Build Mobile WebGL (iOS Safari + Android Chrome)")]
@@ -94,24 +166,17 @@ namespace Karlolegend.Gradomraz.Editor
                     throw new InvalidOperationException($"Mobile WebGL build requires {MobilePipelineAssetPath}.");
                 }
 
-                // Use an actual lightweight mobile pipeline during the build instead of
-                // booting the PC Forward+ renderer and trying to dismantle it after launch.
-                // Restored in finally so Windows/desktop assets remain untouched.
                 QualitySettings.renderPipeline = mobilePipeline;
                 GraphicsSettings.defaultRenderPipeline = mobilePipeline;
 
                 PlayerSettings.WebGL.template = "PROJECT:Mobile";
                 PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli;
                 PlayerSettings.WebGL.dataCaching = true;
-
-                // Content-heavy scene: avoid repeated visible WASM heap growth while still
-                // keeping a strict 1 GB ceiling and modest geometric increments.
                 PlayerSettings.WebGL.initialMemorySize = 512;
                 PlayerSettings.WebGL.maximumMemorySize = 1024;
                 PlayerSettings.WebGL.memoryGrowthMode = WebGLMemoryGrowthMode.Geometric;
                 PlayerSettings.WebGL.geometricMemoryGrowthStep = 0.10f;
                 PlayerSettings.WebGL.memoryGeometricGrowthCap = 64;
-
                 PlayerSettings.WebGL.powerPreference = WebGLPowerPreference.LowPower;
                 PlayerSettings.WebGL.nameFilesAsHashes = true;
                 PlayerSettings.WebGL.decompressionFallback = false;
