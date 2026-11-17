@@ -43,6 +43,25 @@ node Tools/gradomraz-visual-subtree-candidates.mjs Assets/Scenes/SampleScene.uni
 
 The scanners do not mutate Unity data. Cross-scene links for original PlayMaker objects are still unsupported; do not convert `Bridge`, `Outside` or `MaddieRoom` into additive scenes.
 
+## Tested non-destructive Bridge extraction (new Editor command)
+
+In the Unity Editor open a **saved scene**, then select:
+
+**Tools → GRADOMRAZ → Streaming → Stage Bridge Buildings (Non-Destructive)**
+
+The command is deliberately restricted to the **exact source layout** (6,337 objects and 5,832 MeshRenderers). It checks the child subtree contains no nonvisual components; if the hierarchy has changed, it refuses to proceed until the reference audit is updated.
+
+It creates the following two **new assets**, while leaving `Assets/Scenes/SampleScene.unity` byte-for-byte untouched:
+
+- `Assets/GRADOMRAZ/StreamingScenes/BridgeBackground.unity` — isolated copied render-only geometry for a downloadable AssetBundle.
+- `Assets/GRADOMRAZ/ExperimentalBuilds/SampleScene.unity` — copied gameplay scene **without** that geometry, with a disabled-by-empty-URL `GradomrazRemoteVisualRegion` under Bridge. The scene filename stays `SampleScene.unity` so any existing logic relying on that scene name is not silently changed.
+
+**Before using the experimental scene as a WebGL build:** build and publish the hashed BridgeBackground bundle; set its exact URL in the Bridge streaming component; then manually switch that build profile's gameplay scene path from the canonical scene to the **experimental** scene. Do not ship a build in which the streaming URL is empty: the Bridge visuals will be missing. The source gameplay scene and original PlayMaker actors remain intact.
+
+**Verified in an isolated Unity 6000.6.9f1 / URP 17.6 scratch project** with a generated synthetic scene matching the real candidate structure: both output scenes were saved; the original sample scene SHA-256 did not change; the output visual scene retained 5,832 renderers and the experimental scene retained the streaming anchor. This is an **Editor workflow test**, not a validated GRADOMRAZ WebGL build, not a measured download reduction, and not proof of PlayMaker behavior on the real source.
+
+The original project targets **Unity 6000.4.0f1 and URP 17.4**; compile and verify there before release. All three shader sources imported in the scratch Editor, synchronous first-pass compilation reported zero shader messages/errors under its Null graphics backend, and the material-lab preview scene was generated. WebGL fragment compilation and GPU visuals still require a graphical build.
+
 ## 2. Author a separate visual-only test scene
 
 In **Unity 6000.4.0f1**, on a **copied working tree**:
