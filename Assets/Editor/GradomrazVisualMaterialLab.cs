@@ -88,6 +88,10 @@ public static class GradomrazVisualMaterialLab
         }
 
         Scene previous = SceneManager.GetActiveScene();
+        if (!previous.IsValid() || string.IsNullOrEmpty(previous.path))
+            throw new InvalidOperationException(
+                "Save the currently active scene before creating an additive preview. " +
+                "Unity cannot open another scene additively over an unsaved Untitled scene.");
         Scene preview = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
         try
         {
