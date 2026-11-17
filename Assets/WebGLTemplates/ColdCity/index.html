@@ -45,7 +45,13 @@
   const warning = document.querySelector("#warning");
   const buildUrl = "Build";
   const deliveryVersion = "20260807-2";
-  const versionedBuildUrl = (filename) => buildUrl + "/" + filename + "?delivery=" + deliveryVersion;
+  // Keep an existing deployment revision intact: an R2 index may already carry one.
+  // Appending a second "?delivery=" turns the first query into a malformed cache key.
+  const versionedBuildUrl = (filename) => {
+    const url = new URL(buildUrl + "/" + filename, document.baseURI);
+    if (!url.searchParams.has("delivery")) url.searchParams.set("delivery", deliveryVersion);
+    return url.href;
+  };
   const loaderUrl = versionedBuildUrl("{{{ LOADER_FILENAME }}}");
   const config = {
     dataUrl: versionedBuildUrl("{{{ DATA_FILENAME }}}"),
