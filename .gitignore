@@ -48,3 +48,6 @@ Desktop.ini
 /_CodexRepair/Quarantined*/
 /_CodexRepair/**/*.zip
 /_CodexRepair/**/*.log
+
+# Generated, content-hashed WebGL visual streaming bundles and R2 upload manifest
+/_GRADOMRAZ_Streaming_Staging/
