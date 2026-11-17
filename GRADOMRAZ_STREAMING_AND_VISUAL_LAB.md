@@ -103,6 +103,7 @@ Load before a chapter transition to avoid visual popping. There is no automatic 
 1. **Validate Shader Candidates** — ensures that Unity discovers three custom URP shaders.
 2. **Create Candidate Materials** — creates new assets in `Assets/GRADOMRAZ/VisualLab/` without overwriting existing material tuning.
 3. **Build Isolated Preview Scene** — creates a separate `GRADOMRAZ-MaterialLab.unity` with three sample surfaces (wet concrete, paper, glass). **Not included in the player build.**
+4. **Compile Active Platform Shader Passes** — explicitly requests synchronous compilation of each forward shader pass and displays compiler diagnostics. The active Editor graphics backend is not equivalent to a WebGL/GLES player build.
 
 Shaders:
 
