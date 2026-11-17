@@ -37,6 +37,40 @@ public static class GradomrazVisualMaterialLab
         Debug.Log("[GRADOMRAZ] Shader discovery OK. Compile WebGL variants and inspect Shader Inspector errors before production.");
     }
 
+    [MenuItem("Tools/GRADOMRAZ/Visual Lab/4 - Compile Active Platform Shader Passes")]
+    public static void CompileActivePlatformShaderPasses()
+    {
+        Validate();
+        foreach (var candidate in Candidates)
+        {
+            Shader shader = Shader.Find(candidate.shader);
+            var material = new Material(shader);
+            try
+            {
+                ShaderUtil.ClearShaderMessages(shader);
+                ShaderUtil.CompilePass(material, 0, true);
+                var diagnostics = ShaderUtil.GetShaderMessages(shader);
+                if (ShaderUtil.ShaderHasError(shader))
+                {
+                    var lines = new System.Text.StringBuilder();
+                    foreach (var diagnostic in diagnostics)
+                        lines.AppendLine(diagnostic.message);
+                    throw new InvalidOperationException(
+                        "Shader failed to compile on the active Editor graphics platform: " +
+                        candidate.shader + "\n" + lines);
+                }
+                Debug.Log("[GRADOMRAZ] Compiled active-platform forward shader pass: " +
+                    candidate.shader + " (diagnostics: " + diagnostics.Length + ")");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(material);
+            }
+        }
+        Debug.Log("[GRADOMRAZ] All three active-platform shader passes compiled. " +
+            "WebGL/GLES variants must also be checked in a real WebGL build.");
+    }
+
     [MenuItem("Tools/GRADOMRAZ/Visual Lab/2 - Create Candidate Materials")]
     public static void CreateCandidateMaterials()
     {
