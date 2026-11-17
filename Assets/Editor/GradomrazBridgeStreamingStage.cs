@@ -48,6 +48,10 @@ public static class GradomrazBridgeStreamingStage
         AssetDatabase.ImportAsset(GameCopy, ImportAssetOptions.ForceSynchronousImport);
 
         Scene initialActive = SceneManager.GetActiveScene();
+        if (!initialActive.IsValid() || string.IsNullOrEmpty(initialActive.path))
+            throw new InvalidOperationException(
+                "Save the currently active scene before staging an experimental split.");
+
         Scene gameplay = default;
         Scene visuals = default;
         bool savedVisuals = false;
