@@ -136,7 +136,7 @@ namespace PixelCrushers.DialogueSystem
 			TextMeshProTypewriterEffect textMeshProTypewriterEffect = components[0];
 			for (int i = 1; i < components.Length; i++)
 			{
-				if (components[i].GetInstanceID() < textMeshProTypewriterEffect.GetInstanceID())
+				if (components[i].GetEntityId() < textMeshProTypewriterEffect.GetEntityId())
 				{
 					textMeshProTypewriterEffect = components[i];
 				}
