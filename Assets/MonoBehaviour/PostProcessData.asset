@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 572910c10080c0945a0ef731ccedc739, type: 3}
   m_Name: PostProcessData
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   shaders:
     stopNanPS: {fileID: 4800000, guid: 1121bb4e615ca3c48b214e79e841e823, type: 3}
     subpixelMorphologicalAntialiasingPS: {fileID: 4800000, guid: 63eaba0ebfb82cc43bde059b4a8c65f6, type: 3}
@@ -64,17 +64,7 @@ MonoBehaviour:
     - {fileID: 2800000, guid: 5eb781f9ab37804418fa414ef072fcbe, type: 3}
     - {fileID: 2800000, guid: 44e2e9a662ef8764c84be8a8b00ef64e, type: 3}
     - {fileID: 2800000, guid: 4b023fad79a238e4faede6810f49885c, type: 3}
-    filmGrainTex:
-    - {fileID: 2800000, guid: 83b6720cfbdcc1140a5f81b22f54a320, type: 3}
-    - {fileID: 2800000, guid: 46e9e889563411049b1fafdbfef346f0, type: 3}
-    - {fileID: 2800000, guid: ee20d124254408d47afb2d214a294fa5, type: 3}
-    - {fileID: 2800000, guid: 786749127083de34992b79ef8309a967, type: 3}
-    - {fileID: 2800000, guid: 20eed570d97f68c41af809662296a443, type: 3}
-    - {fileID: 2800000, guid: d3063ebdd94f8474da3b9da4cf5ff1b4, type: 3}
-    - {fileID: 2800000, guid: c3fdf3b0be9d62746a4ef332feb028e8, type: 3}
-    - {fileID: 2800000, guid: 09bf07d9d7626c648971cd5d0879a2e6, type: 3}
-    - {fileID: 2800000, guid: 64864ea73cef9f54bafdd60f45cab000, type: 3}
-    - {fileID: 2800000, guid: 486e8c34b040ac540ac0762c25869575, type: 3}
+    filmGrainTex: []
     smaaAreaTex: {fileID: 2800000, guid: 0af9111489400364bb33cd894bb9bdbb, type: 3}
     smaaSearchTex: {fileID: 2800000, guid: eaace4ce8c742024db2be44c687e6756, type: 3}
     m_TexturesResourcesVersion: 0

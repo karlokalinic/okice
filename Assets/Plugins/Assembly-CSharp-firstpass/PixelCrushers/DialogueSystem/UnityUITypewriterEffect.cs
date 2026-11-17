@@ -143,7 +143,7 @@ namespace PixelCrushers.DialogueSystem
 			UnityUITypewriterEffect unityUITypewriterEffect = components[0];
 			for (int i = 1; i < components.Length; i++)
 			{
-				if (components[i].GetInstanceID() < unityUITypewriterEffect.GetInstanceID())
+				if (components[i].GetEntityId() < unityUITypewriterEffect.GetEntityId())
 				{
 					unityUITypewriterEffect = components[i];
 				}
