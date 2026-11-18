@@ -6,7 +6,10 @@
   <meta name="theme-color" content="#000000">
   <title>{{{ PRODUCT_NAME }}}</title>
   <style>
-    html,body,#unity-container,#unity-canvas{width:100%;height:100%;margin:0;background:#000;overflow:hidden}
+    html,body{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:#000;overscroll-behavior:none}
+    #unity-container{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;overflow:hidden;margin:0;padding:0;background:#000}
+    #unity-container:fullscreen,#unity-container:-webkit-full-screen{position:fixed;inset:0;width:100%;height:100%;padding:0;margin:0;background:#000}
+    #unity-canvas{display:block;width:100%!important;height:100%!important;margin:0;padding:0;border:0;background:#000;outline:0;touch-action:none}
     body{font-family:Consolas,monospace;color:#dbe3e4}
     #unity-container{position:fixed;inset:0}
     #unity-canvas{display:block;outline:0}
@@ -21,6 +24,13 @@
     #start:hover,#start:focus-visible{border-color:#d8e66b;color:#d8e66b;outline:0}
     #start[hidden]{display:none}
     #warning{display:none;position:absolute;left:10px;right:10px;bottom:10px;padding:12px;border:1px solid #7f3333;background:#180a0a;color:#f1b7b7;font-size:11px;line-height:1.45}
+    #fullscreen-toggle{display:none;position:absolute;z-index:11;top:max(14px,env(safe-area-inset-top));right:max(14px,env(safe-area-inset-right));height:34px;padding:0 12px;border:1px solid #84949b88;border-radius:3px;background:#0b1219c9;color:#dce4e8;box-shadow:0 2px 12px #0005;font:700 10px Consolas,monospace;letter-spacing:.11em;cursor:pointer;user-select:none;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:.66;transition:opacity .15s ease,background .15s ease,border-color .15s ease}
+    body.game-ready #fullscreen-toggle{display:inline-flex;align-items:center;gap:9px}
+    #fullscreen-toggle:hover,#fullscreen-toggle:focus-visible{opacity:1;background:#101a24;border-color:#d8e66b;color:#f1f6f8;outline:2px solid transparent}
+    #fullscreen-toggle svg{display:block;width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+    #fullscreen-toggle[aria-pressed="true"] .corners-in{display:none}
+    #fullscreen-toggle[aria-pressed="false"] .corners-out{display:none}
+    @media (hover:none){#fullscreen-toggle{opacity:.9}}
   </style>
 </head>
 <body>
@@ -35,6 +45,13 @@
       </div>
     </div>
     <div id="warning"></div>
+    <button id="fullscreen-toggle" type="button" aria-label="Puni zaslon" aria-pressed="false" title="Puni zaslon (Alt+Enter)">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path class="corners-in" d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5"/>
+        <path class="corners-out" d="M3 9h6V3M21 9h-6V3M3 15h6v6M21 15h-6v6"/>
+      </svg>
+      <span>PUNI ZASLON</span>
+    </button>
   </div>
 <script>
   const canvas = document.querySelector("#unity-canvas");
@@ -43,6 +60,8 @@
   const pct = document.querySelector("#pct");
   const start = document.querySelector("#start");
   const warning = document.querySelector("#warning");
+  const fullscreenHost = document.querySelector("#unity-container");
+  const fullscreenToggle = document.querySelector("#fullscreen-toggle");
   const buildUrl = "Build";
   const deliveryVersion = "20260807-2";
   // Keep an existing deployment revision intact: an R2 index may already carry one.
@@ -54,7 +73,14 @@
   };
   const loaderUrl = versionedBuildUrl("{{{ LOADER_FILENAME }}}");
   const config = {
+#if PROGRESSIVE_ASSET_LOADING
+    // Unity 6000.6 per-scene streaming: the compiler emits full data URL arrays.
+    // DATA_FILENAME is deliberately undefined in this build mode.
+    primaryDataUrls: {{{ JSON.stringify(PRIMARY_DATA_FILES) }}},
+    secondaryDataUrls: {{{ JSON.stringify(SECONDARY_DATA_FILES) }}},
+#else
     dataUrl: versionedBuildUrl("{{{ DATA_FILENAME }}}"),
+#endif
     frameworkUrl: versionedBuildUrl("{{{ FRAMEWORK_FILENAME }}}"),
     codeUrl: versionedBuildUrl("{{{ CODE_FILENAME }}}"),
 #if MEMORY_FILENAME
@@ -67,9 +93,77 @@
     companyName: "{{{ COMPANY_NAME }}}",
     productName: "{{{ PRODUCT_NAME }}}",
     productVersion: "{{{ PRODUCT_VERSION }}}",
-    devicePixelRatio: 1
+    devicePixelRatio: 1,
+    matchWebGLToCanvasSize: true
   };
 
+  // Unity's WebGL canvas can receive native browser pointer events even when
+  // InputSystemUIInputModule misses a UGUI pointer click. Forward the pointer
+  // to our tiny Web-menu-only bridge, which invokes the original Button.onClick
+  // only if Unity did not already do so. The PlayMaker FSM chain is preserved.
+  canvas.addEventListener("pointerdown", () => canvas.focus(), { passive: true });
+  canvas.addEventListener("pointerup", (event) => {
+    const player = window.unityInstance;
+    if (!player || typeof player.SendMessage !== "function") return;
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    const bounds = canvas.getBoundingClientRect();
+    if (!(bounds.width > 0 && bounds.height > 0)) return;
+    const x = (event.clientX - bounds.left) * canvas.width / bounds.width;
+    const y = (bounds.bottom - event.clientY) * canvas.height / bounds.height;
+    if (x < 0 || y < 0 || x > canvas.width || y > canvas.height) return;
+    try {
+      player.SendMessage("GRADOMRAZ_WEB_INPUT", "WebPointerUp",
+                         x.toFixed(2) + "," + y.toFixed(2));
+    } catch (_) {
+      // The old player or a scene transition may not have the Web-only bridge.
+    }
+  }, { passive: true });
+  // True browser fullscreen, not an enlarged element in a normal tab.
+  // Fullscreen the container so both the Unity canvas and exit button remain visible.
+  const currentFullscreen = () => document.fullscreenElement || document.webkitFullscreenElement;
+  const syncFullscreenUi = () => {
+    const active = currentFullscreen() === fullscreenHost || currentFullscreen() === canvas;
+    fullscreenToggle.setAttribute("aria-pressed", active ? "true" : "false");
+    fullscreenToggle.setAttribute("aria-label", active ? "IzaÄ‘i iz punog zaslona" : "Puni zaslon");
+    fullscreenToggle.title = active ? "Izlaz iz punog zaslona (Esc / Alt+Enter)" : "Puni zaslon (Alt+Enter)";
+    fullscreenToggle.querySelector("span").textContent = active ? "PROZOR" : "PUNI ZASLON";
+    // Unity's WebGL runtime tracks canvas client dimensions when this event is fired.
+    requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
+  };
+  async function toggleTrueFullscreen() {
+    try {
+      if (currentFullscreen()) {
+        if (document.exitFullscreen) await document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      } else if (fullscreenHost.requestFullscreen) {
+        await fullscreenHost.requestFullscreen({ navigationUI: "hide" });
+      } else if (fullscreenHost.webkitRequestFullscreen) {
+        fullscreenHost.webkitRequestFullscreen();
+      } else if (window.unityInstance?.SetFullscreen) {
+        // Legacy browser fallback only.
+        window.unityInstance.SetFullscreen(1);
+      } else {
+        console.warn("The Fullscreen API is unavailable in this browser.");
+      }
+    } catch (error) {
+      console.warn("Browser fullscreen request was rejected:", error);
+    }
+  }
+  fullscreenToggle.addEventListener("click", toggleTrueFullscreen);
+  document.addEventListener("fullscreenchange", syncFullscreenUi);
+  document.addEventListener("webkitfullscreenchange", syncFullscreenUi);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && currentFullscreen()) {
+      event.preventDefault();
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      return;
+    }
+    if (!event.repeat && event.altKey && event.key === "Enter") {
+      event.preventDefault();
+      toggleTrueFullscreen();
+    }
+  }, { capture: true });
   function showError(message) {
     warning.style.display = "block";
     warning.textContent = message;
@@ -90,6 +184,8 @@
       }).then((unityInstance) => {
         loader.classList.add("hide");
         window.unityInstance = unityInstance;
+        document.body.classList.add("game-ready");
+        syncFullscreenUi();
       }).catch(showError);
     };
     script.onerror = () => {

@@ -12,6 +12,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
+using UnityEngine.UI;
 
 /// <summary>
 /// Author an isolated, reproducible Unity 6.6 Web build. The canonical Boot
@@ -24,11 +25,12 @@ public static class GradomrazWebReleaseBuilder
     private const string Menu = "Assets/Scenes/MainMenu.unity";
     private const string WebAssets = "Assets/GRADOMRAZ/WebRelease";
     private const string WebBoot = WebAssets + "/Boot.unity";
+    private const string WebMenu = WebAssets + "/MainMenu.unity";
     private const string WebIntro = WebAssets + "/GRADOMRAZ_Intro_Web_1080p30.mp4";
     private const string OriginalPipeline = "Assets/MonoBehaviour/PC_RPAsset.asset";
     private const string WebPipeline = WebAssets + "/GRADOMRAZ_Web_URP.asset";
     private const string OutputFolder = "Builds/GRADOMRAZ-Web6";
-    private static readonly string[] ReleaseScenes = { WebBoot, Menu, Gameplay };
+    private static readonly string[] ReleaseScenes = { WebBoot, WebMenu, Gameplay };
 
     [MenuItem("Tools/GRADOMRAZ/Web Release/1 - Stage progressive Web release")]
     public static void Stage()
@@ -48,6 +50,7 @@ public static class GradomrazWebReleaseBuilder
                 "intro video and the original URP pipeline.");
 
         string basePath = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
+        string menuHashBefore = Checksum(Path.Combine(basePath, Menu));
         string bootHashBefore = Checksum(Path.Combine(basePath, OriginalBoot));
         string gameplayHashBefore = Checksum(Path.Combine(basePath, Gameplay));
 
@@ -101,6 +104,60 @@ public static class GradomrazWebReleaseBuilder
             EditorSceneManager.MarkSceneDirty(boot);
             if (!EditorSceneManager.SaveScene(boot, WebBoot))
                 throw new IOException("Could not save optimized Boot clone.");
+
+            // The source MainMenu disables the Image components on three
+            // Button objects. A disabled Graphic cannot receive raycasts.
+            // Preserve the source scene and all PlayMaker FSMs; make a Web
+            // clone with fully transparent yet raycastable button targets.
+            if (!AssetDatabase.LoadAssetAtPath<SceneAsset>(WebMenu))
+            {
+                if (!AssetDatabase.CopyAsset(Menu, WebMenu))
+                    throw new IOException("Could not clone MainMenu scene.");
+            }
+            var webMenu = EditorSceneManager.OpenScene(WebMenu, OpenSceneMode.Single);
+            int repairedButtons = 0;
+            Button play = null, options = null, quit = null;
+            foreach (GameObject root in webMenu.GetRootGameObjects())
+            {
+                foreach (Button button in root.GetComponentsInChildren<Button>(true))
+                {
+                    if (button.name != "PlayButton" && button.name != "OptionsButton" &&
+                        button.name != "QuitButton")
+                        continue;
+                    Image image = button.GetComponent<Image>();
+                    if (image == null)
+                        throw new InvalidOperationException("Missing image for " + button.name);
+                    image.enabled = true;
+                    image.raycastTarget = true;
+                    image.raycastPadding = new Vector4(-135f, -20f, -135f, -20f);
+                    Color transparent = image.color;
+                    transparent.a = 0.001f; // visually invisible, nonzero to avoid CanvasRenderer culling
+                    image.color = transparent;
+                    repairedButtons++;
+                    if (button.name == "PlayButton") play = button;
+                    else if (button.name == "OptionsButton") options = button;
+                    else if (button.name == "QuitButton") quit = button;
+                }
+            }
+            if (repairedButtons != 3)
+                throw new InvalidOperationException("Expected exactly 3 menu buttons, got " + repairedButtons);
+            // A browser pointer listener forwards missed Unity UI clicks to
+            // these SAME Button.onClick events; PlayMaker transitions remain
+            // unchanged and no scene is loaded directly by the bridge.
+            GameObject bridgeRoot = webMenu.GetRootGameObjects()
+                .FirstOrDefault(root => root.name == "GRADOMRAZ_WEB_INPUT");
+            if (bridgeRoot == null)
+            {
+                SceneManager.SetActiveScene(webMenu);
+                bridgeRoot = new GameObject("GRADOMRAZ_WEB_INPUT");
+            }
+            var bridge = bridgeRoot.GetComponent<GradomrazWebMenuInputBridge>();
+            if (bridge == null)
+                bridge = bridgeRoot.AddComponent<GradomrazWebMenuInputBridge>();
+            bridge.Configure(play, options, quit);
+            EditorSceneManager.MarkSceneDirty(webMenu);
+            if (!EditorSceneManager.SaveScene(webMenu, WebMenu))
+                throw new IOException("Could not save Web MainMenu clone.");
         }
         finally
         {
@@ -143,10 +200,12 @@ public static class GradomrazWebReleaseBuilder
         PlayerSettings.WebGL.maximumMemorySize = 2048;
 
         IncludeWebShaders();
+        PreserveWebPostProcessingVariants();
         AssetDatabase.SaveAssets();
+        string menuHashAfter = Checksum(Path.Combine(basePath, Menu));
         string bootHashAfter = Checksum(Path.Combine(basePath, OriginalBoot));
         string gameplayHashAfter = Checksum(Path.Combine(basePath, Gameplay));
-        if (bootHashBefore != bootHashAfter || gameplayHashBefore != gameplayHashAfter)
+        if (bootHashBefore != bootHashAfter || menuHashBefore != menuHashAfter || gameplayHashBefore != gameplayHashAfter)
             throw new InvalidOperationException(
                 "Canonical scene unexpectedly modified. Do not deploy this release.");
 
@@ -154,6 +213,8 @@ public static class GradomrazWebReleaseBuilder
         string videoPath = Path.Combine(basePath, WebIntro);
         var report = new StringBuilder();
         report.AppendLine("Unity editor: " + Application.unityVersion);
+        report.AppendLine("Canonical Menu SHA256 unchanged: " + menuHashAfter);
+        report.AppendLine("Transparent Web menu raycast hit areas repaired: 3");
         report.AppendLine("Canonical Boot SHA256 unchanged: " + bootHashAfter);
         report.AppendLine("Canonical gameplay SHA256 unchanged: " + gameplayHashAfter);
         report.AppendLine("Web Boot scene bytes: " + new FileInfo(staged).Length);
@@ -232,6 +293,45 @@ public static class GradomrazWebReleaseBuilder
         }
     }
 
+    private static void PreserveWebPostProcessingVariants()
+    {
+        // Unity 6.6 migrated URP stripping flags into a SerializeReference
+        // URPShaderStrippingSetting. Its default '1' strips EVERY GLES3 Bloom
+        // variant when the Volume is created at runtime, despite a shader
+        // being on GraphicsSettings.alwaysIncludedShaders.
+        var path = "Assets/MonoBehaviour/UniversalRenderPipelineGlobalSettings1.asset";
+        var global = AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
+        if (global == null)
+            throw new InvalidOperationException("Missing URP global settings: " + path);
+
+        var settings = new SerializedObject(global);
+        var property = settings.GetIterator();
+        int found = 0;
+        while (property.NextVisible(true))
+        {
+            if (property.name == "m_StripUnusedPostProcessingVariantsAndResources")
+            {
+                property.boolValue = false;
+                found++;
+            }
+        }
+        if (found == 0)
+            throw new InvalidOperationException("Cannot find Unity 6.6 URP postprocessing stripper flag.");
+        settings.ApplyModifiedPropertiesWithoutUndo();
+        EditorUtility.SetDirty(global);
+
+        // The GraphicsSettings service caches the managed reference separately
+        // from SerializedObject; update both before ShaderBuildPreprocessor runs.
+        if (GraphicsSettings.TryGetRenderPipelineSettings<URPShaderStrippingSetting>(out var liveSettings))
+            liveSettings.stripUnusedPostProcessingVariants = false;
+
+        // The editor may still report the previous live settings instance
+        // until the Web renderer becomes active. The serialized URP settings
+        // and the compiled GLES3 shader variant counts are the source of
+        // truth for this release, not the inactive pipeline's in-memory cache.
+        Debug.Log("[GRADOMRAZ-WEB] Serialized URP postprocessing stripping disabled; verify GLES3 Bloom variants in BuildReport.");
+
+    }
     private static void IncludeWebShaders()
     {
         // This is the 6000.6 public editor API. GraphicsSettings has no
@@ -243,7 +343,18 @@ public static class GradomrazWebReleaseBuilder
         string[] names = {
             "GRADOMRAZ/Atmosphere/Weathered Glass",
             "GRADOMRAZ/Environment/Wet Triplanar Concrete",
-            "GRADOMRAZ/Props/Lit Paper"
+            "GRADOMRAZ/Props/Lit Paper",
+            // Runtime-created Volume overrides are invisible to the WebGL
+            // shader stripper; retain only the post effects that URP
+            // creates for cinematic grade and its built-in fallback passes.
+            "Hidden/Universal Render Pipeline/Bloom",
+            "Hidden/Universal Render Pipeline/UberPost",
+            "Hidden/Universal Render Pipeline/FinalPost",
+            "Hidden/Universal Render Pipeline/LutBuilderHdr",
+            "Hidden/Universal Render Pipeline/Edge Adaptive Spatial Upsampling",
+            "Hidden/Universal Render Pipeline/GaussianDepthOfField",
+            "Hidden/Universal Render Pipeline/BokehDepthOfField",
+            "Hidden/Universal Render Pipeline/PaniniProjection"
         };
         foreach (string name in names)
         {

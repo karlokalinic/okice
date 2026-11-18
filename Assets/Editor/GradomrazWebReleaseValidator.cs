@@ -11,6 +11,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
+using UnityEngine.UI;
 
 /// <summary>
 /// Strict release preflight. This verifies content, references, importer
@@ -25,6 +26,7 @@ public static class GradomrazWebReleaseValidator
         const string originalBoot = "Assets/Scenes/Boot.unity";
         const string originalGameplay = "Assets/Scenes/SampleScene.unity";
         const string webBoot = release + "Boot.unity";
+        const string webMenu = release + "MainMenu.unity";
         const string webClip = release + "GRADOMRAZ_Intro_Web_1080p30.mp4";
         string root = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
 
@@ -37,7 +39,8 @@ public static class GradomrazWebReleaseValidator
 
         if (Application.unityVersion != "6000.6.9f1")
             throw new InvalidOperationException("Unexpected Unity version " + Application.unityVersion);
-        if (Hash(originalBoot) != "7BBB4528B2612485CB2FA212DFEC18369765BF0F2513CB8141DDF1CDB09C5C58" ||
+        if (Hash("Assets/Scenes/MainMenu.unity") != "175734700CDF4FA7DFA674080E40E7D540652659E012E13AEC5F65E498E58FAD" ||
+            Hash(originalBoot) != "7BBB4528B2612485CB2FA212DFEC18369765BF0F2513CB8141DDF1CDB09C5C58" ||
             Hash(originalGameplay) != "5C28C64A01E17DCCC1EC8C41E5243AA01D724403EBB57E72C6112A6D9E25A211")
             throw new InvalidOperationException("Canonical scenes changed since baseline.");
         string[] expectedScenePaths = {
@@ -101,6 +104,25 @@ public static class GradomrazWebReleaseValidator
         if (streamingTextures < 126 || compressedLongAudio < 10)
             throw new InvalidOperationException("Memory import results missing: " +
                 streamingTextures + " streamed textures, " + compressedLongAudio + " long compressed audio.");
+        // Unity 6000.6 may report stale managed runtime settings before
+        // the Web pipeline is active. Read and assert the serialized
+        // URPShaderStrippingSetting that the player build uses.
+        var globalSettings = AssetDatabase.LoadAssetAtPath<ScriptableObject>(
+            "Assets/MonoBehaviour/UniversalRenderPipelineGlobalSettings1.asset");
+        if (globalSettings == null)
+            throw new InvalidOperationException("Web URP global settings missing.");
+        var stripping = new SerializedObject(globalSettings);
+        var cursor = stripping.GetIterator();
+        int postFxFlags = 0;
+        while (cursor.NextVisible(true))
+        {
+            if (cursor.name != "m_StripUnusedPostProcessingVariantsAndResources") continue;
+            postFxFlags++;
+            if (cursor.boolValue)
+                throw new InvalidOperationException("URP serialized settings still strip postprocessing shaders.");
+        }
+        if (postFxFlags < 2)
+            throw new InvalidOperationException("Expected both legacy and Unity 6.6 URP postprocessing flags.");
         string[] shaders = {
             "GRADOMRAZ/Atmosphere/Weathered Glass",
             "GRADOMRAZ/Environment/Wet Triplanar Concrete",
@@ -134,6 +156,40 @@ public static class GradomrazWebReleaseValidator
         if (bootVideoPlayers != 1)
             throw new InvalidOperationException("Expected one VideoPlayer on Web Boot.");
 
+        Scene menuScene = EditorSceneManager.OpenScene(webMenu, OpenSceneMode.Single);
+        int inputTargets = 0;
+        foreach (GameObject menuRoot in menuScene.GetRootGameObjects())
+        foreach (Button button in menuRoot.GetComponentsInChildren<Button>(true))
+        {
+            if (button.name != "PlayButton" && button.name != "OptionsButton" &&
+                button.name != "QuitButton")
+                continue;
+            Image hitArea = button.GetComponent<Image>();
+            if (hitArea == null || !hitArea.enabled || !hitArea.raycastTarget ||
+                Mathf.Abs(hitArea.color.a - 0.001f) > 0.0001f ||
+                hitArea.raycastPadding.x > -130f || hitArea.raycastPadding.y > -15f)
+                throw new InvalidOperationException("Web UI button hit area not fixed: " + button.name);
+            bool hasClickEvent = false;
+            foreach (Component component in button.GetComponents<Component>())
+                if (component != null && component.GetType().Name == "PlayMakerUiClickEvent")
+                    hasClickEvent = true;
+            if (!hasClickEvent)
+                throw new InvalidOperationException("PlayMaker UI click bridge missing: " + button.name);
+            inputTargets++;
+        }
+        if (inputTargets != 3)
+            throw new InvalidOperationException("Expected exactly three raycastable PlayMaker menu buttons.");        var inputBridges = menuScene.GetRootGameObjects()
+            .Select(root => root.GetComponent<GradomrazWebMenuInputBridge>())
+            .Where(bridge => bridge != null).ToArray();
+        if (inputBridges.Length != 1 || inputBridges[0].gameObject.name != "GRADOMRAZ_WEB_INPUT")
+            throw new InvalidOperationException("Missing unique WebGL menu input bridge.");
+        var bridgeSettings = new SerializedObject(inputBridges[0]);
+        foreach (string property in new[] { "playButton", "optionsButton", "quitButton" })
+        {
+            var target = bridgeSettings.FindProperty(property);
+            if (target == null || target.objectReferenceValue == null)
+                throw new InvalidOperationException("Unbound Web menu input bridge field: " + property);
+        }
         Scene scene = EditorSceneManager.OpenScene(originalGameplay, OpenSceneMode.Single);
         int objects = 0, renderers = 0, playmaker = 0, missing = 0;
         var stack = new System.Collections.Generic.Stack<Transform>();
@@ -163,11 +219,13 @@ public static class GradomrazWebReleaseValidator
                           "; long compressed audio clips: " + compressedLongAudio);
         report.AppendLine("Web URP: HDR and depth retained, unused opaque copy disabled");
         report.AppendLine("PlayMaker FSMs: " + playmaker + "; missing components: " + missing);
+        report.AppendLine("Web Menu click targets: " + inputTargets);
+        report.AppendLine("Original-PlayMaker Web pointer fallback bridge: 1");
         report.AppendLine("Video source bytes: " + originalVideoBytes +
                           "; Web bytes: " + optimizedVideoBytes);
         report.AppendLine("Renderer count: " + renderers + "; GameObjects: " + objects);
         report.AppendLine("URP HDR enabled, reduced shadows, MSAA 2, render scale <= .95");
-        report.AppendLine("3 Web-only shaders present and retained");
+        report.AppendLine("3 Web-only shaders present; 2 serialized URP post-process stripping flags disabled");
         report.AppendLine("WebGL player build: NOT performed (requires Web Build Support)");
         var dir = Path.Combine(root, "Builds", "GRADOMRAZ-Web6");
         Directory.CreateDirectory(dir);
