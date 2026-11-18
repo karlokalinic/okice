@@ -1,6 +1,6 @@
 # GRADOMRAZ — Unity 6000.6.9f1 WebGL release candidate
 
-**Status (18 November 2026):** A real progressive WebGL player builds and runs in Microsoft Edge. The **NOVA IGRA → SampleScene** PlayMaker transition and **native browser fullscreen** both pass actual browser tests. **Not deployed to Cloudflare**. The public URL still serves the prior release.
+**Status (18 November 2026):** A real progressive WebGL player builds and runs in Microsoft Edge. The **NOVA IGRA → SampleScene** PlayMaker transition and **native browser fullscreen** both pass actual browser tests. **LIVE on Cloudflare R2 and the production Worker.** Public game URL: https://gradomraz.karlolegend.workers.dev/unity/game-01/ . The original production index is preserved in a local rollback backup.
 
 ## Verified WebGL artifacts
 
@@ -55,9 +55,15 @@ The ColdCity WebGL HTML template now implements:
 5. Serve Builds/GRADOMRAZ-Web6 over HTTP with correct Content-Encoding: br on every .br resource and application/wasm for WASM. Do not open by file://.
 6. Re-run fullscreen, startup, NOVA IGRA and 30-second gameplay smoke tests before promoting to production.
 
-## Deployment blockers
+## Production deployment — COMPLETE (2026-11-18)
 
-- New game is **not uploaded** to Cloudflare R2 bucket karlo-webgl-builds / game-01. Public URL https://gradomraz.karlolegend.workers.dev/unity/game-01/ remains unchanged.
-- Cloudflare Worker delivery/cache/Brotli patches: https://github.com/karlokalinic/game-dev-console/pull/37 . The private GitHub Actions runner previously failed before any CI steps; the connected Windows PC has no usable Cloudflare authentication.
-- To publish: provide an authenticated R2/Worker deployment path, upload all progressive chunks with Brotli headers, then verify the public URL, source maps/content type, boot intro, scene transitions, gameplay, Safari/Firefox and FPS/RAM. Do not claim publication until those checks pass.
-- This work lives on the separate release/gradomraz-webgl-progressive-20261118 branch of karlokalinic/okice and is not production.
+- **Public game:** https://gradomraz.karlolegend.workers.dev/unity/game-01/
+- **Unity:** 6000.6.9f1 WebGL player built successfully, 28 local files, 80,952,270 bytes. Only the 23 necessary assets plus the release index were uploaded to R2; build diagnostics remain local rather than consuming storage.
+- **R2 bucket:** `karlo-webgl-builds`, release prefix `game-01/releases/20261118-web6-00879a1/`. This immutable release directory keeps old gameplay files intact for rollback.
+- **Publishing:** after a full browser test on a separate Worker, the revisioned HTML was promoted to R2 key `game-01/index.html`. Read-back SHA-256 was `F723ED41D3BF83E6AF7D3CC708C94865520E0C70DCD6B9E3A9D84A98DCC15B76`; the public HTML contained the correct revision, progressive asset arrays, and fullscreen control. The old production index backup SHA-256 is `E55A104F375F1B55E3EFB5534B0C2042052E19A72FAD7A9443E56CEF917F3DE9`.
+- **Cloudflare Worker fix:** Unity 6.6 requires a valid Content-Length for progressive data files. The original Worker automatically re-encoded pre-Brotli-compressed R2 responses and omitted Content-Length, causing a stall at 90%. Serving `.br`/`.gz` R2 bodies using `Response(...,{encodeBody:"manual"})` preserved exact Brotli bytes and Content-Length; first deployed and tested as `gradomraz-cdn-qa-20261118`, then deployed to production `gradomraz` with `--keep-vars`. Public GET for `boot.config.br` returned `Content-Encoding: br` and `Content-Length: 132`. Companion source: https://github.com/karlokalinic/game-dev-console/pull/37 .
+- **Production browser QA:** actual Microsoft Edge/Playwright at the exact public URL `/unity/game-01/` reports `TRUE_FULLSCREEN_QA_PASS=true`: enter/exit via native Fullscreen API, Alt+Enter, Escape, correct 1280×720 and 1600×900 canvas/backing buffers, no scroll. Log: `D:\GRADOMRAZ-WebBrowserQA\cloudflare-production-fullscreen.log`.
+- **Gameplay QA:** public menu loads, NOVA IGRA triggers original PlayMaker `PlayButton.onClick` and `LoadLevelAsync: SampleScene`; first-act title at ~12s and rendered interior at ~30s. **22 Unity asset requests with zero 4xx/5xx responses**. Log: `D:\GRADOMRAZ-WebBrowserQA\cloudflare-production-gameplay.log`; screenshot: `D:\GRADOMRAZ-WebBrowserQA\production-after-click-30s.png`.
+- **Known residual warnings:** WebGL GLES3 does not support the Edge Adaptive Spatial Upsampling FSR shader; a simultaneous additional-shadowed-light limit warning occurs. Two generic 404 console messages remain but no Unity player asset request failed. These did not prevent the verified boot and first game scene. Full-game chapter transitions, FPS/RAM profiling, and Firefox/Safari/mobile QA remain future work.
+- **Rollback:** original R2 index backed up at `D:\GRADOMRAZ-WebBrowserQA\old-cloudflare-index-backup-20261118.html` and prior R2 asset keys were not deleted; recovery is an R2 upload of that index if necessary.
+- **GitHub Actions:** private `game-dev-console` runner remains blocked before job steps, but this **did not prevent deployment**. The live release was uploaded through the connected Windows computer's authorized Wrangler OAuth session. Source PRs remain open for integration review.
