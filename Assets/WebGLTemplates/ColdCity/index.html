@@ -54,7 +54,13 @@
   };
   const loaderUrl = versionedBuildUrl("{{{ LOADER_FILENAME }}}");
   const config = {
+#if PROGRESSIVE_ASSET_LOADING
+    // Unity 6.6 does not define DATA_FILENAME in progressive mode.
+    primaryDataUrls: {{{ JSON.stringify(PRIMARY_DATA_FILES) }}},
+    secondaryDataUrls: {{{ JSON.stringify(SECONDARY_DATA_FILES) }}},
+#else
     dataUrl: versionedBuildUrl("{{{ DATA_FILENAME }}}"),
+#endif
     frameworkUrl: versionedBuildUrl("{{{ FRAMEWORK_FILENAME }}}"),
     codeUrl: versionedBuildUrl("{{{ CODE_FILENAME }}}"),
 #if MEMORY_FILENAME
